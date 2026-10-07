@@ -127,6 +127,180 @@ fixed), the troubleshooting table, and the ten README questions answered in my o
 
 ---
 
+## Screenshot gallery
+
+All screenshots from this session in one place (each one is also explained in the linked sub-README).
+
+### Task 1: kubectl commands
+
+**kubectl get**
+
+![kubectl get](01-kubectl-commands/screenshots/01-kubectl-get.png)
+
+**kubectl describe**
+
+![kubectl describe](01-kubectl-commands/screenshots/02-kubectl-describe.png)
+
+**kubectl logs**
+
+![kubectl logs](01-kubectl-commands/screenshots/03-kubectl-logs.png)
+
+**kubectl exec**
+
+![kubectl exec](01-kubectl-commands/screenshots/04-kubectl-exec.png)
+
+**kubectl events**
+
+![kubectl events](01-kubectl-commands/screenshots/05-kubectl-events.png)
+
+**kubectl explain**
+
+![kubectl explain](01-kubectl-commands/screenshots/06-kubectl-explain.png)
+
+**kubectl top**
+
+![kubectl top](01-kubectl-commands/screenshots/07-kubectl-top.png)
+
+**kubectl output formats**
+
+![kubectl output formats](01-kubectl-commands/screenshots/08-kubectl-output-formats.png)
+
+### Task 2: troubleshooting (before / after)
+
+**crashloopbackoff - after**
+
+![crashloopbackoff - after](02-troubleshooting/01-crashloopbackoff/screenshots/after.png)
+
+**crashloopbackoff - before**
+
+![crashloopbackoff - before](02-troubleshooting/01-crashloopbackoff/screenshots/before.png)
+
+**imagepullbackoff - after**
+
+![imagepullbackoff - after](02-troubleshooting/02-imagepullbackoff/screenshots/after.png)
+
+**imagepullbackoff - before**
+
+![imagepullbackoff - before](02-troubleshooting/02-imagepullbackoff/screenshots/before.png)
+
+**errimagepull - after**
+
+![errimagepull - after](02-troubleshooting/03-errimagepull/screenshots/after.png)
+
+**errimagepull - before**
+
+![errimagepull - before](02-troubleshooting/03-errimagepull/screenshots/before.png)
+
+**pending - after**
+
+![pending - after](02-troubleshooting/04-pending/screenshots/after.png)
+
+**pending - before**
+
+![pending - before](02-troubleshooting/04-pending/screenshots/before.png)
+
+**containercreating - after**
+
+![containercreating - after](02-troubleshooting/05-containercreating/screenshots/after.png)
+
+**containercreating - before**
+
+![containercreating - before](02-troubleshooting/05-containercreating/screenshots/before.png)
+
+**service connectivity - after**
+
+![service connectivity - after](02-troubleshooting/06-service-connectivity/screenshots/after.png)
+
+**service connectivity - before**
+
+![service connectivity - before](02-troubleshooting/06-service-connectivity/screenshots/before.png)
+
+**service connectivity - step1 fix selector**
+
+![service connectivity - step1 fix selector](02-troubleshooting/06-service-connectivity/screenshots/step1-fix-selector.png)
+
+**dns - after**
+
+![dns - after](02-troubleshooting/07-dns/screenshots/after.png)
+
+**dns - before**
+
+![dns - before](02-troubleshooting/07-dns/screenshots/before.png)
+
+**pod networking networkpolicy - after**
+
+![pod networking networkpolicy - after](02-troubleshooting/08-pod-networking-networkpolicy/screenshots/after.png)
+
+**pod networking networkpolicy - before**
+
+![pod networking networkpolicy - before](02-troubleshooting/08-pod-networking-networkpolicy/screenshots/before.png)
+
+**config createcontainerconfigerror - after**
+
+![config createcontainerconfigerror - after](02-troubleshooting/09-config-createcontainerconfigerror/screenshots/after.png)
+
+**config createcontainerconfigerror - before**
+
+![config createcontainerconfigerror - before](02-troubleshooting/09-config-createcontainerconfigerror/screenshots/before.png)
+
+**oomkilled - after**
+
+![oomkilled - after](02-troubleshooting/10-oomkilled/screenshots/after.png)
+
+**oomkilled - before**
+
+![oomkilled - before](02-troubleshooting/10-oomkilled/screenshots/before.png)
+
+### Task 3: mini project
+
+**deploy**
+
+![deploy](mini-project/screenshots/01-deploy.png)
+
+**check application**
+
+![check application](mini-project/screenshots/02-check-application.png)
+
+**check service endpoints**
+
+![check service endpoints](mini-project/screenshots/03-check-service-endpoints.png)
+
+**dns check**
+
+![dns check](mini-project/screenshots/04-dns-check.png)
+
+**broken pod get**
+
+![broken pod get](mini-project/screenshots/05-broken-pod-get.png)
+
+**broken pod describe**
+
+![broken pod describe](mini-project/screenshots/06-broken-pod-describe.png)
+
+**broken pod events logs**
+
+![broken pod events logs](mini-project/screenshots/07-broken-pod-events-logs.png)
+
+**broken pod fix**
+
+![broken pod fix](mini-project/screenshots/08-broken-pod-fix.png)
+
+**service selector broken**
+
+![service selector broken](mini-project/screenshots/09-service-selector-broken.png)
+
+**service root cause**
+
+![service root cause](mini-project/screenshots/10-service-root-cause.png)
+
+**service fixed**
+
+![service fixed](mini-project/screenshots/11-service-fixed.png)
+
+**final checklist**
+
+![final checklist](mini-project/screenshots/12-final-checklist.png)
+
 ## Deliverables checklist
 
 | Deliverable | Where |

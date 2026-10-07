@@ -74,6 +74,86 @@ What it builds: bucket `vansh-dobhal-10099-s18-demo` in `ap-south-1` with
 
 All demo objects (IAM users/roles/policies, key pair, SG, instance, buckets, VPC, table) were deleted again by the script after their screenshots.
 
+## Screenshot gallery
+
+All screenshots from this session in one place (each one is also explained in the linked sub-README).
+
+### Task 1: terraform-s3-demo workflow
+
+**localstack running**
+
+![localstack running](terraform-s3-demo/screenshots/00-localstack-running.png)
+
+**terraform init**
+
+![terraform init](terraform-s3-demo/screenshots/01-terraform-init.png)
+
+**terraform fmt validate**
+
+![terraform fmt validate](terraform-s3-demo/screenshots/02-terraform-fmt-validate.png)
+
+**terraform plan**
+
+![terraform plan](terraform-s3-demo/screenshots/03-terraform-plan.png)
+
+**terraform apply**
+
+![terraform apply](terraform-s3-demo/screenshots/04-terraform-apply.png)
+
+**terraform state show**
+
+![terraform state show](terraform-s3-demo/screenshots/05-terraform-state-show.png)
+
+**terraform show**
+
+![terraform show](terraform-s3-demo/screenshots/06-terraform-show.png)
+
+**terraform output**
+
+![terraform output](terraform-s3-demo/screenshots/07-terraform-output.png)
+
+**verify with aws cli**
+
+![verify with aws cli](terraform-s3-demo/screenshots/08-verify-with-aws-cli.png)
+
+**upload object versions**
+
+![upload object versions](terraform-s3-demo/screenshots/09-upload-object-versions.png)
+
+**terraform destroy**
+
+![terraform destroy](terraform-s3-demo/screenshots/10-terraform-destroy.png)
+
+### Task 2: AWS services hands-on (LocalStack)
+
+**IAM - iam users groups policies**
+
+![IAM - iam users groups policies](aws-services/01-iam/screenshots/01-iam-users-groups-policies.png)
+
+**IAM - iam role for ec2**
+
+![IAM - iam role for ec2](aws-services/01-iam/screenshots/02-iam-role-for-ec2.png)
+
+**EC2 - ec2 keypair sg instance lifecycle**
+
+![EC2 - ec2 keypair sg instance lifecycle](aws-services/02-ec2/screenshots/01-ec2-keypair-sg-instance-lifecycle.png)
+
+**S3 - s3 versioning lifecycle**
+
+![S3 - s3 versioning lifecycle](aws-services/03-s3/screenshots/01-s3-versioning-lifecycle.png)
+
+**VPC - vpc subnets routing nacl**
+
+![VPC - vpc subnets routing nacl](aws-services/04-vpc/screenshots/01-vpc-subnets-routing-nacl.png)
+
+**DYNAMODB-RDS - dynamodb table items query**
+
+![DYNAMODB-RDS - dynamodb table items query](aws-services/05-dynamodb-rds/screenshots/01-dynamodb-table-items-query.png)
+
+**DYNAMODB-RDS - rds not in localstack community**
+
+![DYNAMODB-RDS - rds not in localstack community](aws-services/05-dynamodb-rds/screenshots/02-rds-not-in-localstack-community.png)
+
 ## Honest notes / limitations
 
 - **No real AWS account was used.** Everything ran on LocalStack. ARNs use LocalStack's fake account `000000000000`. EC2 in LocalStack community is **mocked**: the API and state machine are emulated, but no VM boots. IAM policies are stored but not enforced.
