@@ -1,0 +1,18 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout history deployment/yatri-web -n s12-troubleshoot
+deployment.apps/yatri-web 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout undo deployment/yatri-web -n s12-troubleshoot
+Warning: resource deployments/yatri-web was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/yatri-web rolled back
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout status deployment/yatri-web -n s12-troubleshoot --timeout=120s
+deployment "yatri-web" successfully rolled out
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pods -n s12-troubleshoot -l app=yatri-web -L version
+NAME                         READY   STATUS    RESTARTS   AGE   VERSION
+yatri-web-7ddc4cbb46-bslc2   1/1     Running   0          50s   v1
+yatri-web-7ddc4cbb46-f6jgj   1/1     Running   0          50s   v1
+yatri-web-7ddc4cbb46-xlqgx   1/1     Running   0          50s   v1
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get deploy yatri-web -n s12-troubleshoot -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+nginx:1.25-alpine

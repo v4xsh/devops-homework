@@ -1,0 +1,13 @@
+# Trivy configuration shared by `trivy fs` (SCA) and `trivy image` (container scan)
+severity:
+  - HIGH
+  - CRITICAL
+scan:
+  scanners:
+    - vuln
+vulnerability:
+  # only report vulnerabilities that already have a fixed version -> every finding is actionable
+  ignore-unfixed: true
+# trivy itself never fails the job; the security-gate job makes the pass/fail decision
+exit-code: 0
+timeout: 10m

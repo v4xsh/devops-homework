@@ -1,0 +1,22 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pods -n s10-lifecycle -o custom-columns='POD:.metadata.name,PHASE:.status.phase,READY:.status.containerStatuses[*].ready,RESTARTS:.status.containerStatuses[*].restartCount,WAITING:.status.containerStatuses[*].state.waiting.reason,TERMINATED:.status.containerStatuses[*].state.terminated.reason' | grep -v yatri
+POD                         PHASE       READY       RESTARTS   WAITING            TERMINATED
+lifecycle-crashloop         Running     false       5          CrashLoopBackOff   <none>
+lifecycle-failed            Failed      false       0          <none>             Error
+lifecycle-image-error       Pending     false       0          ImagePullBackOff   <none>
+lifecycle-init              Running     true        0          <none>             <none>
+lifecycle-liveness          Running     true        3          <none>             <none>
+lifecycle-multi-container   Running     true,true   0,0        <none>             <none>
+lifecycle-pending           Pending     <none>      <none>     <none>             <none>
+lifecycle-readiness         Running     true        0          <none>             <none>
+lifecycle-running           Running     true        0          <none>             <none>
+lifecycle-startup           Running     true        0          <none>             <none>
+lifecycle-succeeded         Succeeded   false       0          <none>             Completed
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get events -n s10-lifecycle --field-selector type=Warning --sort-by=.lastTimestamp | tail -n 15
+LAST SEEN   TYPE      REASON             OBJECT                      MESSAGE
+115s        Warning   Unhealthy          pod/lifecycle-startup       Startup probe failed:
+73s         Warning   Failed             pod/lifecycle-image-error   Failed to pull image "jakwehrgkaejw:kahsdfgkhj": failed to pull and unpack image "docker.io/library/jakwehrgkaejw:kahsdfgkhj": failed to resolve reference "docker.io/library/jakwehrgkaejw:kahsdfgkhj": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+73s         Warning   Failed             pod/lifecycle-image-error   Error: ErrImagePull
+17s         Warning   Failed             pod/lifecycle-image-error   Error: ImagePullBackOff
+16s         Warning   FailedScheduling   pod/lifecycle-pending       0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+6s          Warning   BackOff            pod/lifecycle-crashloop     Back-off restarting failed container crashing-app in pod lifecycle-crashloop_s10-lifecycle(c4155df0-cdac-498b-80ee-75f6151426c7)
+6s          Warning   Unhealthy          pod/lifecycle-liveness      Liveness probe failed:

@@ -1,0 +1,12 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c writer -- wc -l /shared/heartbeat.log
+5 /shared/heartbeat.log
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pod emptydir-shared -n s13
+pod "emptydir-shared" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 01-emptydir-shared.yaml
+pod/emptydir-shared created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl wait --for=condition=Ready pod/emptydir-shared -n s13 --timeout=120s
+pod/emptydir-shared condition met
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c writer -- wc -l /shared/heartbeat.log
+1 /shared/heartbeat.log
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c writer -- cat /shared/heartbeat.log
+17:11:20 writer heartbeat from emptydir-shared

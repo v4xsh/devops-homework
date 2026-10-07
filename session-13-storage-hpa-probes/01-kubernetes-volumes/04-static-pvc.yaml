@@ -1,0 +1,16 @@
+# The claim asks for 500Mi RWO from class "manual" -> binds to s13-static-pv (1Gi).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: static-pvc
+  namespace: s13
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  selector:
+    matchLabels:
+      owner: vansh-10099

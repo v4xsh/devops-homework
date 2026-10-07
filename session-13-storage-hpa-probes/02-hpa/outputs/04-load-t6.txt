@@ -1,0 +1,33 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ sleep 45
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ date '+%H:%M:%S'
+17:27:19
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get hpa -n s13
+NAME             REFERENCE               TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+php-apache-hpa   Deployment/php-apache   cpu: 90%/50%   1         10        10         5m55s
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl top pods -n s13
+NAME                              CPU(cores)   MEMORY(bytes)   
+load-generator-7c5886f4b6-86nr6   23m          0Mi             
+load-generator-7c5886f4b6-kvlgs   22m          0Mi             
+load-generator-7c5886f4b6-wp2tf   22m          0Mi             
+php-apache-7545b76d78-56fzn       161m         14Mi            
+php-apache-7545b76d78-62d62       176m         13Mi            
+php-apache-7545b76d78-9vq6d       139m         12Mi            
+php-apache-7545b76d78-bdctn       159m         12Mi            
+php-apache-7545b76d78-gkr8c       174m         25Mi            
+php-apache-7545b76d78-lhh7j       177m         12Mi            
+php-apache-7545b76d78-mwcdz       196m         12Mi            
+php-apache-7545b76d78-ngxnx       143m         11Mi            
+php-apache-7545b76d78-rd7sf       186m         12Mi            
+php-apache-7545b76d78-skz4t       181m         16Mi            
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get pods -n s13 -l app=php-apache
+NAME                          READY   STATUS    RESTARTS   AGE
+php-apache-7545b76d78-56fzn   1/1     Running   0          82s
+php-apache-7545b76d78-62d62   1/1     Running   0          3m22s
+php-apache-7545b76d78-9vq6d   1/1     Running   0          82s
+php-apache-7545b76d78-bdctn   1/1     Running   0          82s
+php-apache-7545b76d78-gkr8c   1/1     Running   0          6m28s
+php-apache-7545b76d78-lhh7j   1/1     Running   0          3m22s
+php-apache-7545b76d78-mwcdz   1/1     Running   0          3m22s
+php-apache-7545b76d78-ngxnx   1/1     Running   0          82s
+php-apache-7545b76d78-rd7sf   1/1     Running   0          2m22s
+php-apache-7545b76d78-skz4t   1/1     Running   0          3m22s

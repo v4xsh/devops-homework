@@ -1,0 +1,58 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm get values web1 -n s15
+USER-SUPPLIED VALUES:
+null
+~/devops-homework/session-15-helm/01-helm-commands$ helm get values web1 -n s15 --all | head -15
+COMPUTED VALUES:
+affinity: {}
+autoscaling:
+  enabled: false
+  maxReplicas: 100
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 80
+fullnameOverride: ""
+image:
+  pullPolicy: IfNotPresent
+  repository: nginx
+  tag: ""
+imagePullSecrets: []
+ingress:
+  annotations: {}
+~/devops-homework/session-15-helm/01-helm-commands$ helm get notes web1 -n s15
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace s15 -l "app.kubernetes.io/name=webapp,app.kubernetes.io/instance=web1" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace s15 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace s15 port-forward $POD_NAME 8080:$CONTAINER_PORT
+
+~/devops-homework/session-15-helm/01-helm-commands$ helm get manifest web1 -n s15 | grep -E '^(# Source|kind|  name):'
+# Source: webapp/templates/serviceaccount.yaml
+kind: ServiceAccount
+  name: web1-webapp
+# Source: webapp/templates/service.yaml
+kind: Service
+  name: web1-webapp
+# Source: webapp/templates/deployment.yaml
+kind: Deployment
+  name: web1-webapp
+~/devops-homework/session-15-helm/01-helm-commands$ helm get manifest web1 -n s15 | sed -n '/kind: Service$/,/^---/p'
+kind: Service
+metadata:
+  name: web1-webapp
+  labels:
+    helm.sh/chart: webapp-0.1.0
+    app.kubernetes.io/name: webapp
+    app.kubernetes.io/instance: web1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: webapp
+    app.kubernetes.io/instance: web1
+---

@@ -1,0 +1,15 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl apply -f fixed.yaml
+configmap/web-content created
+pod/containercreating-app configured
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl wait --for=condition=Ready pod/containercreating-app -n s14 --timeout=180s
+pod/containercreating-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl get pod containercreating-app -n s14
+NAME                    READY   STATUS    RESTARTS   AGE
+containercreating-app   1/1     Running   0          66s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl exec containercreating-app -n s14 -- curl -s localhost
+<h1>Served from ConfigMap web-content - Vansh Dobhal 10099</h1>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl events -n s14 --for pod/containercreating-app | tail -n 4
+35s (x7 over 67s)   Warning   FailedMount   Pod/containercreating-app   MountVolume.SetUp failed for volume "content" : configmap "web-content" not found
+1s                  Normal    Pulled        Pod/containercreating-app   Container image "nginx:1.27" already present on machine and can be accessed by the pod
+1s                  Normal    Created       Pod/containercreating-app   Container created
+1s                  Normal    Started       Pod/containercreating-app   Container started

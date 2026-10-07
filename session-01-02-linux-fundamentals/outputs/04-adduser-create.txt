@@ -1,0 +1,31 @@
+~/devops-homework/tools$ ls -l /usr/sbin/adduser /usr/sbin/useradd
+-rwxr-xr-x 1 root root  55191 Jul  5  2023 /usr/sbin/adduser
+-rwxr-xr-x 1 root root 143232 May 30  2024 /usr/sbin/useradd
+~/devops-homework/tools$ file /usr/sbin/adduser /usr/sbin/useradd
+/usr/sbin/adduser: Perl script text executable
+/usr/sbin/useradd: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a0000899fb3c31347e08f25c681dab585afebf36, for GNU/Linux 3.2.0, stripped
+~/devops-homework/tools$ sudo adduser --disabled-password --gecos "Test User One,,," testuser1
+info: Adding user `testuser1' ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Adding new group `testuser1' (1001) ...
+info: Adding new user `testuser1' (1001) with group `testuser1 (1001)' ...
+info: Creating home directory `/home/testuser1' ...
+info: Copying files from `/etc/skel' ...
+info: Adding new user `testuser1' to supplemental / extra groups `users' ...
+info: Adding user `testuser1' to group `users' ...
+~/devops-homework/tools$ grep '^testuser1:' /etc/passwd
+testuser1:x:1001:1001:Test User One,,,:/home/testuser1:/bin/bash
+~/devops-homework/tools$ ls -ld /home/testuser1 && sudo ls -la /home/testuser1
+drwxr-x--- 2 testuser1 testuser1 4096 Oct  7 17:04 /home/testuser1
+total 20
+drwxr-x--- 2 testuser1 testuser1 4096 Oct  7 17:04 .
+drwxr-xr-x 4 root      root      4096 Oct  7 17:04 ..
+-rw-r--r-- 1 testuser1 testuser1  220 Oct  7 17:04 .bash_logout
+-rw-r--r-- 1 testuser1 testuser1 3771 Oct  7 17:04 .bashrc
+-rw-r--r-- 1 testuser1 testuser1  807 Oct  7 17:04 .profile
+~/devops-homework/tools$ id testuser1
+uid=1001(testuser1) gid=1001(testuser1) groups=1001(testuser1),100(users)
+~/devops-homework/tools$ groups testuser1
+testuser1 : testuser1 users
+~/devops-homework/tools$ sudo grep '^testuser1:' /etc/shadow | cut -d: -f1,2
+testuser1:!

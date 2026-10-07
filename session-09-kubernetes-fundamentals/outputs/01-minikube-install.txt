@@ -1,0 +1,17 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ mkdir -p /tmp/s09-install && cd /tmp/s09-install
+/tmp/s09-install$ curl -sSLo minikube-linux-amd64 https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && ls -lh minikube-linux-amd64
+-rw-r--r-- 1 vansh vansh 137M Oct  7 17:09 minikube-linux-amd64
+/tmp/s09-install$ curl -sSLO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && ls -lh kubectl
+-rw-r--r-- 1 vansh vansh 60M Oct  7 17:11 kubectl
+/tmp/s09-install$ chmod +x minikube-linux-amd64 kubectl && ./minikube-linux-amd64 version && ./kubectl version --client
+minikube version: v1.39.0
+commit: 7a9f6a841470a207de8cf4bafcccee0969d8ba10
+Client Version: v1.37.1
+Kustomize Version: v5.8.1
+/tmp/s09-install$ which minikube kubectl docker
+/usr/local/bin/minikube
+/usr/local/bin/kubectl
+/usr/bin/docker
+/tmp/s09-install$ docker version --format 'Docker client {{.Client.Version}} / server {{.Server.Version}}'
+Docker client 29.8.2 / server 29.8.2
+/tmp/s09-install$ cd /tmp && rm -rf /tmp/s09-install

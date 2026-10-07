@@ -1,0 +1,13 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f service-broken-selector.yaml
+service/troubleshooting-service configured
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ sleep 3
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get service -n s14-mini
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+troubleshooting-service   ClusterIP   10.111.64.188   <none>        80/TCP    67s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get endpoints troubleshooting-service -n s14-mini
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                      ENDPOINTS   AGE
+troubleshooting-service   <none>      67s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl exec dns-test -n s14-mini -- wget -qO- -T 3 http://troubleshooting-service
+wget: can't connect to remote host (10.111.64.188): Connection refused
+command terminated with exit code 1

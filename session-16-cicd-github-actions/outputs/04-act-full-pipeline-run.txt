@@ -1,0 +1,15 @@
+~/devops-homework/session-16-cicd-github-actions/scripts$ cd $STAGE
+~/act-stage/session-16-cicd-github-actions/devops-homework$ bash $S/scripts/act-run.sh 2>&1 | sed -r 's/\x1b\[[0-9;]*m//g' > $LOG; echo "act exit code: ${PIPESTATUS[0]}"
+act exit code: 0
+~/act-stage/session-16-cicd-github-actions/devops-homework$ wc -l $LOG
+699 /home/vansh/devops-homework/session-16-cicd-github-actions/outputs/act-s16-main-run.log
+~/act-stage/session-16-cicd-github-actions/devops-homework$ grep -E 'Job (succeeded|failed)' $LOG
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Build Docker image  ] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Push image to registry] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] 🏁  Job succeeded
+~/act-stage/session-16-cicd-github-actions/devops-homework$ grep -cE 'Success - Main' $LOG
+39

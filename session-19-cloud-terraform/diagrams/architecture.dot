@@ -1,0 +1,41 @@
+// Hand-made architecture diagram for session-19 (rendered with: dot -Tpng architecture.dot -o architecture.png)
+digraph arch {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=12, pad=0.4, nodesep=0.5, ranksep=0.7,
+         label="session-19-cloud-terraform  |  Vansh Dobhal (Roll No. 10099)  |  region ap-south-1", labelloc=t];
+  node  [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#ffffff"];
+  edge  [fontname="Helvetica", fontsize=10];
+
+  user     [label="Internet user\n(browser, HTTP :80)", shape=oval, fillcolor="#e8f0fe"];
+  admin    [label="Admin laptop\nmy_ip/32 (SSH :22)", shape=oval, fillcolor="#e8f0fe"];
+  tf       [label="Terraform CLI\n(plan / apply / destroy)", shape=component, fillcolor="#ede7f6"];
+
+  subgraph cluster_aws {
+    label="AWS account / LocalStack (ap-south-1)"; style="rounded,dashed"; color="#ff9900";
+
+    igw [label="Internet Gateway\ns19-vansh-igw", fillcolor="#fff3e0"];
+
+    subgraph cluster_vpc {
+      label="VPC s19-vansh-vpc  10.19.0.0/16"; style="rounded"; color="#1a73e8";
+
+      rt [label="Route table s19-vansh-public-rt\n10.19.0.0/16 -> local\n0.0.0.0/0 -> IGW", fillcolor="#e3f2fd"];
+
+      subgraph cluster_subnet {
+        label="Public subnet 10.19.1.0/24 (ap-south-1a)\nmap_public_ip_on_launch = true"; style="rounded,filled"; fillcolor="#e8f5e9"; color="#34a853";
+
+        subgraph cluster_sg {
+          label="Security group s19-vansh-web-sg\nin: 22 from my_ip, 80 from 0.0.0.0/0 | out: all"; style="rounded,dashed"; color="#d93025";
+          ec2 [label="EC2 t2.micro  s19-vansh-web\nUbuntu AMI + user_data\nnginx: \"Deployed by Vansh Dobhal - 10099\"", fillcolor="#ffffff"];
+        }
+      }
+    }
+
+    s3 [label="S3 bucket\nvansh-dobhal-10099-s19-artifacts\nversioned, SSE-AES256, no public access\nartifacts/<instance-id>/user_data.sh", shape=cylinder, fillcolor="#fce8e6"];
+  }
+
+  user  -> igw [label="HTTP :80"];
+  admin -> igw [label="SSH :22"];
+  igw   -> rt  [dir=both];
+  rt    -> ec2 [label="route table\nassociation", dir=both];
+  ec2   -> s3  [label="logs / artifacts", style=dashed];
+  tf    -> s3  [label="uploads user_data artifact", style=dotted, color="#7e57c2"];
+}

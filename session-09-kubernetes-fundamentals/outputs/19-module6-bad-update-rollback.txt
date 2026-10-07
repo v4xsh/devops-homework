@@ -1,0 +1,53 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10 -n s09
+deployment.apps/kubernetes-bootcamp image updated
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl annotate deployment/kubernetes-bootcamp -n s09 kubernetes.io/change-cause='update image to non-existent tag v10' --overwrite
+deployment.apps/kubernetes-bootcamp annotated
+~/devops-homework/session-09-kubernetes-fundamentals$ sleep 25; kubectl get deployments -n s09
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   3/4     2            3           3m16s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09
+NAME                                   READY   STATUS             RESTARTS   AGE
+kubernetes-bootcamp-556487b4d4-6njph   0/1     ImagePullBackOff   0          27s
+kubernetes-bootcamp-556487b4d4-nrmvl   0/1     ImagePullBackOff   0          27s
+kubernetes-bootcamp-5b97597885-22kwc   1/1     Terminating        0          39s
+kubernetes-bootcamp-5b97597885-mwnqb   1/1     Running            0          38s
+kubernetes-bootcamp-5b97597885-tkn49   1/1     Running            0          38s
+kubernetes-bootcamp-5b97597885-vtk7z   1/1     Running            0          39s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe pods -n s09 -l app=kubernetes-bootcamp | grep -E 'Image:|Reason:|Failed' | sort | uniq -c
+      2       Reason:       ImagePullBackOff
+      4     Image:          docker.io/jocatalin/kubernetes-bootcamp:v2
+      2     Image:          gcr.io/google-samples/kubernetes-bootcamp:v10
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl rollout history deployment/kubernetes-bootcamp -n s09
+deployment.apps/kubernetes-bootcamp 
+REVISION  CHANGE-CAUSE
+1         initial deploy kubernetes-bootcamp:v1
+2         update image to jocatalin/kubernetes-bootcamp:v2
+3         update image to non-existent tag v10
+
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl rollout undo deployments/kubernetes-bootcamp -n s09
+deployment.apps/kubernetes-bootcamp rolled back
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl rollout status deployments/kubernetes-bootcamp -n s09 --timeout=120s
+Waiting for deployment "kubernetes-bootcamp" rollout to finish: 3 of 4 updated replicas are available...
+deployment "kubernetes-bootcamp" successfully rolled out
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09
+NAME                                   READY   STATUS        RESTARTS   AGE
+kubernetes-bootcamp-556487b4d4-6njph   0/1     Terminating   0          30s
+kubernetes-bootcamp-5b97597885-22kwc   1/1     Terminating   0          42s
+kubernetes-bootcamp-5b97597885-mwnqb   1/1     Running       0          41s
+kubernetes-bootcamp-5b97597885-tkn49   1/1     Running       0          41s
+kubernetes-bootcamp-5b97597885-vtk7z   1/1     Running       0          42s
+kubernetes-bootcamp-5b97597885-w44d2   1/1     Running       0          1s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -o custom-columns='POD:.metadata.name,IMAGE:.spec.containers[0].image,BEING-DELETED-AT:.metadata.deletionTimestamp'
+POD                                    IMAGE                                        BEING-DELETED-AT
+kubernetes-bootcamp-5b97597885-22kwc   docker.io/jocatalin/kubernetes-bootcamp:v2   2026-10-07T17:27:10Z
+kubernetes-bootcamp-5b97597885-mwnqb   docker.io/jocatalin/kubernetes-bootcamp:v2   <none>
+kubernetes-bootcamp-5b97597885-tkn49   docker.io/jocatalin/kubernetes-bootcamp:v2   <none>
+kubernetes-bootcamp-5b97597885-vtk7z   docker.io/jocatalin/kubernetes-bootcamp:v2   <none>
+kubernetes-bootcamp-5b97597885-w44d2   docker.io/jocatalin/kubernetes-bootcamp:v2   <none>
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl rollout history deployment/kubernetes-bootcamp -n s09
+deployment.apps/kubernetes-bootcamp 
+REVISION  CHANGE-CAUSE
+1         initial deploy kubernetes-bootcamp:v1
+3         update image to non-existent tag v10
+4         update image to jocatalin/kubernetes-bootcamp:v2
+

@@ -1,0 +1,21 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 07-dynamic-pod.yaml
+pod/dynamic-pv-pod created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl wait --for=condition=Ready pod/dynamic-pv-pod -n s13 --timeout=120s
+pod/dynamic-pv-pod condition met
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec dynamic-pv-pod -n s13 -- sh -c 'echo "<h1>Stored on a dynamically provisioned PV - Vansh Dobhal 10099</h1>" > /usr/share/nginx/html/index.html'
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec dynamic-pv-pod -n s13 -- curl -s localhost
+<h1>Stored on a dynamically provisioned PV - Vansh Dobhal 10099</h1>
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pod dynamic-pv-pod -n s13
+pod "dynamic-pv-pod" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pvc dynamic-pvc -n s13
+NAME          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+dynamic-pvc   Bound    pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f   500Mi      RWO            standard       <unset>                 33s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 07-dynamic-pod.yaml
+pod/dynamic-pv-pod created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl wait --for=condition=Ready pod/dynamic-pv-pod -n s13 --timeout=120s
+pod/dynamic-pv-pod condition met
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pod dynamic-pv-pod -n s13 -o wide
+NAME             READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+dynamic-pv-pod   1/1     Running   0          4s    10.244.0.28   minikube   <none>           <none>
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec dynamic-pv-pod -n s13 -- curl -s localhost
+<h1>Stored on a dynamically provisioned PV - Vansh Dobhal 10099</h1>

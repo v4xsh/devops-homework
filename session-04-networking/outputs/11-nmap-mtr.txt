@@ -1,0 +1,41 @@
+~$ nmap localhost
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-07 17:14 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00012s latency).
+Not shown: 991 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+5000/tcp  open  upnp
+8001/tcp  open  vcom-tunnel
+8002/tcp  open  teradataordbms
+8080/tcp  open  http-proxy
+32768/tcp open  filenet-tms
+32769/tcp open  filenet-rpc
+32770/tcp open  sometimes-rpc3
+32771/tcp open  sometimes-rpc5
+32772/tcp open  sometimes-rpc7
+
+Nmap done: 1 IP address (1 host up) scanned in 0.09 seconds
+~$ nmap -p 22,53,80,443,8080 127.0.0.1
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-07 17:14 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00023s latency).
+
+PORT     STATE  SERVICE
+22/tcp   closed ssh
+53/tcp   closed domain
+80/tcp   closed http
+443/tcp  closed https
+8080/tcp open   http-proxy
+
+Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds
+~$ mtr --report -c 5 -n google.com
+Start: 2026-10-07T17:14:59+0000
+HOST: Vansh-G15                   Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 172.17.0.1                 0.0%     5    0.2   0.6   0.2   2.0   0.8
+  2.|-- 100.128.160.1              0.0%     5   30.1  11.3   3.3  30.1  11.0
+  3.|-- 202.131.146.145            0.0%     5    4.1  15.7   4.1  46.0  17.6
+  4.|-- 172.20.20.17               0.0%     5   19.8  29.3  17.0  53.6  14.7
+  5.|-- 72.14.208.165              0.0%     5   64.3  29.1  17.4  64.3  20.2
+  6.|-- 142.250.146.113            0.0%     5   19.4  28.6  18.2  57.5  16.5
+~$ pkill -f "http.server 8080" && echo "stopped test web server on 8080"
+stopped test web server on 8080

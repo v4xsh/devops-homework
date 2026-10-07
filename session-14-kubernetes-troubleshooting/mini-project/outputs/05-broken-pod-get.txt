@@ -1,0 +1,10 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f broken-pod.yaml
+pod/project-broken-pod created
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ sleep 5
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pod project-broken-pod -n s14-mini
+NAME                 READY   STATUS         RESTARTS   AGE
+project-broken-pod   0/1     ErrImagePull   0          5s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ sleep 30
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pod project-broken-pod -n s14-mini
+NAME                 READY   STATUS         RESTARTS   AGE
+project-broken-pod   0/1     ErrImagePull   0          36s

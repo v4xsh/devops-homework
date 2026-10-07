@@ -1,0 +1,17 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl scale deploy/s20-metrics-app -n s20-app --replicas=2
+deployment.apps/s20-metrics-app scaled
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl rollout status deploy/s20-metrics-app -n s20-app --timeout=120s
+Waiting for deployment "s20-metrics-app" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 of 2 updated replicas are available...
+deployment "s20-metrics-app" successfully rolled out
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 60
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/query --data-urlencode 'query=up{namespace="s20-app"}' | jq -r '.data.result[] | "\(.metric.pod)  up=\(.value[1])"'
+s20-metrics-app-5c7f5f65df-brfkz  up=1
+s20-metrics-app-5c7f5f65df-mrfwl  up=1
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/alerts | jq -r '[.data.alerts[] | select(.labels.alertname=="AppDown")] | if length==0 then "AppDown: no longer active (resolved)" else .[] | "AppDown: \(.state)" end'
+AppDown: no longer active (resolved)
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/rules | jq -r '.data.groups[] | select(.name=="s20-metrics-app.rules") | .rules[] | [.name, .state] | @tsv' | column -t
+AppDown           inactive
+AppHighErrorRate  inactive
+HighPodRestarts   inactive
+AppHighCPU        inactive

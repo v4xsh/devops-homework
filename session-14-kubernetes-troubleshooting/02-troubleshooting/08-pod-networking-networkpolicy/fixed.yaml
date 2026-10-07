@@ -1,0 +1,20 @@
+# FIX: keep default-deny, add an explicit allow rule checkout -> payments-api:80
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-checkout-to-payments
+  namespace: s14
+spec:
+  podSelector:
+    matchLabels:
+      app: payments-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: checkout
+      ports:
+        - protocol: TCP
+          port: 80

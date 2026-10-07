@@ -1,0 +1,25 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl apply -f broken.yaml
+configmap/app-settings created
+pod/config-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ sleep 10
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl get pod config-app -n s14
+NAME         READY   STATUS                       RESTARTS   AGE
+config-app   0/1     CreateContainerConfigError   0          10s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl describe pod config-app -n s14 | sed -n '/State:/,/Environment:/p'
+    State:          Waiting
+      Reason:       CreateContainerConfigError
+    Ready:          False
+    Restart Count:  0
+    Environment:
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl describe pod config-app -n s14 | sed -n '/Environment:/,/Mounts:/p'
+    Environment:
+      DB_HOST:    <set to the key 'DATABASE_HOST' of config map 'app-settings'>  Optional: false
+      LOG_LEVEL:  <set to the key 'log_level' of config map 'app-settings'>      Optional: false
+    Mounts:
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl events -n s14 --for pod/config-app
+LAST SEEN          TYPE      REASON      OBJECT           MESSAGE
+10s                Normal    Scheduled   Pod/config-app   Successfully assigned s14/config-app to minikube
+9s (x2 over 10s)   Normal    Pulled      Pod/config-app   Container image "busybox:1.36" already present on machine and can be accessed by the pod
+9s (x2 over 10s)   Warning   Failed      Pod/config-app   Error: couldn't find key DATABASE_HOST in ConfigMap s14/app-settings
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl get configmap app-settings -n s14 -o jsonpath='{.data}{"\n"}'
+{"database_host":"postgres.s14.svc.cluster.local","log_level":"info"}

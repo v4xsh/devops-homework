@@ -1,0 +1,11 @@
+~/devops-homework/session-16-cicd-github-actions/scripts$ cd $STAGE && git log --oneline -1 && git remote -v | head -1
+3ce2a37 session-16-cicd-github-actions: local act run
+origin	https://github.com/v4xsh/devops-homework.git (fetch)
+~/act-stage/session-16-cicd-github-actions/devops-homework$ act -l -W .github/workflows/session16-ci-cd.yml
+time="2026-10-07T17:35:59Z" level=info msg="Using docker host 'unix:///var/run/docker.sock', and daemon socket 'unix:///var/run/docker.sock'"
+Stage  Job ID  Job name                                    Workflow name                      Workflow file        Events                             
+0      test    Test (Python ${{ matrix.python-version }})  Session 16 - CI/CD Calculator API  session16-ci-cd.yml  workflow_dispatch,push,pull_request
+0      lint    Lint (flake8)                               Session 16 - CI/CD Calculator API  session16-ci-cd.yml  pull_request,workflow_dispatch,push
+1      build   Build Docker image                          Session 16 - CI/CD Calculator API  session16-ci-cd.yml  push,pull_request,workflow_dispatch
+2      push    Push image to registry                      Session 16 - CI/CD Calculator API  session16-ci-cd.yml  push,pull_request,workflow_dispatch
+3      deploy  Deploy to Kubernetes                        Session 16 - CI/CD Calculator API  session16-ci-cd.yml  push,pull_request,workflow_dispatch

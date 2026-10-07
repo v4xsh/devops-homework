@@ -1,0 +1,18 @@
+# Revision 1 (initial install) - defaults
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "1.25-alpine"
+  pullPolicy: IfNotPresent
+
+app:
+  version: v1
+  color: blue
+  message: "Hello from the first release - 1 replica on nginx 1.25"
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}

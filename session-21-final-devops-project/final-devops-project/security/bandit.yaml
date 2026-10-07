@@ -1,0 +1,4 @@
+# Bandit SAST configuration for the TaskBoard backend.
+exclude_dirs: ["tests", ".venv"]
+# B104 (bind to 0.0.0.0) is expected inside a container; it is only set on the uvicorn CLI, not in code.
+skips: []

@@ -1,0 +1,20 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl apply -f php-apache.yaml
+deployment.apps/php-apache created
+service/php-apache created
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl rollout status deployment/php-apache -n s13 --timeout=120s
+Waiting for deployment "php-apache" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "php-apache" rollout to finish: 0 of 1 updated replicas are available...
+deployment "php-apache" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get deploy,svc,pods -n s13 -l app=php-apache -o wide
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                        SELECTOR
+deployment.apps/php-apache   1/1     1            1           31s   php-apache   registry.k8s.io/hpa-example   app=php-apache
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+service/php-apache   ClusterIP   10.99.116.120   <none>        80/TCP    31s   app=php-apache
+
+NAME                              READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+pod/php-apache-7545b76d78-gkr8c   1/1     Running   0          31s   10.244.0.72   minikube   <none>           <none>
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get deploy php-apache -n s13 -o jsonpath='{.spec.template.spec.containers[0].resources}{"\n"}'
+{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"200m","memory":"64Mi"}}
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl exec deploy/php-apache -n s13 -- curl -s localhost
+OK!

@@ -1,0 +1,24 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 01-emptydir-shared.yaml
+pod/emptydir-shared created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl wait --for=condition=Ready pod/emptydir-shared -n s13 --timeout=120s
+pod/emptydir-shared condition met
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ sleep 12
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pod emptydir-shared -n s13 -o wide
+NAME              READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+emptydir-shared   2/2     Running   0          14s   10.244.0.12   minikube   <none>           <none>
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c writer -- ls -l /shared
+total 8
+-rw-r--r--    1 root     root           141 Oct  7 17:10 heartbeat.log
+-rw-r--r--    1 root     root            63 Oct  7 17:10 index.html
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c reader -- cat /usr/share/nginx/html/heartbeat.log
+17:10:20 writer heartbeat from emptydir-shared
+17:10:25 writer heartbeat from emptydir-shared
+17:10:30 writer heartbeat from emptydir-shared
+17:10:35 writer heartbeat from emptydir-shared
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c reader -- curl -s localhost/index.html
+<h1>Written by the writer container (Vansh Dobhal, 10099)</h1>
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c reader -- sh -c 'touch /usr/share/nginx/html/x 2>&1 || true'
+touch: cannot touch '/usr/share/nginx/html/x': Read-only file system
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec emptydir-shared -n s13 -c reader -- df -h /usr/share/nginx/html
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   22G  934G   3% /usr/share/nginx/html

@@ -1,0 +1,45 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM            STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+s13-static-pv   1Gi        RWO            Retain           Bound    s13/static-pvc   manual         <unset>                          45s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 06-dynamic-pvc.yaml
+persistentvolumeclaim/dynamic-pvc created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ sleep 5
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pvc dynamic-pvc -n s13
+NAME          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+dynamic-pvc   Bound    pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f   500Mi      RWO            standard       <unset>                 5s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f   500Mi      RWO            Delete           Bound    s13/dynamic-pvc   standard       <unset>                          6s
+s13-static-pv                              1Gi        RWO            Retain           Bound    s13/static-pvc    manual         <unset>                          52s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl describe pvc dynamic-pvc -n s13
+Name:          dynamic-pvc
+Namespace:     s13
+StorageClass:  standard
+Status:        Bound
+Volume:        pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f
+Labels:        <none>
+Annotations:   pv.kubernetes.io/bind-completed: yes
+               pv.kubernetes.io/bound-by-controller: yes
+               volume.beta.kubernetes.io/storage-provisioner: k8s.io/minikube-hostpath
+               volume.kubernetes.io/storage-provisioner: k8s.io/minikube-hostpath
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      500Mi
+Access Modes:  RWO
+VolumeMode:    Filesystem
+Used By:       <none>
+Conditions:
+  Type     Status  LastProbeTime                     LastTransitionTime                Reason           Message
+  ----     ------  -----------------                 ------------------                ------           -------
+  Unused   True    Mon, 01 Jan 0001 00:00:00 +0000   Wed, 07 Oct 2026 17:12:53 +0000   NoPodsUsingPVC   No pods are currently referencing this PVC
+Events:
+  Type    Reason                 Age   From                                                                    Message
+  ----    ------                 ----  ----                                                                    -------
+  Normal  ExternalProvisioning   6s    persistentvolume-controller                                             Waiting for a volume to be created either by the external provisioner 'k8s.io/minikube-hostpath' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.
+  Normal  Provisioning           6s    k8s.io/minikube-hostpath_minikube_0451c997-f8ca-425d-a70d-1f9a73ba83aa  External provisioner is provisioning volume for claim "s13/dynamic-pvc"
+  Normal  ProvisioningSucceeded  6s    k8s.io/minikube-hostpath_minikube_0451c997-f8ca-425d-a70d-1f9a73ba83aa  Successfully provisioned volume pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ PV=$(kubectl get pvc dynamic-pvc -n s13 -o jsonpath='{.spec.volumeName}'); echo "Auto-created PV: $PV"
+Auto-created PV: pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv $PV -o jsonpath='{.metadata.annotations}{"\n"}{.spec.hostPath.path}{"\n"}{.spec.persistentVolumeReclaimPolicy}{"\n"}'
+{"hostPathProvisionerIdentity":"fa4935e3-4e88-4f38-9068-974398113c0d","pv.kubernetes.io/provisioned-by":"k8s.io/minikube-hostpath"}
+/tmp/hostpath-provisioner/s13/dynamic-pvc
+Delete

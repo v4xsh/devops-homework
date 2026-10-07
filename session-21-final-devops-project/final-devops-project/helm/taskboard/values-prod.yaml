@@ -1,0 +1,21 @@
+# Production-like overrides: more replicas, bigger requests, DB password from a pre-created Secret, TLS ingress.
+config: {appEnv: prod, logLevel: INFO}
+backend:
+  replicaCount: 3
+  resources:
+    requests: {cpu: 250m, memory: 256Mi}
+    limits: {cpu: "1", memory: 512Mi}
+frontend: {replicaCount: 3}
+hpa: {minReplicas: 3, maxReplicas: 10}
+postgres:
+  storage: {size: 20Gi, storageClassName: gp3}
+  resources:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits: {cpu: "1", memory: 1Gi}
+secret: {existingSecret: taskboard-db-prod}
+ingress:
+  host: taskboard.v4xsh.dev
+  annotations: {cert-manager.io/cluster-issuer: letsencrypt}
+  tls:
+    - hosts: [taskboard.v4xsh.dev]
+      secretName: taskboard-tls

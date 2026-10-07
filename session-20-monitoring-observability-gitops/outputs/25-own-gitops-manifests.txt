@@ -1,0 +1,42 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ tree task3-gitops
+task3-gitops
+├── argocd
+│   ├── application-devops-homework.yaml
+│   └── application-instructor-repo.yaml
+└── gitops
+    └── s20-metrics-app
+        ├── app.yaml
+        ├── prometheusrule.yaml
+        └── servicemonitor.yaml
+
+4 directories, 5 files
+~/devops-homework/session-20-monitoring-observability-gitops$ grep -vE '^\s*#' task3-gitops/argocd/application-devops-homework.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: s20-metrics-app
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/v4xsh/devops-homework.git
+    targetRevision: main
+    path: session-20-monitoring-observability-gitops/task3-gitops/gitops/s20-metrics-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: s20-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply --dry-run=server -f task3-gitops/gitops/s20-metrics-app/
+deployment.apps/s20-metrics-app unchanged (server dry run)
+service/s20-metrics-app unchanged (server dry run)
+prometheusrule.monitoring.coreos.com/s20-metrics-app-alerts unchanged (server dry run)
+servicemonitor.monitoring.coreos.com/s20-metrics-app unchanged (server dry run)
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply --dry-run=server -f task3-gitops/argocd/application-devops-homework.yaml
+application.argoproj.io/s20-metrics-app created (server dry run)

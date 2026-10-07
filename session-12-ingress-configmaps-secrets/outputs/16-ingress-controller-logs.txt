@@ -1,0 +1,7 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl logs -n ingress-nginx deploy/ingress-nginx-controller --since=2m | grep -E "s12-app[12]-service" | tail -6
+192.168.49.1 - - [07/Oct/2026:17:41:38 +0000] "GET / HTTP/1.1" 200 44 "-" "curl/8.5.0" 73 0.003 [s12-app1-service-80] [] 10.244.0.61:5678 44 0.003 200 fc02be2764aed7f0a3ea610f7d68dead
+192.168.49.1 - - [07/Oct/2026:17:41:38 +0000] "GET / HTTP/1.1" 200 44 "-" "curl/8.5.0" 73 0.004 [s12-app1-service-80] [] 10.244.0.61:5678 44 0.004 200 60075fcff3b00d410b21c170b3147272
+192.168.49.1 - - [07/Oct/2026:17:41:38 +0000] "GET / HTTP/1.1" 200 44 "-" "curl/8.5.0" 73 0.002 [s12-app1-service-80] [] 10.244.0.60:5678 44 0.002 200 02da587c4c3fed741789f287b4fcf357
+192.168.49.1 - - [07/Oct/2026:17:41:38 +0000] "GET / HTTP/1.1" 200 44 "-" "curl/8.5.0" 73 0.001 [s12-app1-service-80] [] 10.244.0.61:5678 44 0.001 200 08b64137f15dcb85633d210681e77213
+192.168.49.1 - - [07/Oct/2026:17:41:38 +0000] "GET / HTTP/1.1" 200 44 "-" "curl/8.5.0" 73 0.001 [s12-app1-service-80] [] 10.244.0.60:5678 44 0.001 200 da079f0be4f31fc43c15a77fcc4aaa27
+192.168.49.1 - - [07/Oct/2026:17:41:38 +0000] "GET / HTTP/1.1" 200 44 "-" "curl/8.5.0" 73 0.001 [s12-app1-service-80] [] 10.244.0.61:5678 44 0.001 200 05d9d2b70d0a1ba018279107b3d0f0fb

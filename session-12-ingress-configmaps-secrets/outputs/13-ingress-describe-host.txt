@@ -1,0 +1,19 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl describe ingress host-ingress -n s12
+Name:             host-ingress
+Labels:           <none>
+Namespace:        s12
+Address:          192.168.49.2
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  app1.local  
+              /   app1-service:80 (10.244.0.60:5678,10.244.0.61:5678)
+  app2.local  
+              /   app2-service:80 (10.244.0.62:5678,10.244.0.63:5678)
+Annotations:  <none>
+Events:
+  Type    Reason  Age               From                      Message
+  ----    ------  ----              ----                      -------
+  Normal  Sync    6s (x2 over 33s)  nginx-ingress-controller  Scheduled for sync

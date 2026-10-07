@@ -1,0 +1,19 @@
+~/devops-homework/session-08-docker-networking$ cd ~/devops-homework/session-08-docker-networking/01-multi-network
+~/devops-homework/session-08-docker-networking/01-multi-network$ docker run -d --name s08-frontend --network s08-frontend-net -p 8021:80 -v "$(readlink -f frontend)":/usr/share/nginx/html:ro nginx:alpine
+0a891ab3a96fd98041f387beaba7fea0d503da0c6899d170455c720edcaf97fe
+~/devops-homework/session-08-docker-networking/01-multi-network$ docker run -d --name s08-backend --network s08-frontend-net -v "$(readlink -f backend)":/usr/share/nginx/html:ro nginx:alpine
+37c99737423c355ae8c6dfd5c24a00c91758e2bff875a170bd1b4a3b9aa7dab4
+~/devops-homework/session-08-docker-networking/01-multi-network$ docker network connect s08-db-net s08-backend
+~/devops-homework/session-08-docker-networking/01-multi-network$ docker run -d --name s08-database --network s08-db-net -e MYSQL_ROOT_PASSWORD="$MYSQL_PWD" -e MYSQL_DATABASE=appdb mysql:8
+6ca73a26db50004f365d5a923dc0d3583a3f13bcf077124e3071d5ee3c47a219
+~/devops-homework/session-08-docker-networking/01-multi-network$ until docker logs s08-database 2>&1 | grep -q 'ready for connections.*port: 3306'; do sleep 3; done; echo "mysql is ready"
+mysql is ready
+~/devops-homework/session-08-docker-networking/01-multi-network$ docker ps --filter name=s08- --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Networks}}"
+NAMES          IMAGE          STATUS          PORTS                                     NETWORKS
+s08-database   mysql:8        Up 19 seconds   3306/tcp, 33060/tcp                       s08-db-net
+s08-backend    nginx:alpine   Up 20 seconds   80/tcp                                    s08-db-net,s08-frontend-net
+s08-frontend   nginx:alpine   Up 21 seconds   0.0.0.0:8021->80/tcp, [::]:8021->80/tcp   s08-frontend-net
+~/devops-homework/session-08-docker-networking/01-multi-network$ for c in s08-frontend s08-backend s08-database; do echo "$c -> $(docker inspect -f '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}={{$v.IPAddress}} {{end}}' $c)"; done
+s08-frontend -> s08-frontend-net=172.19.0.2 
+s08-backend -> s08-db-net=172.21.0.2 s08-frontend-net=172.19.0.3 
+s08-database -> s08-db-net=172.21.0.3 

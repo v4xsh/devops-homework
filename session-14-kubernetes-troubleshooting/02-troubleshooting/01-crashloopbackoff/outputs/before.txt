@@ -1,0 +1,31 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl apply -f broken.yaml
+pod/crashloop-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl wait --for=jsonpath='{.status.containerStatuses[0].state.waiting.reason}'=CrashLoopBackOff pod/crashloop-app -n s14 --timeout=120s
+pod/crashloop-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl get pod crashloop-app -n s14
+NAME            READY   STATUS             RESTARTS      AGE
+crashloop-app   0/1     CrashLoopBackOff   1 (11s ago)   19s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl describe pod crashloop-app -n s14 | sed -n '/State:/,/Restart Count/p'
+    State:          Running
+      Started:      Wed, 07 Oct 2026 17:39:30 +0000
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Wed, 07 Oct 2026 17:39:16 +0000
+      Finished:     Wed, 07 Oct 2026 17:39:19 +0000
+    Ready:          True
+    Restart Count:  2
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl logs crashloop-app -n s14
+order-service v1.4 starting, reading configuration...
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl logs crashloop-app -n s14 --previous
+order-service v1.4 starting, reading configuration...
+[FATAL ERROR]: DATABASE_URL environment variable is MISSING!
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl events -n s14 --for pod/crashloop-app
+LAST SEEN          TYPE      REASON      OBJECT              MESSAGE
+19s                Normal    Scheduled   Pod/crashloop-app   Successfully assigned s14/crashloop-app to minikube
+10s                Warning   BackOff     Pod/crashloop-app   Back-off restarting failed container python-app in pod crashloop-app_s14(167b668b-295f-465f-8240-29eaa7066854)
+0s (x3 over 19s)   Normal    Pulled      Pod/crashloop-app   Container image "python:3.11-alpine" already present on machine and can be accessed by the pod
+0s (x3 over 19s)   Normal    Created     Pod/crashloop-app   Container created
+0s (x3 over 19s)   Normal    Started     Pod/crashloop-app   Container started
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl get pod crashloop-app -n s14 -o jsonpath='{.spec.containers[0].env}{"\n"}'
+

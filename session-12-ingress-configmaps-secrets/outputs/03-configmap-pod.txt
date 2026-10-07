@@ -1,0 +1,17 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl apply -f pod-using-configmaps.yaml
+pod/config-demo created
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl wait --for=condition=Ready pod/config-demo -n s12 --timeout=120s
+pod/config-demo condition met
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl get pod config-demo -n s12
+NAME          READY   STATUS    RESTARTS   AGE
+config-demo   1/1     Running   0          4s
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl logs config-demo -n s12
+Starting in production with log level INFO
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl describe pod config-demo -n s12 | sed -n '/Environment Variables from:/,/Mounts:/p'
+    Environment Variables from:
+      app-literal-config  ConfigMap with prefix 'LIT_'  Optional: false
+    Environment:
+      APP_ENV:        <set to the key 'ENVIRONMENT' of config map 'yatri-app-config'>  Optional: false
+      APP_LOG_LEVEL:  <set to the key 'LOG_LEVEL' of config map 'yatri-app-config'>    Optional: false
+      APP_COLOR:      <set to the key 'APP_COLOR' of config map 'app-literal-config'>  Optional: false
+    Mounts:

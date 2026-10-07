@@ -1,0 +1,53 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: s20-metrics-app-alerts
+  namespace: s20-app
+  labels:
+    release: kps
+spec:
+  groups:
+    - name: s20-metrics-app.rules
+      rules:
+        # Fires when no healthy scrape target for the app exists (pods crashed, scaled to 0, /metrics broken).
+        - alert: AppDown
+          expr: absent(up{namespace="s20-app", service="s20-metrics-app"} == 1)
+          for: 30s
+          labels:
+            severity: critical
+            team: vansh
+          annotations:
+            summary: "s20-metrics-app has no healthy targets"
+            description: "No s20-metrics-app pod has been successfully scraped for 30s."
+        # Fires when more than 10% of requests return HTTP 5xx over 2 minutes.
+        - alert: AppHighErrorRate
+          expr: |
+            sum(rate(app_requests_total{namespace="s20-app", status=~"5.."}[2m]))
+              / sum(rate(app_requests_total{namespace="s20-app"}[2m])) > 0.10
+          for: 1m
+          labels:
+            severity: warning
+            team: vansh
+          annotations:
+            summary: "s20-metrics-app 5xx ratio above 10%"
+            description: "Error ratio is {{ $value | humanizePercentage }}."
+        # Fires when a container in the namespace restarts more than 3 times in 10 minutes.
+        - alert: HighPodRestarts
+          expr: increase(kube_pod_container_status_restarts_total{namespace="s20-app"}[10m]) > 3
+          for: 1m
+          labels:
+            severity: warning
+            team: vansh
+          annotations:
+            summary: "Pod {{ $labels.pod }} is restarting frequently"
+        # Fires when the app containers use more than 80% of their CPU limit.
+        - alert: AppHighCPU
+          expr: |
+            sum by (pod) (rate(container_cpu_usage_seconds_total{namespace="s20-app", container="app"}[2m]))
+              / sum by (pod) (kube_pod_container_resource_limits{namespace="s20-app", container="app", resource="cpu"}) > 0.8
+          for: 2m
+          labels:
+            severity: warning
+            team: vansh
+          annotations:
+            summary: "Pod {{ $labels.pod }} CPU above 80% of its limit"

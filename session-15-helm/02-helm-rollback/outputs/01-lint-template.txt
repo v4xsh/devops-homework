@@ -1,0 +1,42 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ cd ~/devops-homework/session-15-helm/02-helm-rollback
+~/devops-homework/session-15-helm/02-helm-rollback$ helm lint rollback-demo
+==> Linting rollback-demo
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-15-helm/02-helm-rollback$ helm lint rollback-demo -f rollback-demo/values-v2.yaml
+==> Linting rollback-demo
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-15-helm/02-helm-rollback$ helm lint rollback-demo -f rollback-demo/values-v3.yaml
+==> Linting rollback-demo
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-15-helm/02-helm-rollback$ helm template rb-web rollback-demo -n s15-rollback --show-only templates/configmap.yaml
+---
+# Source: rollback-demo/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rb-web-page
+  labels:
+    helm.sh/chart: rollback-demo-0.1.0
+    app.kubernetes.io/name: rollback-demo
+    app.kubernetes.io/instance: rb-web
+    app.kubernetes.io/version: "v1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  index.html: |
+    release=rb-web rendered-at-revision=1 chart=rollback-demo-0.1.0
+    version=v1 color=blue image=nginx:1.25-alpine replicas=1
+    message=Hello from the first release - 1 replica on nginx 1.25
+~/devops-homework/session-15-helm/02-helm-rollback$ helm template rb-web rollback-demo -f rollback-demo/values-v3.yaml --show-only templates/deployment.yaml | grep -E 'replicas:|image:|checksum|cpu|memory'
+  replicas: 3
+        checksum/config: c1c75367b1c24689082842fbb85a5d0b350ac6cee085e302474b260f4c691356
+          image: "nginx:1.27-alpine"
+              cpu: 100m
+              memory: 64Mi
+              cpu: 10m
+              memory: 16Mi

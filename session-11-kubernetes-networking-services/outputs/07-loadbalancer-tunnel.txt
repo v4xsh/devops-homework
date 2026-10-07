@@ -1,0 +1,39 @@
+~/devops-homework/session-11-kubernetes-networking-services$ pgrep -af "minikube tunnel"
+81687 minikube tunnel
+~/devops-homework/session-11-kubernetes-networking-services$ cat /tmp/s11-tunnel.log
+* Tunnel successfully started
+
+* NOTE: Please do not close this terminal as this process must stay alive for the tunnel to be accessible ...
+
+* Starting tunnel for service web-service-loadbalancer.
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc web-service-loadbalancer -n s11 -o wide
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE     SELECTOR
+web-service-loadbalancer   LoadBalancer   10.104.10.192   127.0.0.1     8081:31470/TCP   2m26s   app=web-loadbalancer
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl describe svc web-service-loadbalancer -n s11
+Name:                     web-service-loadbalancer
+Namespace:                s11
+Labels:                   app=web-loadbalancer
+Annotations:              <none>
+Selector:                 app=web-loadbalancer
+Type:                     LoadBalancer
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.104.10.192
+IPs:                      10.104.10.192
+LoadBalancer Ingress:     127.0.0.1 (VIP)
+Port:                     http  8081/TCP
+TargetPort:               80/TCP
+NodePort:                 http  31470/TCP
+Endpoints:                10.244.0.91:80,10.244.0.90:80,10.244.0.88:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+~/devops-homework/session-11-kubernetes-networking-services$ LBIP=$(kubectl get svc web-service-loadbalancer -n s11 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'); echo "EXTERNAL-IP = $LBIP"
+EXTERNAL-IP = 127.0.0.1
+~/devops-homework/session-11-kubernetes-networking-services$ for i in 1 2 3 4 5; do curl -s -m 5 http://$LBIP:8081; done
+Hello from pod web-app-loadbalancer-b6d4c489c-wfvgn (LoadBalancer backend)
+Hello from pod web-app-loadbalancer-b6d4c489c-wfvgn (LoadBalancer backend)
+Hello from pod web-app-loadbalancer-b6d4c489c-x9r7l (LoadBalancer backend)
+Hello from pod web-app-loadbalancer-b6d4c489c-wfvgn (LoadBalancer backend)
+Hello from pod web-app-loadbalancer-b6d4c489c-wfvgn (LoadBalancer backend)

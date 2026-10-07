@@ -1,0 +1,6 @@
+**
+!application/backend/requirements.txt
+!application/backend/alembic.ini
+!application/backend/alembic/**
+!application/backend/app/**
+**/__pycache__

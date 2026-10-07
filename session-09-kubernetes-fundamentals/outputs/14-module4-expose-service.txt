@@ -1,0 +1,30 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get services -n s09
+No resources found in s09 namespace.
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080 -n s09
+service/kubernetes-bootcamp exposed
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get services -n s09
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes-bootcamp   NodePort   10.106.20.140   <none>        8080:31698/TCP   0s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe services/kubernetes-bootcamp -n s09
+Name:                     kubernetes-bootcamp
+Namespace:                s09
+Labels:                   app=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 app=kubernetes-bootcamp
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.106.20.140
+IPs:                      10.106.20.140
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  31698/TCP
+Endpoints:                10.244.0.111:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+~/devops-homework/session-09-kubernetes-fundamentals$ export NODE_PORT=$(kubectl get services/kubernetes-bootcamp -n s09 -o go-template='{{(index .spec.ports 0).nodePort}}'); echo "NODE_PORT=$NODE_PORT"
+NODE_PORT=31698
+~/devops-homework/session-09-kubernetes-fundamentals$ curl -s http://$(minikube ip):$NODE_PORT
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-pmkff | v=1

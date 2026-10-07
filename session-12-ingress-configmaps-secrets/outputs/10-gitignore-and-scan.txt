@@ -1,0 +1,18 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ cat .gitignore
+# Never commit real secret material. Only db-secret.yaml (dummy demo values) is tracked.
+*.env
+.env*
+*-secret.real.yaml
+secrets/
+*.pem
+*.key
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ echo "--- gitleaks finds the base64 secret material in the manifest (this is why real ones never go to Git)"
+--- gitleaks finds the base64 secret material in the manifest (this is why real ones never go to Git)
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ gitleaks detect --no-git --source . --redact --no-color -v 2>&1 | grep -E "Finding|RuleID|File|leaks found|no leaks" | head -12
+Finding:     kind: Secret
+RuleID:      kubernetes-secret-yaml
+File:        db-secret.yaml
+Finding:     POSTGRES_PASSWORD: REDACTED
+RuleID:      generic-api-key
+File:        db-secret.yaml
+5:46PM WRN leaks found: 2

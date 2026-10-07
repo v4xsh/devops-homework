@@ -1,0 +1,29 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl scale deploy/s20-metrics-app -n s20-app --replicas=0
+deployment.apps/s20-metrics-app scaled
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl wait --for=delete pod -l app=s20-metrics-app -n s20-app --timeout=60s
+pod/s20-metrics-app-5c7f5f65df-57rn5 condition met
+pod/s20-metrics-app-5c7f5f65df-zhd8v condition met
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 30
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/alerts | jq -r '.data.alerts[] | select(.labels.alertname=="AppDown") | [.labels.alertname, .labels.severity, .state, .activeAt] | @tsv'
+AppDown	critical	pending	2026-10-07T17:26:48.766672067Z
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 45
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/alerts | jq '.data.alerts[] | select(.labels.alertname=="AppDown")'
+{
+  "labels": {
+    "alertname": "AppDown",
+    "severity": "critical",
+    "team": "vansh"
+  },
+  "annotations": {
+    "description": "No s20-metrics-app pod has been successfully scraped for 30s.",
+    "summary": "s20-metrics-app has no healthy targets"
+  },
+  "state": "firing",
+  "activeAt": "2026-10-07T17:26:48.766672067Z",
+  "value": "1e+00"
+}
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl port-forward -n monitoring svc/kps-alertmanager 19093:9093 > /tmp/pf-am.log 2>&1 &
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 20
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19093/api/v2/alerts | jq -r '.[] | select(.labels.namespace=="s20-app" or .labels.alertname=="AppDown") | [.labels.alertname, .status.state, .startsAt, .annotations.summary] | @tsv'
+AppDown	active	2026-10-07T17:27:18.766Z	s20-metrics-app has no healthy targets
+InfoInhibitor	suppressed	2026-10-07T17:21:36.448Z	Info-level alert inhibition.

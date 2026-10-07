@@ -1,0 +1,25 @@
+# Apply AFTER the submission repo is pushed to GitHub:
+#   kubectl apply -f session-20-monitoring-observability-gitops/task3-gitops/argocd/application-devops-homework.yaml
+# Argo CD then owns the s20-metrics-app manifests in task3-gitops/gitops/s20-metrics-app.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: s20-metrics-app
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/v4xsh/devops-homework.git
+    targetRevision: main
+    path: session-20-monitoring-observability-gitops/task3-gitops/gitops/s20-metrics-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: s20-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

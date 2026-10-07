@@ -1,0 +1,28 @@
+~/devops-homework/session-15-helm/01-helm-commands$ cd ~/devops-homework/session-15-helm/01-helm-commands
+~/devops-homework/session-15-helm/01-helm-commands$ helm package webapp -d dist
+Successfully packaged chart and saved it to: dist/webapp-0.1.0.tgz
+~/devops-homework/session-15-helm/01-helm-commands$ helm package webapp -d dist --version 0.2.0 --app-version 1.27.0
+Successfully packaged chart and saved it to: dist/webapp-0.2.0.tgz
+~/devops-homework/session-15-helm/01-helm-commands$ ls -l dist
+total 16
+-rwxrwxrwx 1 vansh vansh 4167 Oct  7 17:15 webapp-0.1.0.tgz
+-rwxrwxrwx 1 vansh vansh 4167 Oct  7 17:15 webapp-0.2.0.tgz
+~/devops-homework/session-15-helm/01-helm-commands$ tar -tzf dist/webapp-0.1.0.tgz
+webapp/Chart.yaml
+webapp/values.yaml
+webapp/templates/NOTES.txt
+webapp/templates/_helpers.tpl
+webapp/templates/deployment.yaml
+webapp/templates/hpa.yaml
+webapp/templates/ingress.yaml
+webapp/templates/service.yaml
+webapp/templates/serviceaccount.yaml
+webapp/templates/tests/test-connection.yaml
+webapp/.helmignore
+~/devops-homework/session-15-helm/01-helm-commands$ helm show chart dist/webapp-0.2.0.tgz | grep -E '^(name|version|appVersion):'
+appVersion: 1.27.0
+name: webapp
+version: 0.2.0
+~/devops-homework/session-15-helm/01-helm-commands$ mkdir -p /tmp/s15-pull && helm pull prometheus-community/prometheus-node-exporter -d /tmp/s15-pull && ls -l /tmp/s15-pull
+total 16
+-rw-r--r-- 1 vansh vansh 15822 Oct  7 17:15 prometheus-node-exporter-4.59.0.tgz

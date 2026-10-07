@@ -1,0 +1,24 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ echo "line 2 (modified tracked file)" >> app.txt
+~/practice/git-homework$ echo "I am a brand new file" > new_file.txt
+~/practice/git-homework$ git status --short
+ M app.txt
+?? new_file.txt
+~/practice/git-homework$ git commit -m "Try commit -m without git add"; echo "exit code: $?"
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   app.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	new_file.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+exit code: 1
+~/practice/git-homework$ git status --short
+ M app.txt
+?? new_file.txt
+~/practice/git-homework$ git log --oneline
+7cfaa34 Initial commit: README and app.txt

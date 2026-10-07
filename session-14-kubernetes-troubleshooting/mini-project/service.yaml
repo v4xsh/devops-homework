@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: troubleshooting-service
+  namespace: s14-mini
+spec:
+  selector:
+    app: troubleshooting-app
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

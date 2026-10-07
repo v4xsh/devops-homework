@@ -1,0 +1,36 @@
+~$ ping -c 4 google.com
+PING google.com (142.250.206.174) 56(84) bytes of data.
+64 bytes from del11s22-in-f14.1e100.net (142.250.206.174): icmp_seq=1 ttl=118 time=28.1 ms
+64 bytes from del11s22-in-f14.1e100.net (142.250.206.174): icmp_seq=2 ttl=118 time=26.9 ms
+64 bytes from del11s22-in-f14.1e100.net (142.250.206.174): icmp_seq=3 ttl=118 time=35.8 ms
+64 bytes from del11s22-in-f14.1e100.net (142.250.206.174): icmp_seq=4 ttl=118 time=66.2 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3006ms
+rtt min/avg/max/mdev = 26.887/39.247/66.165/15.915 ms
+~$ traceroute -n -q 1 -w 2 -m 15 google.com
+traceroute to google.com (142.250.206.174), 15 hops max, 60 byte packets
+ 1  172.17.0.1  0.351 ms
+ 2  100.128.160.1  100.862 ms
+ 3  202.131.146.145  118.808 ms
+ 4  172.20.20.17  118.817 ms
+ 5  72.14.208.165  121.201 ms
+ 6  142.250.206.174  113.154 ms
+~$ netstat -tuln | head -n 12
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 10.255.255.254:53       0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:32769         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:32768         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:32771         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:32770         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:32772         0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:4566            0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+tcp6       0      0 :::4566                 :::*                    LISTEN     
+~$ (printf 'HEAD / HTTP/1.0\r\nHost: google.com\r\n\r\n'; sleep 3) | telnet google.com 80 2>&1 | head -n 8
+Trying 142.250.206.174...
+Connected to google.com.
+Escape character is '^]'.
+Connection closed by foreign host.

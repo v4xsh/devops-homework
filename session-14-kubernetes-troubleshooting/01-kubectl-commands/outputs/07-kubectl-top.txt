@@ -1,0 +1,25 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl top nodes
+NAME       CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)   
+minikube   776m         6%       1776Mi          17%         
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl top pods -n s14
+NAME                   CPU(cores)   MEMORY(bytes)   
+multi                  4m           15Mi            
+web-5644464899-j99n8   2m           10Mi            
+web-5644464899-lz6f6   2m           10Mi            
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl top pods -n s14 --containers
+POD                    NAME      CPU(cores)   MEMORY(bytes)   
+multi                  nginx     3m           14Mi            
+multi                  sidecar   2m           1Mi             
+web-5644464899-j99n8   nginx     2m           10Mi            
+web-5644464899-lz6f6   nginx     2m           10Mi            
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl top pods -n kube-system --sort-by=memory
+NAME                               CPU(cores)   MEMORY(bytes)   
+kube-apiserver-minikube            195m         468Mi           
+kube-controller-manager-minikube   42m          77Mi            
+etcd-minikube                      71m          76Mi            
+kube-scheduler-minikube            11m          26Mi            
+metrics-server-768f9f6999-r9cgx    5m           21Mi            
+kube-proxy-p8685                   8m           17Mi            
+coredns-559f6c778d-jxzsm           7m           14Mi            
+kindnet-f2x6d                      4m           12Mi            
+storage-provisioner                2m           10Mi            

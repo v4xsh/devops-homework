@@ -1,0 +1,27 @@
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform output -no-color
+bucket_arn = "arn:aws:s3:::vansh-dobhal-10099-s18-demo"
+bucket_name = "vansh-dobhal-10099-s18-demo"
+bucket_region = "ap-south-1"
+bucket_tags = tomap({
+  "Environment" = "dev"
+  "ManagedBy" = "Terraform"
+  "Name" = "vansh-dobhal-10099-s18-demo"
+  "Owner" = "Vansh Dobhal"
+  "Project" = "session-18-terraform-iac"
+  "RollNo" = "10099"
+  "Session" = "18"
+})
+encryption_algorithm = "AES256"
+versioning_status = "Enabled"
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform output -raw bucket_name; echo
+vansh-dobhal-10099-s18-demo
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform output -json bucket_tags | jq .
+{
+  "Environment": "dev",
+  "ManagedBy": "Terraform",
+  "Name": "vansh-dobhal-10099-s18-demo",
+  "Owner": "Vansh Dobhal",
+  "Project": "session-18-terraform-iac",
+  "RollNo": "10099",
+  "Session": "18"
+}

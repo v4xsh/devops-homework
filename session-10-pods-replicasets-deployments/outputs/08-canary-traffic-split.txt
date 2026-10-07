@@ -1,0 +1,14 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ for run in 1 2 3; do echo "== run $run: 100 requests =="; kubectl exec -n s10-canary curl-client -- sh -c 'for i in $(seq 1 100); do curl -s http://myapp-canary-service | grep -oE "STABLE v1|CANARY v2"; done' | sort | uniq -c; done
+== run 1: 100 requests ==
+      8 CANARY v2
+     92 STABLE v1
+== run 2: 100 requests ==
+     16 CANARY v2
+     84 STABLE v1
+== run 3: 100 requests ==
+      7 CANARY v2
+     93 STABLE v1
+~/devops-homework/session-10-pods-replicasets-deployments$ echo "== 300 requests total =="; kubectl exec -n s10-canary curl-client -- sh -c 'for i in $(seq 1 300); do curl -s http://myapp-canary-service | grep -oE "STABLE v1|CANARY v2"; done' | sort | uniq -c
+== 300 requests total ==
+     35 CANARY v2
+    265 STABLE v1

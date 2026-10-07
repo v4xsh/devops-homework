@@ -1,0 +1,18 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl patch deployment web-app -n s13-mini --type=json -p '[{"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/httpGet/path","value":"/does-not-exist"}]'
+deployment.apps/web-app patched
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ sleep 40
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pods -n s13-mini -l app=web-app
+NAME                       READY   STATUS    RESTARTS   AGE
+web-app-5945bfc776-5n687   0/1     Running   0          39s
+web-app-5945bfc776-5s5gd   0/1     Running   0          39s
+web-app-5945bfc776-9x7cb   0/1     Running   0          39s
+web-app-5945bfc776-c7mdj   0/1     Running   0          39s
+web-app-5945bfc776-lc9zt   0/1     Running   0          39s
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get endpoints -n s13-mini web-service
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME          ENDPOINTS   AGE
+web-service               13m
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ POD=$(kubectl get pods -n s13-mini -l app=web-app -o jsonpath='{.items[0].metadata.name}'); kubectl events -n s13-mini --for pod/$POD | tail -n 3
+38s                Normal    Created     Pod/web-app-5945bfc776-5n687   Container created
+37s                Normal    Started     Pod/web-app-5945bfc776-5n687   Container started
+4s (x6 over 29s)   Warning   Unhealthy   Pod/web-app-5945bfc776-5n687   Readiness probe failed: HTTP probe failed with statuscode: 404

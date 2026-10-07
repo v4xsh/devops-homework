@@ -1,0 +1,20 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f deployment.yaml
+deployment.apps/web-app created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f service.yaml
+service/web-service created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl rollout status deployment/web-app -n s13-mini --timeout=120s
+Waiting for deployment "web-app" rollout to finish: 0 out of 2 new replicas have been updated...
+Waiting for deployment "web-app" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "web-app" rollout to finish: 1 of 2 updated replicas are available...
+deployment "web-app" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pods -n s13-mini -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+web-app-d45775485-5dsfz   1/1     Running   0          9s    10.244.0.109   minikube   <none>           <none>
+web-app-d45775485-hdxv5   1/1     Running   0          9s    10.244.0.108   minikube   <none>           <none>
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get svc,endpoints -n s13-mini
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                  TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+service/web-service   ClusterIP   10.101.6.188   <none>        80/TCP    9s
+
+NAME                    ENDPOINTS                         AGE
+endpoints/web-service   10.244.0.108:80,10.244.0.109:80   9s

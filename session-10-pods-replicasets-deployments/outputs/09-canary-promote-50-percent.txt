@@ -1,0 +1,16 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl scale deployment app-canary -n s10-canary --replicas=5 && kubectl scale deployment app-stable -n s10-canary --replicas=5
+deployment.apps/app-canary scaled
+deployment.apps/app-stable scaled
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout status deployment/app-canary -n s10-canary --timeout=120s
+Waiting for deployment "app-canary" rollout to finish: 1 of 5 updated replicas are available...
+Waiting for deployment "app-canary" rollout to finish: 2 of 5 updated replicas are available...
+Waiting for deployment "app-canary" rollout to finish: 3 of 5 updated replicas are available...
+Waiting for deployment "app-canary" rollout to finish: 4 of 5 updated replicas are available...
+deployment "app-canary" successfully rolled out
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 8; kubectl get deploy -n s10-canary
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+app-canary   5/5     5            5           59s
+app-stable   5/5     5            5           59s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl exec -n s10-canary curl-client -- sh -c 'for i in $(seq 1 200); do curl -s http://myapp-canary-service | grep -oE "STABLE v1|CANARY v2"; done' | sort | uniq -c
+    116 CANARY v2
+     84 STABLE v1

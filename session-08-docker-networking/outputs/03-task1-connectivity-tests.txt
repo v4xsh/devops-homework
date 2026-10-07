@@ -1,0 +1,34 @@
+~/devops-homework/session-08-docker-networking$ echo "=== 1) frontend -> backend (both on s08-frontend-net) : should WORK"
+=== 1) frontend -> backend (both on s08-frontend-net) : should WORK
+~/devops-homework/session-08-docker-networking$ docker exec s08-frontend ping -c 2 s08-backend
+PING s08-backend (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.958 ms
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.071 ms
+
+--- s08-backend ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.071/0.514/0.958 ms
+~/devops-homework/session-08-docker-networking$ docker exec s08-frontend wget -qO- http://s08-backend
+<h1>BACKEND container (s08-backend) - Vansh Dobhal (10099)</h1>
+~/devops-homework/session-08-docker-networking$ echo "=== 2) backend -> database (both on s08-db-net) : should WORK"
+=== 2) backend -> database (both on s08-db-net) : should WORK
+~/devops-homework/session-08-docker-networking$ docker exec s08-backend ping -c 2 s08-database
+PING s08-database (172.21.0.3): 56 data bytes
+64 bytes from 172.21.0.3: seq=0 ttl=64 time=0.817 ms
+64 bytes from 172.21.0.3: seq=1 ttl=64 time=0.077 ms
+
+--- s08-database ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.077/0.447/0.817 ms
+~/devops-homework/session-08-docker-networking$ docker exec s08-backend nc -zv -w 3 s08-database 3306
+s08-database (172.21.0.3:3306) open
+~/devops-homework/session-08-docker-networking$ echo "=== 3) frontend -> database (no common network) : should FAIL"
+=== 3) frontend -> database (no common network) : should FAIL
+~/devops-homework/session-08-docker-networking$ docker exec s08-frontend ping -c 2 -W 2 s08-database
+ping: bad address 's08-database'
+~/devops-homework/session-08-docker-networking$ docker exec s08-frontend nc -zv -w 3 s08-database 3306
+nc: bad address 's08-database'
+~/devops-homework/session-08-docker-networking$ echo "=== 4) a container on s08-backend-net cannot reach either tier"
+=== 4) a container on s08-backend-net cannot reach either tier
+~/devops-homework/session-08-docker-networking$ docker run --rm --network s08-backend-net alpine:3.20 ping -c 2 -W 2 s08-backend
+ping: bad address 's08-backend'

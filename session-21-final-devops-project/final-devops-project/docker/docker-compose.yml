@@ -1,0 +1,48 @@
+# Full local stack: PostgreSQL + one-shot migration + FastAPI backend + Nginx/React frontend.
+#   cd final-devops-project && docker compose -f docker/docker-compose.yml up -d --build
+#   open http://localhost:3021
+name: taskboard
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: taskboard
+      POSTGRES_USER: taskboard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-taskboard-local-only}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskboard -d taskboard"]
+      interval: 5s
+      retries: 10
+
+  migrate:
+    image: taskboard-backend:1.0.1
+    build: {context: .., dockerfile: docker/backend.Dockerfile}
+    command: ["alembic", "upgrade", "head"]
+    environment: &backend-env
+      APP_ENV: compose
+      DB_HOST: postgres
+      DB_NAME: taskboard
+      DB_USER: taskboard
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-taskboard-local-only}
+    depends_on:
+      postgres: {condition: service_healthy}
+
+  backend:
+    image: taskboard-backend:1.0.1
+    environment: *backend-env
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    ports: ["8021:8000"]
+
+  frontend:
+    image: taskboard-frontend:1.0.1
+    build: {context: .., dockerfile: docker/frontend.Dockerfile}
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on: [backend]
+    ports: ["3021:8080"]
+
+volumes:
+  postgres-data:

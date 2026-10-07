@@ -1,0 +1,58 @@
+# One pod that consumes ConfigMaps in all three ways:
+#   1) env + valueFrom.configMapKeyRef  -> pick single keys, rename them
+#   2) envFrom.configMapRef              -> import ALL keys as env vars
+#   3) volume (configMap)                -> every key becomes a file
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-demo
+  namespace: s12
+  labels:
+    app: config-demo
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "echo \"Starting in $APP_ENV with log level $APP_LOG_LEVEL\"; sleep 36000"]
+      env:
+        - name: APP_ENV                      # (1) single key, renamed
+          valueFrom:
+            configMapKeyRef:
+              name: yatri-app-config
+              key: ENVIRONMENT
+        - name: APP_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: yatri-app-config
+              key: LOG_LEVEL
+        - name: APP_COLOR                    # from the literal-created ConfigMap
+          valueFrom:
+            configMapKeyRef:
+              name: app-literal-config
+              key: APP_COLOR
+      envFrom:
+        - configMapRef:                      # (2) all keys of the literal ConfigMap
+            name: app-literal-config
+          prefix: LIT_
+      volumeMounts:
+        - name: yaml-config                  # (3a) whole ConfigMap as a directory
+          mountPath: /etc/yatri
+          readOnly: true
+        - name: file-config                  # (3b) ConfigMap created from files
+          mountPath: /etc/app
+          readOnly: true
+      resources:
+        requests: { cpu: "5m", memory: "8Mi" }
+        limits:   { cpu: "50m", memory: "32Mi" }
+  volumes:
+    - name: yaml-config
+      configMap:
+        name: yatri-app-config
+        items:                               # only project selected keys as files
+          - key: settings.json
+            path: settings.json
+          - key: LOG_LEVEL
+            path: log_level
+    - name: file-config
+      configMap:
+        name: app-file-config

@@ -1,0 +1,27 @@
+# LIVE demo Application (actually run): Argo CD deploys the TaskBoard Helm chart from the in-cluster Gitea repo.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: taskboard-gitops
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: http://gitea.final-gitea.svc:3000/vansh/taskboard-gitops.git
+    targetRevision: main
+    path: helm/taskboard
+    helm:
+      releaseName: taskboard
+      valueFiles:
+        - values-gitops.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: final-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

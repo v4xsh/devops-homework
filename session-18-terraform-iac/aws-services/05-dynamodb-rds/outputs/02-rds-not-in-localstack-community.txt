@@ -1,0 +1,9 @@
+~/devops-homework/session-18-terraform-iac/aws-services/05-dynamodb-rds$ curl -s http://localhost:4566/_localstack/health | jq '{edition, version, rds_available: (.services | has("rds"))}'
+{
+  "edition": "community",
+  "version": "4.9.2",
+  "rds_available": false
+}
+~/devops-homework/session-18-terraform-iac/aws-services/05-dynamodb-rds$ aws --endpoint-url=http://localhost:4566 rds describe-db-instances 2>&1 | tail -n 3
+
+An error occurred (InternalFailure) when calling the DescribeDBInstances operation: The API for service 'rds' is either not included in your current license plan or has not yet been emulated by LocalStack. Please refer to https://docs.localstack.cloud/references/coverage for more details.

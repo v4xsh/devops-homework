@@ -1,0 +1,33 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 02-nodeport/
+deployment.apps/web-app-nodeport created
+service/web-service-nodeport created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl rollout status deployment/web-app-nodeport -n s11 --timeout=120s
+Waiting for deployment "web-app-nodeport" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "web-app-nodeport" rollout to finish: 1 of 2 updated replicas are available...
+deployment "web-app-nodeport" successfully rolled out
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc web-service-nodeport -n s11 -o wide
+NAME                   TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE   SELECTOR
+web-service-nodeport   NodePort   10.99.14.109   <none>        80:31111/TCP   1s    app=web-nodeport
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpoints web-service-nodeport -n s11
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                   ENDPOINTS                       AGE
+web-service-nodeport   10.244.0.21:80,10.244.0.22:80   2s
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl describe svc web-service-nodeport -n s11
+Name:                     web-service-nodeport
+Namespace:                s11
+Labels:                   app=web-nodeport
+Annotations:              <none>
+Selector:                 app=web-nodeport
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.99.14.109
+IPs:                      10.99.14.109
+Port:                     http  80/TCP
+TargetPort:               80/TCP
+NodePort:                 http  31111/TCP
+Endpoints:                10.244.0.22:80,10.244.0.21:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Internal Traffic Policy:  Cluster
+Events:                   <none>

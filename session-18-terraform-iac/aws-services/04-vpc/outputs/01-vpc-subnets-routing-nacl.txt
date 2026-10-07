@@ -1,0 +1,41 @@
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ VPC=$(awsl ec2 create-vpc --cidr-block 10.18.0.0/16 --query Vpc.VpcId --output text); echo "VPC=$VPC"
+VPC=vpc-dd7479d4062530242
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ PUB=$(awsl ec2 create-subnet --vpc-id $VPC --cidr-block 10.18.1.0/24 --availability-zone ap-south-1a --query Subnet.SubnetId --output text); echo "public subnet=$PUB"
+public subnet=subnet-cf7d321ea919d0bbb
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ PRIV=$(awsl ec2 create-subnet --vpc-id $VPC --cidr-block 10.18.2.0/24 --availability-zone ap-south-1b --query Subnet.SubnetId --output text); echo "private subnet=$PRIV"
+private subnet=subnet-efb489b6e058aeac1
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ IGW=$(awsl ec2 create-internet-gateway --query InternetGateway.InternetGatewayId --output text); echo "IGW=$IGW"
+IGW=igw-3f0949450f169a42b
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl ec2 attach-internet-gateway --internet-gateway-id $IGW --vpc-id $VPC && echo "IGW attached to $VPC"
+IGW attached to vpc-dd7479d4062530242
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ RT=$(awsl ec2 create-route-table --vpc-id $VPC --query RouteTable.RouteTableId --output text); echo "RT=$RT"
+RT=rtb-46b692117eaad610d
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl ec2 create-route --route-table-id $RT --destination-cidr-block 0.0.0.0/0 --gateway-id $IGW --query Return
+true
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl ec2 associate-route-table --route-table-id $RT --subnet-id $PUB --query 'AssociationState.State' --output text
+None
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl ec2 describe-route-tables --route-table-ids $RT --query 'RouteTables[].Routes[].[DestinationCidrBlock,GatewayId,State]' --output table
+-----------------------------------------------------
+|                DescribeRouteTables                |
++---------------+-------------------------+---------+
+|  10.18.0.0/16 |  local                  |  active |
+|  0.0.0.0/0    |  igw-3f0949450f169a42b  |  active |
++---------------+-------------------------+---------+
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl ec2 describe-subnets --filters Name=vpc-id,Values=$VPC --query 'Subnets[].[SubnetId,CidrBlock,AvailabilityZone,AvailableIpAddressCount]' --output table
+--------------------------------------------------------------------
+|                          DescribeSubnets                         |
++---------------------------+---------------+--------------+-------+
+|  subnet-cf7d321ea919d0bbb |  10.18.1.0/24 |  ap-south-1a |  251  |
+|  subnet-efb489b6e058aeac1 |  10.18.2.0/24 |  ap-south-1b |  251  |
++---------------------------+---------------+--------------+-------+
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ awsl ec2 describe-network-acls --filters Name=vpc-id,Values=$VPC --query 'NetworkAcls[].Entries[].[RuleNumber,Protocol,RuleAction,Egress,CidrBlock]' --output table
+------------------------------------------------
+|              DescribeNetworkAcls             |
++-------+-----+--------+--------+--------------+
+|  100  |  -1 |  allow |  True  |  0.0.0.0/0   |
+|  32767|  -1 |  deny  |  True  |  0.0.0.0/0   |
+|  100  |  -1 |  allow |  False |  0.0.0.0/0   |
+|  32767|  -1 |  deny  |  False |  0.0.0.0/0   |
++-------+-----+--------+--------+--------------+
+~/devops-homework/session-18-terraform-iac/aws-services/04-vpc$ echo "$VPC $PUB $PRIV $IGW $RT" > /tmp/s18-vpc-ids

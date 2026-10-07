@@ -1,0 +1,7 @@
+# Single-stage: full Debian-based node image, everything copied in
+FROM node:20
+WORKDIR /app
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD ["node", "server.js"]

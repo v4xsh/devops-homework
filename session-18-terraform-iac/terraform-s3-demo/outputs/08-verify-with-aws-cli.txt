@@ -1,0 +1,64 @@
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3 ls
+2026-10-07 17:23:15 tagtest-6-23-0
+2026-10-07 17:24:01 tagtest-6-24-0
+2026-10-07 17:17:52 tagtest-6-25-0
+2026-10-07 17:25:17 vansh-dobhal-10099-s18-demo
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3api get-bucket-versioning --bucket vansh-dobhal-10099-s18-demo
+{
+    "Status": "Enabled"
+}
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3api get-bucket-encryption --bucket vansh-dobhal-10099-s18-demo
+{
+    "ServerSideEncryptionConfiguration": {
+        "Rules": [
+            {
+                "ApplyServerSideEncryptionByDefault": {
+                    "SSEAlgorithm": "AES256"
+                },
+                "BucketKeyEnabled": true
+            }
+        ]
+    }
+}
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3api get-public-access-block --bucket vansh-dobhal-10099-s18-demo
+{
+    "PublicAccessBlockConfiguration": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+    }
+}
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3api get-bucket-tagging --bucket vansh-dobhal-10099-s18-demo
+{
+    "TagSet": [
+        {
+            "Key": "Owner",
+            "Value": "Vansh Dobhal"
+        },
+        {
+            "Key": "Environment",
+            "Value": "dev"
+        },
+        {
+            "Key": "ManagedBy",
+            "Value": "Terraform"
+        },
+        {
+            "Key": "Project",
+            "Value": "session-18-terraform-iac"
+        },
+        {
+            "Key": "Name",
+            "Value": "vansh-dobhal-10099-s18-demo"
+        },
+        {
+            "Key": "RollNo",
+            "Value": "10099"
+        },
+        {
+            "Key": "Session",
+            "Value": "18"
+        }
+    ]
+}

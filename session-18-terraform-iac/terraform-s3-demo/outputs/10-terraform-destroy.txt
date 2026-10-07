@@ -1,0 +1,143 @@
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform destroy -no-color -auto-approve
+aws_s3_bucket.demo: Refreshing state... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket_versioning.demo: Refreshing state... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket_public_access_block.demo: Refreshing state... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket_server_side_encryption_configuration.demo: Refreshing state... [id=vansh-dobhal-10099-s18-demo]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_s3_bucket.demo will be destroyed
+  - resource "aws_s3_bucket" "demo" {
+      - arn                         = "arn:aws:s3:::vansh-dobhal-10099-s18-demo" -> null
+      - bucket                      = "vansh-dobhal-10099-s18-demo" -> null
+      - bucket_domain_name          = "vansh-dobhal-10099-s18-demo.s3.amazonaws.com" -> null
+      - bucket_region               = "ap-south-1" -> null
+      - bucket_regional_domain_name = "vansh-dobhal-10099-s18-demo.s3.ap-south-1.amazonaws.com" -> null
+      - force_destroy               = true -> null
+      - hosted_zone_id              = "Z11RGJOFQNVJUP" -> null
+      - id                          = "vansh-dobhal-10099-s18-demo" -> null
+      - object_lock_enabled         = false -> null
+      - region                      = "ap-south-1" -> null
+      - request_payer               = "BucketOwner" -> null
+      - tags                        = {
+          - "Environment" = "dev"
+          - "Name"        = "vansh-dobhal-10099-s18-demo"
+          - "Owner"       = "Vansh Dobhal"
+          - "RollNo"      = "10099"
+          - "Session"     = "18"
+        } -> null
+      - tags_all                    = {
+          - "Environment" = "dev"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "vansh-dobhal-10099-s18-demo"
+          - "Owner"       = "Vansh Dobhal"
+          - "Project"     = "session-18-terraform-iac"
+          - "RollNo"      = "10099"
+          - "Session"     = "18"
+        } -> null
+        # (3 unchanged attributes hidden)
+
+      - grant {
+          - id          = "75aa57f09aa0c8caeab4f8c24e99d10f8e7faeebf76c078efc7c6caea54ba06a" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = true -> null
+
+              - apply_server_side_encryption_by_default {
+                  - sse_algorithm     = "AES256" -> null
+                    # (1 unchanged attribute hidden)
+                }
+            }
+        }
+
+      - versioning {
+          - enabled    = true -> null
+          - mfa_delete = false -> null
+        }
+    }
+
+  # aws_s3_bucket_public_access_block.demo will be destroyed
+  - resource "aws_s3_bucket_public_access_block" "demo" {
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - bucket                  = "vansh-dobhal-10099-s18-demo" -> null
+      - id                      = "vansh-dobhal-10099-s18-demo" -> null
+      - ignore_public_acls      = true -> null
+      - region                  = "ap-south-1" -> null
+      - restrict_public_buckets = true -> null
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.demo will be destroyed
+  - resource "aws_s3_bucket_server_side_encryption_configuration" "demo" {
+      - bucket                = "vansh-dobhal-10099-s18-demo" -> null
+      - id                    = "vansh-dobhal-10099-s18-demo" -> null
+      - region                = "ap-south-1" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - blocked_encryption_types = [] -> null
+          - bucket_key_enabled       = true -> null
+
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm     = "AES256" -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # aws_s3_bucket_versioning.demo will be destroyed
+  - resource "aws_s3_bucket_versioning" "demo" {
+      - bucket                = "vansh-dobhal-10099-s18-demo" -> null
+      - id                    = "vansh-dobhal-10099-s18-demo" -> null
+      - region                = "ap-south-1" -> null
+        # (1 unchanged attribute hidden)
+
+      - versioning_configuration {
+          - status     = "Enabled" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+Plan: 0 to add, 0 to change, 4 to destroy.
+
+Changes to Outputs:
+  - bucket_arn           = "arn:aws:s3:::vansh-dobhal-10099-s18-demo" -> null
+  - bucket_name          = "vansh-dobhal-10099-s18-demo" -> null
+  - bucket_region        = "ap-south-1" -> null
+  - bucket_tags          = {
+      - Environment = "dev"
+      - ManagedBy   = "Terraform"
+      - Name        = "vansh-dobhal-10099-s18-demo"
+      - Owner       = "Vansh Dobhal"
+      - Project     = "session-18-terraform-iac"
+      - RollNo      = "10099"
+      - Session     = "18"
+    } -> null
+  - encryption_algorithm = "AES256" -> null
+  - versioning_status    = "Enabled" -> null
+aws_s3_bucket_public_access_block.demo: Destroying... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket_server_side_encryption_configuration.demo: Destroying... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket_versioning.demo: Destroying... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket_versioning.demo: Destruction complete after 0s
+aws_s3_bucket_server_side_encryption_configuration.demo: Destruction complete after 0s
+aws_s3_bucket_public_access_block.demo: Destruction complete after 0s
+aws_s3_bucket.demo: Destroying... [id=vansh-dobhal-10099-s18-demo]
+aws_s3_bucket.demo: Destruction complete after 0s
+
+Destroy complete! Resources: 4 destroyed.
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform state list | wc -l
+0
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3 ls | grep -c vansh-dobhal-10099-s18-demo || echo "bucket is gone"
+0
+bucket is gone

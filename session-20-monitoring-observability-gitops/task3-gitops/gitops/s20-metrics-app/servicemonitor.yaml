@@ -1,0 +1,21 @@
+# Tells the Prometheus Operator to scrape every Service labelled app=s20-metrics-app
+# on its "http" port at /metrics every 15s.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: s20-metrics-app
+  namespace: s20-app
+  labels:
+    release: kps
+spec:
+  selector:
+    matchLabels:
+      app: s20-metrics-app
+  namespaceSelector:
+    matchNames: [s20-app]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      # keep the app's own "endpoint" label instead of renaming it to exported_endpoint
+      honorLabels: true

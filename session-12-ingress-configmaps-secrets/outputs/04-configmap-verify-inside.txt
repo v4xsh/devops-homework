@@ -1,0 +1,38 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ echo "--- env (single keys via configMapKeyRef)"
+--- env (single keys via configMapKeyRef)
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl exec -n s12 config-demo -- sh -c 'echo APP_ENV=$APP_ENV; echo APP_LOG_LEVEL=$APP_LOG_LEVEL; echo APP_COLOR=$APP_COLOR'
+APP_ENV=production
+APP_LOG_LEVEL=INFO
+APP_COLOR=blue
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ echo "--- envFrom (all keys of app-literal-config, prefixed LIT_)"
+--- envFrom (all keys of app-literal-config, prefixed LIT_)
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl exec -n s12 config-demo -- sh -c 'env | grep ^LIT_ | sort'
+LIT_APP_COLOR=blue
+LIT_APP_MODE=demo
+LIT_FEATURE_FLAGS=search,booking
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ echo "--- volume mounts (each key is a file)"
+--- volume mounts (each key is a file)
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl exec -n s12 config-demo -- ls -l /etc/yatri /etc/app
+/etc/app:
+total 0
+lrwxrwxrwx    1 root     root            21 Oct  7 17:38 app.properties -> ..data/app.properties
+lrwxrwxrwx    1 root     root            23 Oct  7 17:38 nginx-extra.conf -> ..data/nginx-extra.conf
+
+/etc/yatri:
+total 0
+lrwxrwxrwx    1 root     root            16 Oct  7 17:38 log_level -> ..data/log_level
+lrwxrwxrwx    1 root     root            20 Oct  7 17:38 settings.json -> ..data/settings.json
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl exec -n s12 config-demo -- cat /etc/yatri/settings.json
+{
+  "region": "ap-south-1",
+  "maxPassengers": 6,
+  "supportEmail": "support@yatri.example"
+}
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl exec -n s12 config-demo -- cat /etc/yatri/log_level; echo
+INFO
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl exec -n s12 config-demo -- cat /etc/app/app.properties
+# application settings loaded with: kubectl create configmap ... --from-file
+app.name=yatri-booking
+app.theme=dark
+cache.ttl.seconds=300
+feature.new-checkout=true

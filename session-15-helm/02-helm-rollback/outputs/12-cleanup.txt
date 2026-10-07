@@ -1,0 +1,10 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ helm uninstall rb-web -n s15-rollback --wait
+release "rb-web" uninstalled
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl delete pod client -n s15-rollback --now
+pod "client" deleted from s15-rollback namespace
+~/devops-homework/session-15-helm/02-helm-rollback$ helm list -n s15-rollback --all
+NAME	NAMESPACE	REVISION	UPDATED	STATUS	CHART	APP VERSION
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl delete namespace s15-rollback --wait
+namespace "s15-rollback" deleted
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl get ns s15-rollback
+Error from server (NotFound): namespaces "s15-rollback" not found

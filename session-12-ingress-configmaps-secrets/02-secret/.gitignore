@@ -1,0 +1,7 @@
+# Never commit real secret material. Only db-secret.yaml (dummy demo values) is tracked.
+*.env
+.env*
+*-secret.real.yaml
+secrets/
+*.pem
+*.key

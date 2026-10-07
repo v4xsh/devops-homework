@@ -1,0 +1,30 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl get all -n ingress-nginx
+NAME                                           READY   STATUS      RESTARTS   AGE
+pod/ingress-nginx-admission-create-9gvhv       0/1     Completed   0          44m
+pod/ingress-nginx-admission-patch-9j4m2        0/1     Completed   0          44m
+pod/ingress-nginx-controller-d7cd8c989-z97jr   1/1     Running     0          44m
+
+NAME                                         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+service/ingress-nginx-controller             NodePort    10.108.149.214   <none>        80:30872/TCP,443:30417/TCP   44m
+service/ingress-nginx-controller-admission   ClusterIP   10.104.245.76    <none>        443/TCP                      44m
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ingress-nginx-controller   1/1     1            1           44m
+
+NAME                                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/ingress-nginx-controller-d7cd8c989   1         1         1       44m
+
+NAME                                       STATUS     COMPLETIONS   DURATION   AGE
+job.batch/ingress-nginx-admission-create   Complete   1/1           37s        44m
+job.batch/ingress-nginx-admission-patch    Complete   1/1           37s        44m
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl get ingressclass -o wide
+NAME              CONTROLLER             PARAMETERS   AGE
+nginx (default)   k8s.io/ingress-nginx   <none>       44m
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl describe ingressclass nginx
+Name:         nginx
+Labels:       app.kubernetes.io/component=controller
+              app.kubernetes.io/instance=ingress-nginx
+              app.kubernetes.io/name=ingress-nginx
+Annotations:  ingressclass.kubernetes.io/is-default-class: true
+Controller:   k8s.io/ingress-nginx
+Events:       <none>

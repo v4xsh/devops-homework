@@ -1,0 +1,13 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ sleep 45
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ date '+%H:%M:%S'
+17:23:20
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get hpa -n s13
+NAME             REFERENCE               TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+php-apache-hpa   Deployment/php-apache   cpu: 51%/50%   1         10        1          116s
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl top pods -n s13
+NAME                              CPU(cores)   MEMORY(bytes)   
+load-generator-7c5886f4b6-kvlgs   28m          0Mi             
+php-apache-7545b76d78-gkr8c       103m         21Mi            
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get pods -n s13 -l app=php-apache
+NAME                          READY   STATUS    RESTARTS   AGE
+php-apache-7545b76d78-gkr8c   1/1     Running   0          2m29s

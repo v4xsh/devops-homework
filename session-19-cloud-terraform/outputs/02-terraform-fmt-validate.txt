@@ -1,0 +1,5 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform fmt -check -diff -recursive && echo "fmt: all files already formatted"
+fmt: all files already formatted
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform validate -no-color
+Success! The configuration is valid.
+

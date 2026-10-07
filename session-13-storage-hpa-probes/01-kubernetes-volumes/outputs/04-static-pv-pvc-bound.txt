@@ -1,0 +1,33 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 03-static-pv.yaml
+persistentvolume/s13-static-pv created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv s13-static-pv
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+s13-static-pv   1Gi        RWO            Retain           Available           manual         <unset>                          1s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 04-static-pvc.yaml
+persistentvolumeclaim/static-pvc created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ sleep 3
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv s13-static-pv
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM            STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+s13-static-pv   1Gi        RWO            Retain           Bound    s13/static-pvc   manual         <unset>                          6s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pvc static-pvc -n s13
+NAME         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+static-pvc   Bound    s13-static-pv   1Gi        RWO            manual         <unset>                 4s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl describe pvc static-pvc -n s13
+Name:          static-pvc
+Namespace:     s13
+StorageClass:  manual
+Status:        Bound
+Volume:        s13-static-pv
+Labels:        <none>
+Annotations:   pv.kubernetes.io/bind-completed: yes
+               pv.kubernetes.io/bound-by-controller: yes
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      1Gi
+Access Modes:  RWO
+VolumeMode:    Filesystem
+Used By:       <none>
+Conditions:
+  Type     Status  LastProbeTime                     LastTransitionTime                Reason           Message
+  ----     ------  -----------------                 ------------------                ------           -------
+  Unused   True    Mon, 01 Jan 0001 00:00:00 +0000   Wed, 07 Oct 2026 17:12:09 +0000   NoPodsUsingPVC   No pods are currently referencing this PVC
+Events:    <none>

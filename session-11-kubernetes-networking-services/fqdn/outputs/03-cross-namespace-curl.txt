@@ -1,0 +1,11 @@
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 curl-s12 -- curl -s -m 5 http://web-service-clusterip:8080 || echo "curl exit code $? (could not resolve host)"
+command terminated with exit code 6
+curl exit code 6 (could not resolve host)
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 curl-s12 -- curl -s http://web-service-clusterip.s11:8080
+Hello from pod web-app-clusterip-6d7dc5546c-4k7hd (ClusterIP backend)
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 curl-s12 -- curl -s http://web-service-clusterip.s11.svc.cluster.local:8080
+Hello from pod web-app-clusterip-6d7dc5546c-2248t (ClusterIP backend)
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 curl-s12 -- curl -s http://web-0.web-service-headless.s11.svc.cluster.local
+Hello from web-0 (StatefulSet + headless)
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 curl-s12 -- curl -sk -o /dev/null -w "kubernetes API via FQDN -> HTTP %{http_code}\n" https://kubernetes.default.svc.cluster.local/version
+kubernetes API via FQDN -> HTTP 200

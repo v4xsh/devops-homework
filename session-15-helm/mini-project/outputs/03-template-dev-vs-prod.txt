@@ -1,0 +1,37 @@
+~/devops-homework/session-15-helm/mini-project$ cd ~/devops-homework/session-15-helm/mini-project
+~/devops-homework/session-15-helm/mini-project$ helm template notes notes-chart > /tmp/s15-dev.yaml
+~/devops-homework/session-15-helm/mini-project$ helm template notes notes-chart -f notes-chart/values-prod.yaml > /tmp/s15-prod.yaml
+~/devops-homework/session-15-helm/mini-project$ diff /tmp/s15-dev.yaml /tmp/s15-prod.yaml | grep -E '^[<>]' | grep -v checksum
+<     environment: development
+>     environment: production
+<   ENVIRONMENT: "development"
+<   LOG_LEVEL: "debug"
+>   ENVIRONMENT: "production"
+>   FEATURE_SHARING: "true"
+>   LOG_LEVEL: "warn"
+<     <h1>notes-app (DEVELOPMENT)</h1>
+<     <p>release=notes namespace=default revision=1 chart=notes-chart-0.1.0 replicas=1</p>
+>     <h1>notes-app (PRODUCTION)</h1>
+>     <p>release=notes namespace=default revision=1 chart=notes-chart-0.1.0 replicas=3</p>
+>       <li>3. Run 3 replicas in production</li>
+>       <li>4. Set CPU / memory requests and limits</li>
+<     environment: development
+>     environment: production
+<   type: NodePort
+>   type: ClusterIP
+<       nodePort: 31590
+<     environment: development
+>     environment: production
+<   replicas: 1
+>   replicas: 3
+<         environment: development
+>         environment: production
+<           image: "nginx:1.24-alpine"
+>           image: "nginx:1.25-alpine"
+>           resources:
+>             limits:
+>               cpu: 200m
+>               memory: 128Mi
+>             requests:
+>               cpu: 25m
+>               memory: 32Mi

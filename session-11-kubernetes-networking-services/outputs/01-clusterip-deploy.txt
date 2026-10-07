@@ -1,0 +1,26 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 01-clusterip/
+deployment.apps/web-app-clusterip created
+service/web-service-clusterip created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl rollout status deployment/web-app-clusterip -n s11 --timeout=120s
+Waiting for deployment "web-app-clusterip" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "web-app-clusterip" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "web-app-clusterip" rollout to finish: 2 of 3 updated replicas are available...
+deployment "web-app-clusterip" successfully rolled out
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get deploy,pods -n s11 -l app=web-clusterip -o wide
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES              SELECTOR
+deployment.apps/web-app-clusterip   3/3     3            3           2s    nginx-web    nginx:1.25-alpine   app=web-clusterip
+
+NAME                                     READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+pod/web-app-clusterip-6d7dc5546c-2248t   1/1     Running   0          2s    10.244.0.18   minikube   <none>           <none>
+pod/web-app-clusterip-6d7dc5546c-4k7hd   1/1     Running   0          2s    10.244.0.19   minikube   <none>           <none>
+pod/web-app-clusterip-6d7dc5546c-vst2v   1/1     Running   0          2s    10.244.0.20   minikube   <none>           <none>
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc web-service-clusterip -n s11 -o wide
+NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE   SELECTOR
+web-service-clusterip   ClusterIP   10.102.6.189   <none>        8080/TCP   2s    app=web-clusterip
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpoints web-service-clusterip -n s11
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                    ENDPOINTS                                      AGE
+web-service-clusterip   10.244.0.18:80,10.244.0.19:80,10.244.0.20:80   3s
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpointslices -n s11 -l kubernetes.io/service-name=web-service-clusterip
+NAME                          ADDRESSTYPE   PORTS   ENDPOINTS                             AGE
+web-service-clusterip-kz8vt   IPv4          80      10.244.0.19,10.244.0.18,10.244.0.20   3s

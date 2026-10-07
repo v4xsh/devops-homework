@@ -1,0 +1,11 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f namespace.yaml
+namespace/s13-mini created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f pvc.yaml
+persistentvolumeclaim/web-data created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ sleep 4
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pvc -n s13-mini
+NAME       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+web-data   Bound    pvc-8e004a46-74b8-43ab-b7cf-e1f677b07326   500Mi      RWO            standard       <unset>                 4s
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pv | grep -E 'NAME|s13-mini'
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-8e004a46-74b8-43ab-b7cf-e1f677b07326   500Mi      RWO            Delete           Bound    s13-mini/web-data   standard       <unset>                          4s

@@ -1,0 +1,42 @@
+~/devops-homework/session-07-docker-images$ git clone --depth 1 https://github.com/Nency-Ravaliya/devops-heros.git /tmp/s07-devops-heros 2>&1
+Cloning into '/tmp/s07-devops-heros'...
+~/devops-homework/session-07-docker-images$ cd /tmp/s07-devops-heros/session6-7-docker/multi-stage-dockerfile
+/tmp/s07-devops-heros/session6-7-docker/multi-stage-dockerfile$ ls -la
+total 20
+drwxr-xr-x 2 vansh vansh 4096 Oct  7 17:25 .
+drwxr-xr-x 7 vansh vansh 4096 Oct  7 17:25 ..
+-rw-r--r-- 1 vansh vansh  429 Oct  7 17:25 Dockerfile
+-rw-r--r-- 1 vansh vansh  178 Oct  7 17:25 package.json
+-rw-r--r-- 1 vansh vansh  258 Oct  7 17:25 server.js
+/tmp/s07-devops-heros/session6-7-docker/multi-stage-dockerfile$ cat Dockerfile
+# -------------------------
+# Stage 1: Build
+# -------------------------
+FROM node:24-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# -------------------------
+# Stage 2: Production
+# -------------------------
+FROM node:24-alpine AS production
+WORKDIR /app
+COPY --from=builder /app/package*.json ./
+RUN npm install --omit=dev
+COPY --from=builder /app/server.js ./
+EXPOSE 3000
+CMD ["npm", "start"]/tmp/s07-devops-heros/session6-7-docker/multi-stage-dockerfile$ cat server.js
+const express = require("express");
+
+const app = express();
+const PORT = 3000;
+
+app.get("/", (req, res) => {
+  res.send("<h1>Hello World from Docker Multi-Stage Build!</h1>");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

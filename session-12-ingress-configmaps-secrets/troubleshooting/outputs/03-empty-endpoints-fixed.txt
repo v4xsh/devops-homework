@@ -1,0 +1,24 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ diff manifests/01-empty-endpoints-broken.yaml manifests/01-empty-endpoints-fixed.yaml
+1,2c1
+< # Copied from instructor's session-11 troubleshooting/empty-endpoints.yaml (namespace added)
+< # INTENTIONALLY BROKEN: the selector 'app: wrong-backend-name' does not match the backend pods
+---
+> # FIX: selector now matches the pod label app: yatri-backend
+11c10
+<     app: wrong-backend-name     # BUG: running pods have label app: yatri-backend
+---
+>     app: yatri-backend
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/01-empty-endpoints-fixed.yaml
+service/broken-backend-service configured
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ sleep 3
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl describe svc broken-backend-service -n s12-troubleshoot | grep -E "Selector|Endpoints"
+Selector:                 app=yatri-backend
+Endpoints:                10.244.0.109:5000,10.244.0.110:5000
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get endpointslices -n s12-troubleshoot -l kubernetes.io/service-name=broken-backend-service
+NAME                           ADDRESSTYPE   PORTS   ENDPOINTS                   AGE
+broken-backend-service-z2wgw   IPv4          5000    10.244.0.109,10.244.0.110   10s
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ for i in 1 2 3 4; do kubectl exec -n s12-troubleshoot debug-client -- curl -s -m 5 http://broken-backend-service; done
+yatri-backend OK from yatri-backend-5b6cdbdb5b-jp6rn
+yatri-backend OK from yatri-backend-5b6cdbdb5b-cpjrn
+yatri-backend OK from yatri-backend-5b6cdbdb5b-cpjrn
+yatri-backend OK from yatri-backend-5b6cdbdb5b-cpjrn

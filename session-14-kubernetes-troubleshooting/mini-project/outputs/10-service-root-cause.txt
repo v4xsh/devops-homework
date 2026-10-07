@@ -1,0 +1,29 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pods -n s14-mini --show-labels
+NAME                                   READY   STATUS    RESTARTS   AGE   LABELS
+dns-test                               1/1     Running   0          61s   <none>
+project-broken-pod                     1/1     Running   0          11s   <none>
+troubleshooting-app-59d4957864-87hlc   1/1     Running   0          71s   app=troubleshooting-app,pod-template-hash=59d4957864
+troubleshooting-app-59d4957864-bnth2   1/1     Running   0          71s   app=troubleshooting-app,pod-template-hash=59d4957864
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl describe service troubleshooting-service -n s14-mini
+Name:                     troubleshooting-service
+Namespace:                s14-mini
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=wrong-app
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.111.64.188
+IPs:                      10.111.64.188
+Port:                     <unset>  80/TCP
+TargetPort:               80/TCP
+Endpoints:                
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pods -n s14-mini -l app=wrong-app
+No resources found in s14-mini namespace.
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pods -n s14-mini -l app=troubleshooting-app
+NAME                                   READY   STATUS    RESTARTS   AGE
+troubleshooting-app-59d4957864-87hlc   1/1     Running   0          71s
+troubleshooting-app-59d4957864-bnth2   1/1     Running   0          71s

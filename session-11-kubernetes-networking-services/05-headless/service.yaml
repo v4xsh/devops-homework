@@ -1,0 +1,19 @@
+# Headless service: clusterIP: None -> no virtual IP, no kube-proxy load balancing.
+# DNS returns the individual pod IPs (one A record per ready pod) and, together with a
+# StatefulSet, gives every pod a stable DNS name: <pod>.<svc>.<ns>.svc.cluster.local
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service-headless
+  namespace: s11
+  labels:
+    app: web-headless
+spec:
+  clusterIP: None
+  selector:
+    app: web-headless
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+      protocol: TCP

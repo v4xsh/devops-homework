@@ -1,0 +1,31 @@
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   29m   v1.37.0
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl apply -f daemonset.yaml
+daemonset.apps/node-agent created
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl apply -f statefulset-with-storage.yaml
+service/db-headless created
+statefulset.apps/db created
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl rollout status daemonset/node-agent -n s11 --timeout=120s
+daemon set "node-agent" successfully rolled out
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl rollout status statefulset/db -n s11 --timeout=180s
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 2 new pods have been updated...
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get ds,sts -n s11
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/node-agent   1         1         1       1            1           <none>          3s
+
+NAME                   READY   AGE
+statefulset.apps/db    2/2     3s
+statefulset.apps/web   3/3     3m24s
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pods -n s11 -l 'app in (node-agent,db)' -o wide
+NAME               READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+db-0               1/1     Running   0          2s    10.244.0.164   minikube   <none>           <none>
+db-1               1/1     Running   0          2s    10.244.0.165   minikube   <none>           <none>
+node-agent-q7cnv   1/1     Running   0          3s    10.244.0.163   minikube   <none>           <none>
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pvc -n s11
+NAME        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+data-db-0   Bound    pvc-119b2811-218b-4b70-8acf-b5a6cc9221b0   50Mi       RWO            standard       <unset>                 4s
+data-db-1   Bound    pvc-838b9eab-4f03-42dd-9b4a-51ffdd6ed079   50Mi       RWO            standard       <unset>                 3s
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl logs -n s11 -l app=node-agent --tail=1
+agent on node minikube

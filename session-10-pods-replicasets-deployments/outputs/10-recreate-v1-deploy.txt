@@ -1,0 +1,17 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-recreate -f task1-deployment-strategies/04-recreate/deployment-v1.yaml -f task1-deployment-strategies/04-recreate/service.yaml
+deployment.apps/app-recreate created
+service/app-recreate-service created
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout status deployment/app-recreate -n s10-recreate --timeout=120s
+Waiting for deployment "app-recreate" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "app-recreate" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "app-recreate" rollout to finish: 2 of 3 updated replicas are available...
+deployment "app-recreate" successfully rolled out
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get deploy app-recreate -n s10-recreate -o jsonpath='{.spec.strategy}{"\n"}'
+{"type":"Recreate"}
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pods -n s10-recreate -l app=app-recreate -L version
+NAME                            READY   STATUS    RESTARTS   AGE   VERSION
+app-recreate-6c78cb55bb-k9pm6   1/1     Running   0          5s    v1
+app-recreate-6c78cb55bb-p6t6h   1/1     Running   0          5s    v1
+app-recreate-6c78cb55bb-wszdl   1/1     Running   0          5s    v1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl exec -n s10-recreate curl-client -- curl -s http://app-recreate-service | grep -o 'VERSION: v[12]'
+VERSION: v1

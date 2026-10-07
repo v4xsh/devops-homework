@@ -1,0 +1,40 @@
+~/devops-homework/session-16-cicd-github-actions/scripts$ grep -A3 'Run Main Use kubeconfig from secret' $LOG | grep -E '\| '
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Kubernetes control plane is running at https://192.168.49.2:8443
+~/devops-homework/session-16-cicd-github-actions/scripts$ awk '/Run Main Apply manifests and roll out/{f=1} f&&/\| /{print} /Success - Main Apply manifests/{exit}' $LOG | cut -c1-165
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | namespace/s16 created
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | deployment.apps/calculator-api created
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | service/calculator-api created
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Waiting for deployment "calculator-api" rollout to finish: 0 of 2 updated replicas are available...
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Waiting for deployment "calculator-api" rollout to finish: 1 of 2 updated replicas are available...
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | deployment "calculator-api" successfully rolled out
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | NAME                             READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES       
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | deployment.apps/calculator-api   2/2     2            2           8s    calculator-api   s16-calculato
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | NAME                                  READY   STATUS    RESTARTS   AGE   IP            NODE       NOMI
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | pod/calculator-api-7468b7bbd9-jclxp   1/1     Running   0          8s    10.244.0.24   minikube   <non
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | pod/calculator-api-7468b7bbd9-qrbpk   1/1     Running   0          8s    10.244.0.23   minikube   <non
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | service/calculator-api   ClusterIP   10.104.119.132   <none>        80/TCP    8s    app=calculator-api
+~/devops-homework/session-16-cicd-github-actions/scripts$ awk '/Run Main Smoke test through the Service/{f=1} f&&/\| /{print} /Success - Main Smoke test through/{exit}' $LOG
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | {"status":"ok"}
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | {"app":"s16-calculator-api","git_sha":"3ce2a37","version":"1.0.0"}
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | {"a":6.0,"b":7.0,"operation":"multiply","result":42.0}
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+~/devops-homework/session-16-cicd-github-actions/scripts$ kubectl get deploy,rs,pods,svc -n s16 -o wide
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES                       SELECTOR
+deployment.apps/calculator-api   2/2     2            2           22s   calculator-api   s16-calculator-api:3ce2a37   app=calculator-api
+
+NAME                                        DESIRED   CURRENT   READY   AGE   CONTAINERS       IMAGES                       SELECTOR
+replicaset.apps/calculator-api-7468b7bbd9   2         2         2       22s   calculator-api   s16-calculator-api:3ce2a37   app=calculator-api,pod-template-hash=7468b7bbd9
+
+NAME                                  READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+pod/calculator-api-7468b7bbd9-jclxp   1/1     Running   0          22s   10.244.0.24   minikube   <none>           <none>
+pod/calculator-api-7468b7bbd9-qrbpk   1/1     Running   0          22s   10.244.0.23   minikube   <none>           <none>
+
+NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+service/calculator-api   ClusterIP   10.104.119.132   <none>        80/TCP    22s   app=calculator-api
+~/devops-homework/session-16-cicd-github-actions/scripts$ kubectl get deploy calculator-api -n s16 -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+s16-calculator-api:3ce2a37

@@ -1,0 +1,55 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 20; pkill -f 'get pods -n s10-recreate -w'; wait 2>/dev/null; echo "watch + curl loop finished"
+watch + curl loop finished
+~/devops-homework/session-10-pods-replicasets-deployments$ grep -v curl-client outputs/04-recreate-watch.log
+17:29:17.079  EVENT      NAME                            READY   STATUS    RESTARTS   AGE
+17:29:17.087  ADDED      app-recreate-6c78cb55bb-k9pm6   1/1     Running   0          8s
+17:29:17.093  ADDED      app-recreate-6c78cb55bb-p6t6h   1/1     Running   0          8s
+17:29:17.098  ADDED      app-recreate-6c78cb55bb-wszdl   1/1     Running   0          8s
+17:29:20.172  MODIFIED   app-recreate-6c78cb55bb-p6t6h   1/1     Terminating   0          11s
+17:29:20.175  MODIFIED   app-recreate-6c78cb55bb-wszdl   1/1     Terminating   0          11s
+17:29:20.195  MODIFIED   app-recreate-6c78cb55bb-k9pm6   1/1     Terminating   0          11s
+17:29:20.225  MODIFIED   app-recreate-6c78cb55bb-p6t6h   1/1     Terminating   0          11s
+17:29:20.280  MODIFIED   app-recreate-6c78cb55bb-wszdl   1/1     Terminating   0          11s
+17:29:20.294  MODIFIED   app-recreate-6c78cb55bb-k9pm6   1/1     Terminating   0          11s
+17:29:20.898  MODIFIED   app-recreate-6c78cb55bb-wszdl   0/1     Completed     0          11s
+17:29:20.973  MODIFIED   app-recreate-6c78cb55bb-p6t6h   0/1     Completed     0          11s
+17:29:20.993  MODIFIED   app-recreate-6c78cb55bb-k9pm6   0/1     Completed     0          11s
+17:29:21.050  ADDED      app-recreate-7bd8d89b8b-lzdps   0/1     Pending       0          0s
+17:29:21.068  MODIFIED   app-recreate-7bd8d89b8b-lzdps   0/1     Pending       0          0s
+17:29:21.084  ADDED      app-recreate-7bd8d89b8b-w9jlt   0/1     Pending       0          0s
+17:29:21.089  ADDED      app-recreate-7bd8d89b8b-7wclv   0/1     Pending       0          0s
+17:29:21.095  MODIFIED   app-recreate-7bd8d89b8b-w9jlt   0/1     Pending       0          0s
+17:29:21.106  MODIFIED   app-recreate-7bd8d89b8b-lzdps   0/1     ContainerCreating   0          0s
+17:29:21.123  MODIFIED   app-recreate-7bd8d89b8b-7wclv   0/1     Pending             0          0s
+17:29:21.141  MODIFIED   app-recreate-7bd8d89b8b-w9jlt   0/1     ContainerCreating   0          0s
+17:29:21.189  MODIFIED   app-recreate-6c78cb55bb-wszdl   0/1     Completed           0          12s
+17:29:21.226  DELETED    app-recreate-6c78cb55bb-wszdl   0/1     Completed           0          12s
+17:29:21.262  MODIFIED   app-recreate-7bd8d89b8b-7wclv   0/1     ContainerCreating   0          0s
+17:29:21.291  MODIFIED   app-recreate-6c78cb55bb-k9pm6   0/1     Completed           0          12s
+17:29:21.300  DELETED    app-recreate-6c78cb55bb-k9pm6   0/1     Completed           0          12s
+17:29:21.319  MODIFIED   app-recreate-6c78cb55bb-p6t6h   0/1     Completed           0          12s
+17:29:21.327  DELETED    app-recreate-6c78cb55bb-p6t6h   0/1     Completed           0          12s
+17:29:21.973  MODIFIED   app-recreate-7bd8d89b8b-lzdps   0/1     ContainerCreating   0          0s
+17:29:22.136  MODIFIED   app-recreate-7bd8d89b8b-w9jlt   0/1     ContainerCreating   0          1s
+17:29:22.161  MODIFIED   app-recreate-7bd8d89b8b-7wclv   0/1     ContainerCreating   0          1s
+17:29:22.628  MODIFIED   app-recreate-7bd8d89b8b-lzdps   1/1     Running             0          1s
+17:29:22.706  MODIFIED   app-recreate-7bd8d89b8b-w9jlt   1/1     Running             0          1s
+17:29:22.827  MODIFIED   app-recreate-7bd8d89b8b-7wclv   1/1     Running             0          1s
+~/devops-homework/session-10-pods-replicasets-deployments$ cat outputs/04-recreate-curl-during-update.log | uniq -c -f1
+      5 17:29:18 VERSION: v1
+      2 17:29:20 FAIL(no response)
+     23 17:29:22 VERSION: v2
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe deployment app-recreate -n s10-recreate | sed -n '/^StrategyType/p;/^Events:/,$p'
+StrategyType:       Recreate
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  36s   deployment-controller  Scaled up replica set app-recreate-6c78cb55bb from 0 to 3
+  Normal  ScalingReplicaSet  25s   deployment-controller  Scaled down replica set app-recreate-6c78cb55bb from 3 to 0
+  Normal  ScalingReplicaSet  24s   deployment-controller  Scaled up replica set app-recreate-7bd8d89b8b from 0 to 3
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout history deployment/app-recreate -n s10-recreate
+deployment.apps/app-recreate 
+REVISION  CHANGE-CAUSE
+1         v1 - nginx:1.24-alpine
+2         v2 - nginx:1.25-alpine
+

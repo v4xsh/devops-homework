@@ -1,0 +1,25 @@
+~/devops-homework/session-07-docker-images$ docker run -d --name s07-multistage -p 8080:3000 s07-multistage:1.0
+97649f6b86017b53a84e6519ad27a941266711beee68a1c3a9164a46b74c4bff
+~/devops-homework/session-07-docker-images$ sleep 3
+~/devops-homework/session-07-docker-images$ docker ps --filter name=s07-multistage
+CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS         PORTS                                         NAMES
+97649f6b8601   s07-multistage:1.0   "docker-entrypoint.s…"   5 seconds ago   Up 4 seconds   0.0.0.0:8080->3000/tcp, [::]:8080->3000/tcp   s07-multistage
+~/devops-homework/session-07-docker-images$ docker port s07-multistage
+3000/tcp -> 0.0.0.0:8080
+3000/tcp -> [::]:8080
+~/devops-homework/session-07-docker-images$ curl -s -i localhost:8080
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 51
+ETag: W/"33-gCAsBJJtlso/BVPWoV3U/pWC3Ak"
+Date: Wed, 07 Oct 2026 17:42:20 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+<h1>Hello World from Docker Multi-Stage Build!</h1>~/devops-homework/session-07-docker-images$ docker logs s07-multistage
+
+> docker-hello-world@1.0.0 start
+> node server.js
+
+Server running on port 3000

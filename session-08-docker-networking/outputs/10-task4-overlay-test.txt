@@ -1,0 +1,42 @@
+~/devops-homework/session-08-docker-networking$ docker run --rm --network s08-overlay-net alpine:3.20 nslookup tasks.s08-web
+Server:		127.0.0.11
+Address:	127.0.0.11:53
+
+Non-authoritative answer:
+
+Non-authoritative answer:
+Name:	tasks.s08-web
+Address: 10.0.1.4
+Name:	tasks.s08-web
+Address: 10.0.1.3
+
+~/devops-homework/session-08-docker-networking$ docker run --rm --network s08-overlay-net alpine:3.20 sh -c 'wget -qO- http://s08-web | grep -o "<title>.*</title>"'
+<title>Welcome to nginx!</title>
+~/devops-homework/session-08-docker-networking$ curl -s localhost:8024 | grep -o '<title>.*</title>'
+<title>Welcome to nginx!</title>
+~/devops-homework/session-08-docker-networking$ docker network inspect s08-overlay-net | jq '.[0] | {Name, Driver, Scope, Attachable, Subnet: .IPAM.Config[0].Subnet, Options}'
+{
+  "Name": "s08-overlay-net",
+  "Driver": "overlay",
+  "Scope": "swarm",
+  "Attachable": true,
+  "Subnet": "10.0.1.0/24",
+  "Options": {
+    "com.docker.network.driver.overlay.vxlanid_list": "4097"
+  }
+}
+~/devops-homework/session-08-docker-networking$ docker network inspect ingress | jq '.[0] | {Name, Driver, Scope, Ingress, Options}'
+{
+  "Name": "ingress",
+  "Driver": "overlay",
+  "Scope": "swarm",
+  "Ingress": true,
+  "Options": {
+    "com.docker.network.driver.overlay.vxlanid_list": "4096"
+  }
+}
+~/devops-homework/session-08-docker-networking$ sudo ss -lntu | grep -E ':(2377|7946|4789)\b'
+udp   UNCONN 0      0             0.0.0.0:4789       0.0.0.0:*          
+udp   UNCONN 0      0                   *:7946             *:*          
+tcp   LISTEN 0      4096                *:7946             *:*          
+tcp   LISTEN 0      4096                *:2377             *:*          

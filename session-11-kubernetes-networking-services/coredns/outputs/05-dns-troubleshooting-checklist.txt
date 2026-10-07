@@ -1,0 +1,54 @@
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "1) are the CoreDNS pods running and ready?"
+1) are the CoreDNS pods running and ready?
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get pods -n kube-system -l k8s-app=kube-dns
+NAME                       READY   STATUS    RESTARTS   AGE
+coredns-559f6c778d-jxzsm   1/1     Running   0          32m
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "2) does the kube-dns service have endpoints?"
+2) does the kube-dns service have endpoints?
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get endpoints kube-dns -n kube-system
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS                                     AGE
+kube-dns   10.244.0.4:9153,10.244.0.4:53,10.244.0.4:53   32m
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "3) any errors in the CoreDNS logs?"
+3) any errors in the CoreDNS logs?
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl logs -n kube-system -l k8s-app=kube-dns --tail=15
+[INFO] 10.244.0.168:46919 - 24748 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000080602s
+[INFO] 10.244.0.128:40561 - 2902 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000130811s
+[INFO] 10.244.0.128:40561 - 58707 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000179371s
+[INFO] 10.244.0.166:42963 - 58794 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000168787s
+[INFO] 10.244.0.166:42963 - 8852 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000192935s
+[INFO] 10.244.0.167:59478 - 62885 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000113173s
+[INFO] 10.244.0.167:59478 - 58531 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000166507s
+[INFO] 10.244.0.168:56818 - 38646 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000211871s
+[INFO] 10.244.0.128:44220 - 53724 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000206462s
+[INFO] 10.244.0.168:56818 - 30196 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000241237s
+[INFO] 10.244.0.128:44220 - 64194 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000283365s
+[INFO] 10.244.0.169:41588 - 12200 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.00009649s
+[INFO] 10.244.0.167:57101 - 63599 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000082393s
+[INFO] 10.244.0.167:57101 - 65129 "A IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 110 0.000076684s
+[INFO] 10.244.0.169:41588 - 59562 "AAAA IN web-service.s13-mini.svc.cluster.local. udp 56 false 512" NOERROR qr,aa,rd 149 0.000439396s
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "4) can a debug pod resolve the API server service and an external name?"
+4) can a debug pod resolve the API server service and an external name?
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- nslookup kubernetes.default
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	kubernetes.default.svc.cluster.local
+Address: 10.96.0.1
+
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- nslookup example.com
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	example.com
+Address: 104.20.23.154
+Name:	example.com
+Address: 172.66.147.243
+
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "5) is CoreDNS healthy according to its own ready/health endpoints?"
+5) is CoreDNS healthy according to its own ready/health endpoints?
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ COREDNS_IP=$(kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[0].status.podIP}')
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 curl-client -- curl -s http://$COREDNS_IP:8181/ready; echo
+OK
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 curl-client -- curl -s http://$COREDNS_IP:8080/health; echo
+OK

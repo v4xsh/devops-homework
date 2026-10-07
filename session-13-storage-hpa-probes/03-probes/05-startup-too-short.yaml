@@ -1,0 +1,20 @@
+# Same slow app, but the startup budget is only 5 x 2s = 10s -> container killed before it boots.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: startup-too-short
+  namespace: s13
+spec:
+  terminationGracePeriodSeconds: 5   # sh as PID 1 ignores SIGTERM; do not wait the default 30s on restart
+  containers:
+    - name: nginx
+      image: nginx:1.27
+      command: ["/bin/sh", "-c", "echo 'warming cache for 25s...'; sleep 25; echo 'starting nginx'; exec nginx -g 'daemon off;'"]
+      ports:
+        - containerPort: 80
+      startupProbe:
+        httpGet:
+          path: /
+          port: 80
+        failureThreshold: 5
+        periodSeconds: 2

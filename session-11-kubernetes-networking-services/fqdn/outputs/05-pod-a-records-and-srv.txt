@@ -1,0 +1,18 @@
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ POD_IP=$(kubectl get pod curl-client -n s11 -o jsonpath='{.status.podIP}'); echo "curl-client pod IP = $POD_IP"
+curl-client pod IP = 10.244.0.16
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ DASHED=$(echo $POD_IP | tr . -); echo "pod A record name  = $DASHED.s11.pod.cluster.local"
+pod A record name  = 10-244-0-16.s11.pod.cluster.local
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- dig +short $DASHED.s11.pod.cluster.local
+10.244.0.16
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ echo "--- SRV record: _<port-name>._<protocol>.<svc>.<ns>.svc.cluster.local"
+--- SRV record: _<port-name>._<protocol>.<svc>.<ns>.svc.cluster.local
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- dig +noall +answer SRV _http._tcp.web-service-clusterip.s11.svc.cluster.local
+_http._tcp.web-service-clusterip.s11.svc.cluster.local.	30 IN SRV 0 100 8080 web-service-clusterip.s11.svc.cluster.local.
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- dig +noall +answer SRV _web._tcp.web-service-headless.s11.svc.cluster.local
+_web._tcp.web-service-headless.s11.svc.cluster.local. 30 IN SRV	0 33 80 web-0.web-service-headless.s11.svc.cluster.local.
+_web._tcp.web-service-headless.s11.svc.cluster.local. 30 IN SRV	0 33 80 web-1.web-service-headless.s11.svc.cluster.local.
+_web._tcp.web-service-headless.s11.svc.cluster.local. 30 IN SRV	0 33 80 web-2.web-service-headless.s11.svc.cluster.local.
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ echo "--- reverse (PTR) lookup of the ClusterIP"
+--- reverse (PTR) lookup of the ClusterIP
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- dig +short -x $(kubectl get svc web-service-clusterip -n s11 -o jsonpath='{.spec.clusterIP}')
+web-service-clusterip.s11.svc.cluster.local.

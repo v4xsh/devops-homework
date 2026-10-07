@@ -1,0 +1,35 @@
+~/devops-homework/session-06-docker-fundamentals$ cd ~/devops-homework/session-06-docker-fundamentals/java-app
+~/devops-homework/session-06-docker-fundamentals/java-app$ ls -A
+.dockerignore
+Dockerfile
+pom.xml
+src
+~/devops-homework/session-06-docker-fundamentals/java-app$ docker build --progress=plain -t s06-java-app:1.0 . 2>&1 | tail -n 20
+#12 DONE 0.4s
+
+#13 [build 6/6] RUN mvn -q -B package -DskipTests
+#13 DONE 4.7s
+
+#14 [stage-1 3/3] COPY --from=build /build/target/hello-java.jar app.jar
+#14 DONE 0.2s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.2s done
+#15 exporting manifest sha256:f7ec810fd5d21381e07a12b35e6a6161582f324e6178dee1b1f2ee6d4e383478
+#15 exporting manifest sha256:f7ec810fd5d21381e07a12b35e6a6161582f324e6178dee1b1f2ee6d4e383478 0.0s done
+#15 exporting config sha256:86b64442619f9364835adc25af2dd923776f33cdb666a57f27870d21e527b45a 0.0s done
+#15 exporting attestation manifest sha256:b7cbb67dab11648c701e9adbafb6e6c422fe1b724c07f647eaf7d5b8996aac98 0.0s done
+#15 exporting manifest list sha256:8bd95bbd6812d86a8fc88d6988c331a6baa7799676fe7c69086c76c96be89434 0.0s done
+#15 naming to docker.io/library/s06-java-app:1.0
+#15 naming to docker.io/library/s06-java-app:1.0 done
+#15 unpacking to docker.io/library/s06-java-app:1.0 0.1s done
+#15 DONE 0.4s
+~/devops-homework/session-06-docker-fundamentals/java-app$ docker run -d --name s06-java-app -p 8003:8080 s06-java-app:1.0
+b393b84f82b5868b37267b7af11ae3afd9597a9ffb81b3e937f9b078c618563a
+~/devops-homework/session-06-docker-fundamentals/java-app$ sleep 4
+~/devops-homework/session-06-docker-fundamentals/java-app$ docker ps --filter name=s06-java-app --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES          IMAGE              STATUS         PORTS
+s06-java-app   s06-java-app:1.0   Up 5 seconds   0.0.0.0:8003->8080/tcp, [::]:8003->8080/tcp
+~/devops-homework/session-06-docker-fundamentals/java-app$ curl -s localhost:8003
+<h1>Hello World from Java in Docker - Vansh Dobhal (Roll No. 10099)</h1>

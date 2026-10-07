@@ -1,0 +1,28 @@
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get svc web-service-clusterip -n s11
+NAME                    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+web-service-clusterip   ClusterIP   10.102.6.189   <none>        8080/TCP   15m
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get endpointslices -n s11 -l kubernetes.io/service-name=web-service-clusterip -o wide
+NAME                          ADDRESSTYPE   PORTS   ENDPOINTS                             AGE
+web-service-clusterip-kz8vt   IPv4          80      10.244.0.19,10.244.0.18,10.244.0.20   15m
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pods -n s11 -l app=web-clusterip -o custom-columns=POD:.metadata.name,IP:.status.podIP
+POD                                  IP
+web-app-clusterip-6d7dc5546c-2248t   10.244.0.18
+web-app-clusterip-6d7dc5546c-4k7hd   10.244.0.19
+web-app-clusterip-6d7dc5546c-vst2v   10.244.0.20
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pods -n kube-system -l k8s-app=kube-proxy -o wide
+NAME               READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+kube-proxy-p8685   1/1     Running   0          29m   192.168.49.2   minikube   <none>           <none>
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl logs -n kube-system -l k8s-app=kube-proxy --tail=200 | grep -i "proxier" | head -3
+I1007 16:57:21.413682       1 server_linux.go:144] "Using iptables Proxier"
+I1007 16:57:21.415624       1 proxier.go:231] "Setting route_localnet=1 to allow node-ports on localhost; to change this either disable iptables.localhostNodePorts (--iptables-localhost-nodeports) or set nodePortAddresses (--nodeport-addresses) to filter loopback addresses" ipFamily="IPv4"
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ minikube ssh -- sudo iptables -t nat -L KUBE-SERVICES -n | grep -E "s11/web-service-clusterip"
+KUBE-SVC-ZBGGFHO2TKOFULLW  6    --  0.0.0.0/0            10.102.6.189         /* s11/web-service-clusterip:http cluster IP */ tcp dpt:8080
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ SVCCHAIN=$(minikube ssh -- sudo iptables -t nat -L KUBE-SERVICES -n | grep "s11/web-service-clusterip" | awk '{print $1}' | tr -d '\r'); echo "service chain: $SVCCHAIN"
+service chain: KUBE-SVC-ZBGGFHO2TKOFULLW
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ minikube ssh -- sudo iptables -t nat -L $SVCCHAIN -n
+Chain KUBE-SVC-ZBGGFHO2TKOFULLW (1 references)
+target     prot opt source               destination         
+KUBE-MARK-MASQ  6    -- !10.244.0.0/16        10.102.6.189         /* s11/web-service-clusterip:http cluster IP */ tcp dpt:8080
+KUBE-SEP-LBKTQYOZ5MR4VRNQ  0    --  0.0.0.0/0            0.0.0.0/0            /* s11/web-service-clusterip:http -> 10.244.0.18:80 */ statistic mode random probability 0.33333333349
+KUBE-SEP-YLKNIR3L2BGNF4Y3  0    --  0.0.0.0/0            0.0.0.0/0            /* s11/web-service-clusterip:http -> 10.244.0.19:80 */ statistic mode random probability 0.50000000000
+KUBE-SEP-LQQJDVORW3PISITZ  0    --  0.0.0.0/0            0.0.0.0/0            /* s11/web-service-clusterip:http -> 10.244.0.20:80 */

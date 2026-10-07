@@ -1,0 +1,31 @@
+# ---------- Default (development) values ----------
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "1.24-alpine"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 31590        # fixed port so the dev app is reachable at http://<minikube-ip>:31590
+
+app:
+  name: notes-app
+  environment: development
+  owner: Vansh Dobhal (10099)
+  # every entry becomes one line on the web page (rendered with `range`)
+  notes:
+    - "Learn helm create / install / upgrade"
+    - "Practise helm rollback"
+
+# extra environment variables injected into the ConfigMap (rendered with `range` over a map)
+extraEnv:
+  LOG_LEVEL: debug
+
+# empty = no requests/limits block is rendered (`with` + `toYaml`)
+resources: {}
+
+probes:
+  enabled: true

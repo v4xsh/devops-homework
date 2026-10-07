@@ -1,0 +1,12 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl delete pod config-app -n s14 --wait=true
+pod "config-app" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl apply -f fixed.yaml
+configmap/app-settings unchanged
+pod/config-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl wait --for=condition=Ready pod/config-app -n s14 --timeout=90s
+pod/config-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl get pod config-app -n s14
+NAME         READY   STATUS    RESTARTS   AGE
+config-app   1/1     Running   0          1s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/09-config-createcontainerconfigerror$ kubectl logs config-app -n s14
+DB_HOST=postgres.s14.svc.cluster.local LOG_LEVEL=info

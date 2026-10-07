@@ -1,0 +1,31 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ tail -n 4 scripts/promq.sh
+PROM=${PROM:-http://localhost:19090}
+curl -s -G "$PROM/api/v1/query" --data-urlencode "query=$1" \
+  | jq -r 'if .status != "success" then . else
+      (.data.result[] | "\(.metric | del(.__name__) | to_entries | map("\(.key)=\"\(.value)\"") | join(", ") | "{" + . + "}")  =>  \(.value[1])") end'
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -G localhost:19090/api/v1/query --data-urlencode 'query=sum by (pod) (rate(container_cpu_usage_seconds_total{namespace="s20-app",container!=""}[2m]))' | jq -c '.data.result[] | {pod: .metric.pod, cpu_cores: .value[1]}'
+{"pod":"jaeger-f9958d67b-rt9df","cpu_cores":"0.004577472279329928"}
+{"pod":"loadgen-5fbf9d6677-cm5tg","cpu_cores":"0.018506253483664668"}
+{"pod":"s20-metrics-app-5c7f5f65df-mrfwl","cpu_cores":"0.010942982084943136"}
+{"pod":"s20-metrics-app-5c7f5f65df-brfkz","cpu_cores":"0.01164793944491169"}
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum by (pod) (container_memory_working_set_bytes{namespace="s20-app",container!=""}) / 1024 / 1024'
+{pod="jaeger-f9958d67b-rt9df"}  =>  21.234375
+{pod="loadgen-5fbf9d6677-cm5tg"}  =>  4.48046875
+{pod="s20-metrics-app-5c7f5f65df-mrfwl"}  =>  60.8671875
+{pod="s20-metrics-app-5c7f5f65df-brfkz"}  =>  61.58984375
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'topk(5, sum by (namespace) (rate(container_cpu_usage_seconds_total{container!=""}[5m])))'
+{namespace="kube-system"}  =>  0.30980358773485633
+{namespace="monitoring"}  =>  0.16594688888488826
+{namespace="s20-app"}  =>  0.0373161495619867
+{namespace="s10-lifecycle"}  =>  0.013823566610073546
+{namespace="ingress-nginx"}  =>  0.008184292631006153
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh '100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])))'
+{}  =>  31.60701754385965
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh '100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)'
+{container="node-exporter", endpoint="http-metrics", instance="192.168.49.2:9100", job="node-exporter", namespace="monitoring", pod="kps-prometheus-node-exporter-8zn5n", service="kps-prometheus-node-exporter"}  =>  52.78873954180939
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl top pods -n s20-app
+NAME                               CPU(cores)   MEMORY(bytes)   
+jaeger-f9958d67b-rt9df             6m           21Mi            
+loadgen-5fbf9d6677-cm5tg           19m          3Mi             
+s20-metrics-app-5c7f5f65df-brfkz   13m          61Mi            
+s20-metrics-app-5c7f5f65df-mrfwl   13m          60Mi            

@@ -1,0 +1,22 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get endpoints broken-backend-service -n s12-troubleshoot
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                     ENDPOINTS   AGE
+broken-backend-service   <none>      2s
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get endpointslices -n s12-troubleshoot -l kubernetes.io/service-name=broken-backend-service
+NAME                           ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+broken-backend-service-z2wgw   IPv4          <unset>   <unset>     3s
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl describe svc broken-backend-service -n s12-troubleshoot | grep -E "Selector|Endpoints|TargetPort"
+Selector:                 app=wrong-backend-name
+TargetPort:               5000/TCP
+Endpoints:                
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pods -n s12-troubleshoot --show-labels
+NAME                             READY   STATUS    RESTARTS   AGE   LABELS
+debug-client                     1/1     Running   0          9s    <none>
+yatri-backend-5b6cdbdb5b-cpjrn   1/1     Running   0          9s    app=yatri-backend,pod-template-hash=5b6cdbdb5b
+yatri-backend-5b6cdbdb5b-jp6rn   1/1     Running   0          9s    app=yatri-backend,pod-template-hash=5b6cdbdb5b
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pods -n s12-troubleshoot -l app=wrong-backend-name
+No resources found in s12-troubleshoot namespace.
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pods -n s12-troubleshoot -l app=yatri-backend -o wide
+NAME                             READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+yatri-backend-5b6cdbdb5b-cpjrn   1/1     Running   0          10s   10.244.0.110   minikube   <none>           <none>
+yatri-backend-5b6cdbdb5b-jp6rn   1/1     Running   0          10s   10.244.0.109   minikube   <none>           <none>

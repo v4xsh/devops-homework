@@ -1,0 +1,25 @@
+# FIX: memory limit sized to the real working set (~200MB) plus headroom
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oom-app
+  namespace: s14
+spec:
+  containers:
+    - name: memory-hungry
+      image: python:3.11-alpine
+      command:
+        - python3
+        - -u
+        - -c
+        - |
+          import time
+          print("Loading 200MB cache into memory...")
+          cache = [b"x" * (10 * 1024 * 1024) for _ in range(20)]
+          print("Cache loaded, serving")
+          while True: time.sleep(10)
+      resources:
+        requests:
+          memory: 256Mi
+        limits:
+          memory: 320Mi

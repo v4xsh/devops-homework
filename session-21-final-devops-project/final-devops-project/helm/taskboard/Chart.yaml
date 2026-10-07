@@ -1,0 +1,11 @@
+apiVersion: v2
+name: taskboard
+description: TaskBoard (FastAPI + React + PostgreSQL) - final DevOps project of Vansh Dobhal (10099)
+type: application
+version: 1.0.1
+appVersion: "1.0.1"
+keywords: [fastapi, react, postgresql, devops]
+maintainers:
+  - name: Vansh Dobhal
+    url: https://github.com/v4xsh
+home: https://github.com/v4xsh/devops-homework

@@ -1,0 +1,19 @@
+# Liveness probe demo: the app is "healthy" while /tmp/healthy exists.
+# After 30s the file is removed (simulates a deadlock) -> probe fails 3x -> kubelet restarts the container.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-exec
+  namespace: s13
+spec:
+  terminationGracePeriodSeconds: 5   # sh as PID 1 ignores SIGTERM; do not wait the default 30s on restart
+  containers:
+    - name: app
+      image: busybox:1.36
+      args: ["/bin/sh", "-c", "touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600"]
+      livenessProbe:
+        exec:
+          command: ["cat", "/tmp/healthy"]
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        failureThreshold: 3

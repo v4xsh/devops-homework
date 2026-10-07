@@ -1,0 +1,21 @@
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ docker build -q --build-arg GIT_SHA=local -t s17-devsecops-api:local . && docker image inspect s17-devsecops-api:local --format 'base=python:3.12-slim user={{.Config.User}} size={{.Size}}'
+sha256:7811820ee6968c3e5bfb14ae9cb4ef365e2e93c44724395d14e5fb859818ce97
+base=python:3.12-slim user=10001 size=187213276
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ trivy image --config trivy.yaml --quiet --format table s17-devsecops-api:local 2>&1 | grep -E 'Total|─|│' | cut -c1-150 | head -n 12
+┌─────────────────────────────────────────────────
+│                                    Target                                    │    Type    │ Vulnerabilities │
+├─────────────────────────────────────────────────
+│ s17-devsecops-api:local (debian 13.7)                                        │   debian   │        0        │
+├─────────────────────────────────────────────────
+│ usr/local/lib/python3.12/site-packages/blinker-1.9.0.dist-info/METADATA      │ python-pkg │        0        │
+├─────────────────────────────────────────────────
+│ usr/local/lib/python3.12/site-packages/click-8.5.0.dist-info/METADATA        │ python-pkg │        0        │
+├─────────────────────────────────────────────────
+│ usr/local/lib/python3.12/site-packages/flask-3.1.3.dist-info/METADATA        │ python-pkg │        0        │
+├─────────────────────────────────────────────────
+│ usr/local/lib/python3.12/site-packages/gunicorn-23.0.0.dist-info/METADATA    │ python-pkg │        0        │
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ docker build -q --build-arg BASE_IMAGE=public.ecr.aws/docker/library/python:3.9.7-slim-buster -t s17-devsecops-api:old-base . >/dev/null && echo "built s17-devsecops-api:old-base (python:3.9.7-slim-buster, 2021)"
+built s17-devsecops-api:old-base (python:3.9.7-slim-buster, 2021)
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ trivy image --config trivy.yaml --quiet --format json s17-devsecops-api:old-base 2>/dev/null | jq -r '.Results[] | "\(.Target): \([.Vulnerabilities[]?.Severity] | group_by(.) | map("\(.[0])=\(length)") | join(" "))"'
+s17-devsecops-api:old-base (debian 10.11): CRITICAL=19 HIGH=58
+Python: HIGH=4

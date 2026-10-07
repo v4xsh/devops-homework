@@ -1,0 +1,22 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/03-rollout-v1.yaml
+deployment.apps/yatri-web created
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout status deployment/yatri-web -n s12-troubleshoot --timeout=120s
+Waiting for deployment "yatri-web" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "yatri-web" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "yatri-web" rollout to finish: 2 of 3 updated replicas are available...
+deployment "yatri-web" successfully rolled out
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/03-broken-image.yaml
+deployment.apps/yatri-web configured
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout status deployment/yatri-web -n s12-troubleshoot --timeout=40s
+Waiting for deployment "yatri-web" rollout to finish: 1 out of 3 new replicas have been updated...
+error: timed out waiting for the condition
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pods -n s12-troubleshoot -l app=yatri-web -o wide
+NAME                         READY   STATUS         RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+yatri-web-7ddc4cbb46-bslc2   1/1     Running        0          42s   10.244.0.116   minikube   <none>           <none>
+yatri-web-7ddc4cbb46-f6jgj   1/1     Running        0          42s   10.244.0.117   minikube   <none>           <none>
+yatri-web-7ddc4cbb46-xlqgx   1/1     Running        0          42s   10.244.0.115   minikube   <none>           <none>
+yatri-web-7f6f8496f5-qhwcx   0/1     ErrImagePull   0          41s   10.244.0.118   minikube   <none>           <none>
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get rs -n s12-troubleshoot -l app=yatri-web -o wide
+NAME                   DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                                SELECTOR
+yatri-web-7ddc4cbb46   3         3         3       43s   backend      nginx:1.25-alpine                     app=yatri-web,pod-template-hash=7ddc4cbb46
+yatri-web-7f6f8496f5   1         1         0       42s   backend      yatri-backend:non-existent-tag-v999   app=yatri-web,pod-template-hash=7f6f8496f5

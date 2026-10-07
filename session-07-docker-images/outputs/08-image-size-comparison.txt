@@ -1,0 +1,24 @@
+~/devops-homework/session-07-docker-images$ docker images --filter reference='s07-*' --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" | sort
+REPOSITORY       TAG       SIZE
+s07-java-app     multi     265MB
+s07-java-app     single    807MB
+s07-multistage   1.0       253MB
+s07-node-app     multi     199MB
+s07-node-app     single    1.59GB
+s07-python-app   multi     205MB
+s07-python-app   single    1.63GB
+~/devops-homework/session-07-docker-images$ for a in node python java; do s=$(docker image inspect s07-$a-app:single --format '{{.Size}}'); m=$(docker image inspect s07-$a-app:multi --format '{{.Size}}'); echo "$a: single=$((s/1024/1024))MB multi=$((m/1024/1024))MB  saved=$(( (s-m)*100/s ))%"; done
+node: single=1517MB multi=189MB  saved=87%
+python: single=1551MB multi=195MB  saved=87%
+java: single=769MB multi=252MB  saved=67%
+~/devops-homework/session-07-docker-images$ docker exec s07-node-multi whoami
+node
+~/devops-homework/session-07-docker-images$ docker exec s07-python-multi whoami
+appuser
+~/devops-homework/session-07-docker-images$ docker exec s07-java-multi whoami
+app
+~/devops-homework/session-07-docker-images$ docker exec s07-java-single which mvn javac
+/usr/bin/mvn
+/opt/java/openjdk/bin/javac
+~/devops-homework/session-07-docker-images$ docker exec s07-java-multi sh -c 'which mvn javac || echo "no mvn / javac in the runtime image"'
+no mvn / javac in the runtime image

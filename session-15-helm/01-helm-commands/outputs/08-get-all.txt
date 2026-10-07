@@ -1,0 +1,72 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm get all web1 -n s15 | head -40
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:12:56 2026
+NAMESPACE: s15
+STATUS: deployed
+REVISION: 1
+CHART: webapp
+VERSION: 0.1.0
+APP_VERSION: 1.16.0
+USER-SUPPLIED VALUES:
+null
+
+COMPUTED VALUES:
+affinity: {}
+autoscaling:
+  enabled: false
+  maxReplicas: 100
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 80
+fullnameOverride: ""
+image:
+  pullPolicy: IfNotPresent
+  repository: nginx
+  tag: ""
+imagePullSecrets: []
+ingress:
+  annotations: {}
+  className: ""
+  enabled: false
+  hosts:
+  - host: chart-example.local
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  tls: []
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+nameOverride: ""
+nodeSelector: {}
+~/devops-homework/session-15-helm/01-helm-commands$ helm get hooks web1 -n s15 | head -25
+---
+# Source: webapp/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "web1-webapp-test-connection"
+  labels:
+    helm.sh/chart: webapp-0.1.0
+    app.kubernetes.io/name: webapp
+    app.kubernetes.io/instance: web1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['web1-webapp:80']
+  restartPolicy: Never
+~/devops-homework/session-15-helm/01-helm-commands$ helm get metadata web1 -n s15
+NAME: web1
+CHART: webapp
+VERSION: 0.1.0
+APP_VERSION: 1.16.0
+NAMESPACE: s15
+REVISION: 1
+STATUS: deployed
+DEPLOYED_AT: 2026-10-07T17:12:56Z

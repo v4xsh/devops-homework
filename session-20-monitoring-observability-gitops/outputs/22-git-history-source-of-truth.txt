@@ -1,0 +1,19 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ cd ~/devops-heros-ref 2>/dev/null || git clone -q https://github.com/Nency-Ravaliya/devops-heros.git ~/devops-heros-ref
+~/devops-homework/session-20-monitoring-observability-gitops$ cd ~/devops-heros-ref && git pull -q && git log --oneline -4 -- session20-monitoring-observability-gitops/07-argocd/app
+8376590 replicas from 2 to 5
+0c9a224 argocd project
+7d83c44 session 19 & 20 resources
+~/devops-heros-ref$ git -C ~/devops-heros-ref show --stat --format='%h %an %ad %s' HEAD -- session20-monitoring-observability-gitops/07-argocd/app | head -n 4
+8376590 Nency-Ravaliya Mon Oct 5 18:13:23 2026 +0530 replicas from 2 to 5
+
+ session20-monitoring-observability-gitops/07-argocd/app/deployment.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+~/devops-heros-ref$ git -C ~/devops-heros-ref show HEAD -- session20-monitoring-observability-gitops/07-argocd/app/deployment.yaml | tail -n 6
+ spec:
+-  replicas: 2
++  replicas: 5
+   selector:
+     matchLabels:
+       app: session20-gitops-app
+~/devops-heros-ref$ kubectl get deploy session20-gitops-app -n s20-app -o jsonpath='cluster replicas = {.spec.replicas}{"\n"}'
+cluster replicas = 5

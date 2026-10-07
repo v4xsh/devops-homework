@@ -1,0 +1,23 @@
+# A bare ReplicaSet (normally you never create these directly - a Deployment does it for you)
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: bare-rs
+  namespace: s11
+  labels:
+    app: bare-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bare-rs
+  template:
+    metadata:
+      labels:
+        app: bare-rs
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine
+          resources:
+            requests: { cpu: "10m", memory: "16Mi" }

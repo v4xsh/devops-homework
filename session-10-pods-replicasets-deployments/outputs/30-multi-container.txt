@@ -1,0 +1,26 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/11-multi-container.yaml
+pod/lifecycle-multi-container created
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl wait -n s10-lifecycle --for=condition=Ready pod/lifecycle-multi-container --timeout=90s
+pod/lifecycle-multi-container condition met
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-multi-container -n s10-lifecycle
+NAME                        READY   STATUS    RESTARTS   AGE
+lifecycle-multi-container   2/2     Running   0          1s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-multi-container -n s10-lifecycle -o jsonpath='{range .status.containerStatuses[*]}{.name}: ready={.ready} image={.image}{"\n"}{end}'
+app: ready=true image=docker.io/library/nginx:1.27
+sidecar: ready=true image=docker.io/library/busybox:1.36
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 12; kubectl logs lifecycle-multi-container -n s10-lifecycle -c sidecar
+Sidecar is running
+Sidecar is running
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl exec lifecycle-multi-container -n s10-lifecycle -c sidecar -- wget -qO- http://localhost:80 | grep -o '<title>.*</title>'
+<title>Welcome to nginx!</title>
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-multi-container -n s10-lifecycle | sed -n '/^Events:/,$p'
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  15s   default-scheduler  Successfully assigned s10-lifecycle/lifecycle-multi-container to minikube
+  Normal  Pulled     15s   kubelet            spec.containers{app}: Container image "nginx:1.27" already present on machine and can be accessed by the pod
+  Normal  Created    15s   kubelet            spec.containers{app}: Container created
+  Normal  Started    14s   kubelet            spec.containers{app}: Container started
+  Normal  Pulled     14s   kubelet            spec.containers{sidecar}: Container image "busybox:1.36" already present on machine and can be accessed by the pod
+  Normal  Created    14s   kubelet            spec.containers{sidecar}: Container created
+  Normal  Started    14s   kubelet            spec.containers{sidecar}: Container started

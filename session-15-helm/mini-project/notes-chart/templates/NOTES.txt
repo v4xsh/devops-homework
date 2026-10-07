@@ -1,0 +1,12 @@
+{{ .Chart.Name }} {{ .Chart.Version }} (app {{ .Chart.AppVersion }}) {{ if .Release.IsInstall }}installed{{ else }}upgraded{{ end }} as release "{{ .Release.Name }}" (revision {{ .Release.Revision }}) in namespace "{{ .Release.Namespace }}".
+Environment: {{ .Values.app.environment }} | replicas: {{ .Values.replicaCount }} | image: {{ include "notes-chart.image" . }}
+
+{{- if eq .Values.service.type "NodePort" }}
+
+Open the Notes app:
+  curl http://$(minikube ip):{{ .Values.service.nodePort }}
+{{- else }}
+
+The Service is {{ .Values.service.type }} (internal only). Test it from inside the cluster:
+  kubectl -n {{ .Release.Namespace }} run tmp --rm -i --restart=Never --image=busybox:1.36 -- wget -qO- http://{{ .Release.Name }}-svc
+{{- end }}

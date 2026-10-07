@@ -1,0 +1,12 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ security/security-gate.sh ghcr.io/v4xsh/taskboard-backend:1.0.1 ghcr.io/v4xsh/taskboard-frontend:1.0.1; echo "gate exit code: $?"
+sast-bandit            PASS
+sca-pip-audit          FAIL
+sca-npm-audit          PASS
+sca-trivy-fs           PASS
+iac-trivy-config       PASS
+secrets-gitleaks       PASS
+image-backend          FAIL
+image-frontend         PASS
+----------------------------------------
+SECURITY GATE: FAILED (sca-pip-audit)
+gate exit code: 1

@@ -1,0 +1,24 @@
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- typo in service name -> NXDOMAIN"
+--- typo in service name -> NXDOMAIN
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- nslookup web-servce-clusterip.s11.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+** server can't find web-servce-clusterip.s11.svc.cluster.local: NXDOMAIN
+
+command terminated with exit code 1
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- wrong namespace -> NXDOMAIN"
+--- wrong namespace -> NXDOMAIN
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- nslookup web-service-clusterip.default.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+** server can't find web-service-clusterip.default.svc.cluster.local: NXDOMAIN
+
+command terminated with exit code 1
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- CoreDNS metrics (prometheus plugin on :9153) count responses by rcode"
+--- CoreDNS metrics (prometheus plugin on :9153) count responses by rcode
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ COREDNS_IP=$(kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[0].status.podIP}')
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 curl-client -- curl -s http://$COREDNS_IP:9153/metrics | grep -E "^coredns_dns_responses_total" | head -8
+coredns_dns_responses_total{plugin="errors",rcode="NOERROR",server="dns://:53",view="",zone="."} 668107
+coredns_dns_responses_total{plugin="errors",rcode="NXDOMAIN",server="dns://:53",view="",zone="."} 35793

@@ -1,0 +1,16 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ kubectl get secret yatri-db-secret -n s12 -o jsonpath='{.data.POSTGRES_PASSWORD}'; echo
+ZGVtby1wYXNzd29yZC1ub3QtcmVhbA==
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ kubectl get secret yatri-db-secret -n s12 -o jsonpath='{.data.POSTGRES_PASSWORD}' | base64 -d; echo
+demo-password-not-real
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ kubectl get secret yatri-db-secret -n s12 -o go-template='{{range $k,$v := .data}}{{$k}} = {{$v | base64decode}}{{"\n"}}{{end}}'
+POSTGRES_DB = yatri_demo_db
+POSTGRES_PASSWORD = demo-password-not-real
+POSTGRES_USER = demo_user
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ echo -n "demo-password-not-real" | base64
+ZGVtby1wYXNzd29yZC1ub3QtcmVhbA==
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ echo "ZGVtby1wYXNzd29yZC1ub3QtcmVhbA==" | base64 -d; echo
+demo-password-not-real
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ echo "--- anyone with 'get secret' RBAC (or read access to the Git repo) can do the same:"
+--- anyone with 'get secret' RBAC (or read access to the Git repo) can do the same:
+~/devops-homework/session-12-ingress-configmaps-secrets/02-secret$ kubectl auth can-i get secrets -n s12
+yes

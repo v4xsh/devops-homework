@@ -1,0 +1,23 @@
+~$ cd ~/devops-homework/session-03-shell-scripting
+~/devops-homework/session-03-shell-scripting$ ls -ld vansh_sysinfo
+drwxrwxrwx 1 vansh vansh 4096 Oct  7 17:06 vansh_sysinfo
+~/devops-homework/session-03-shell-scripting$ ls -l vansh_sysinfo
+total 16
+-rwxrwxrwx 1 vansh vansh 15985 Oct  7 17:06 processes.txt
+~/devops-homework/session-03-shell-scripting$ head -n 12 vansh_sysinfo/processes.txt | cut -c1-140
+# Process snapshot taken on Wednesday, 07 October 2026 17:06:16 UTC
+# Host: Vansh-G15   User: vansh   Total processes: 147
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.1  21724 12072 ?        Ss   16:56   0:00 /sbin/init
+root           2  0.0  0.0   3060  1792 ?        Sl   16:56   0:00 /init
+root           6  0.0  0.0   3076  1792 ?        Sl   16:56   0:00 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-t
+root          52  0.0  0.1  50468 15616 ?        S<s  16:56   0:00 /usr/lib/systemd/systemd-journald
+root          99  0.0  0.0  25284  6144 ?        Ss   16:56   0:00 /usr/lib/systemd/systemd-udevd
+systemd+     114  0.0  0.1  21344 11776 ?        Ss   16:56   0:00 /usr/lib/systemd/systemd-resolved
+systemd+     115  0.0  0.0  91036  7680 ?        Ssl  16:56   0:00 /usr/lib/systemd/systemd-timesyncd
+root         176  0.0  0.0   4240  2432 ?        Ss   16:56   0:00 /usr/sbin/cron -f -P
+message+     177  0.0  0.0   9608  4864 ?        Ss   16:56   0:00 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-a
+~/devops-homework/session-03-shell-scripting$ wc -l vansh_sysinfo/processes.txt
+148 vansh_sysinfo/processes.txt
+~/devops-homework/session-03-shell-scripting$ grep -c "" vansh_sysinfo/processes.txt
+148

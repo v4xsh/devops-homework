@@ -1,0 +1,39 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm list -n s15
+NAME	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART       	APP VERSION
+web1	s15      	1       	2026-10-07 17:12:56.543806818 +0000 UTC	deployed	webapp-0.1.0	1.16.0     
+~/devops-homework/session-15-helm/01-helm-commands$ helm list -A
+NAME	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART       	APP VERSION
+web1	s15      	1       	2026-10-07 17:12:56.543806818 +0000 UTC	deployed	webapp-0.1.0	1.16.0     
+~/devops-homework/session-15-helm/01-helm-commands$ helm status web1 -n s15
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:12:56 2026
+NAMESPACE: s15
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace s15 -l "app.kubernetes.io/name=webapp,app.kubernetes.io/instance=web1" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace s15 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace s15 port-forward $POD_NAME 8080:$CONTAINER_PORT
+~/devops-homework/session-15-helm/01-helm-commands$ helm status web1 -n s15 --show-resources | tail -n 20
+==> v1/Service
+NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+web1-webapp   ClusterIP   10.104.182.13   <none>        80/TCP    10s
+
+==> v1/Deployment
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+web1-webapp   1/1     1            1           10s
+
+==> v1/Pod(related)
+NAME                           READY   STATUS      RESTARTS   AGE
+web1-webapp-69db6f5dc6-sdspx   1/1     Running     0          10s
+web1-webapp-test-connection    0/1     Completed   0          2m44s
+
+
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace s15 -l "app.kubernetes.io/name=webapp,app.kubernetes.io/instance=web1" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace s15 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace s15 port-forward $POD_NAME 8080:$CONTAINER_PORT

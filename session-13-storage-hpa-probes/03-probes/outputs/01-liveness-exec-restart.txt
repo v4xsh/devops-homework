@@ -1,0 +1,30 @@
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl apply -f 01-liveness-exec.yaml
+pod/liveness-exec created
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl wait --for=condition=Ready pod/liveness-exec -n s13 --timeout=60s
+pod/liveness-exec condition met
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod liveness-exec -n s13
+NAME            READY   STATUS    RESTARTS   AGE
+liveness-exec   1/1     Running   0          1s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 60
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod liveness-exec -n s13
+NAME            READY   STATUS    RESTARTS      AGE
+liveness-exec   1/1     Running   1 (15s ago)   61s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl describe pod liveness-exec -n s13 | sed -n '/State:/,/Liveness:/p'
+    State:          Running
+      Started:      Wed, 07 Oct 2026 17:47:18 +0000
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    137
+      Started:      Wed, 07 Oct 2026 17:46:33 +0000
+      Finished:     Wed, 07 Oct 2026 17:47:18 +0000
+    Ready:          True
+    Restart Count:  1
+    Liveness:       exec [cat /tmp/healthy] delay=5s timeout=1s period=5s successThreshold=1 failureThreshold=3
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl events -n s13 --for pod/liveness-exec
+LAST SEEN           TYPE      REASON      OBJECT              MESSAGE
+62s                 Normal    Scheduled   Pod/liveness-exec   Successfully assigned s13/liveness-exec to minikube
+21s (x3 over 30s)   Warning   Unhealthy   Pod/liveness-exec   Liveness probe failed: cat: can't open '/tmp/healthy': No such file or directory
+21s                 Normal    Killing     Pod/liveness-exec   Container app failed liveness probe, will be restarted
+16s (x2 over 61s)   Normal    Pulled      Pod/liveness-exec   Container image "busybox:1.36" already present on machine and can be accessed by the pod
+16s (x2 over 61s)   Normal    Created     Pod/liveness-exec   Container created
+16s (x2 over 61s)   Normal    Started     Pod/liveness-exec   Container started

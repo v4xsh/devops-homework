@@ -1,0 +1,77 @@
+{{- $fullname := include "taskboard.fullname" . }}
+{{- if and .Values.monitoring.serviceMonitor.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $fullname }}-backend
+  labels: {{- include "taskboard.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.serviceMonitor.labels }}{{ toYaml . | nindent 4 }}{{ end }}
+spec:
+  selector:
+    matchLabels: {{- include "taskboard.selectorLabels" (dict "ctx" . "component" "backend") | nindent 6 }}
+  namespaceSelector:
+    matchNames: [{{ .Release.Namespace }}]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: {{ .Values.monitoring.serviceMonitor.interval }}
+{{- end }}
+{{- if and .Values.monitoring.prometheusRule.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ $fullname }}-alerts
+  labels: {{- include "taskboard.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.prometheusRule.labels }}{{ toYaml . | nindent 4 }}{{ end }}
+spec:
+  groups:
+    - name: taskboard.rules
+      rules:
+        - alert: TaskboardBackendDown
+          expr: absent(up{namespace="{{ .Release.Namespace }}", service="{{ $fullname }}-backend"} == 1)
+          for: 1m
+          labels: {severity: critical, app: taskboard}
+          annotations:
+            summary: "TaskBoard backend has no healthy scrape targets in {{ .Release.Namespace }}"
+        - alert: TaskboardHigh5xxRate
+          expr: |
+            sum(rate(http_requests_total{namespace="{{ .Release.Namespace }}", service="{{ $fullname }}-backend", status="5xx"}[5m]))
+              / clamp_min(sum(rate(http_requests_total{namespace="{{ .Release.Namespace }}", service="{{ $fullname }}-backend"}[5m])), 0.001) > 0.05
+          for: 5m
+          labels: {severity: warning, app: taskboard}
+          annotations:
+            summary: "More than 5% of TaskBoard API requests fail with 5xx"
+        - alert: TaskboardHighLatencyP95
+          expr: |
+            histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{namespace="{{ .Release.Namespace }}", service="{{ $fullname }}-backend"}[5m]))) > 0.5
+          for: 5m
+          labels: {severity: warning, app: taskboard}
+          annotations:
+            summary: "TaskBoard API p95 latency above 500ms"
+        - alert: TaskboardPodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="{{ .Release.Namespace }}", pod=~"{{ $fullname }}-.*"}[15m]) > 3
+          for: 1m
+          labels: {severity: warning, app: taskboard}
+          annotations:
+            summary: "Pod {{ "{{" }} $labels.pod {{ "}}" }} restarted more than 3 times in 15m"
+        - alert: TaskboardDatabaseNotReady
+          expr: kube_statefulset_status_replicas_ready{namespace="{{ .Release.Namespace }}", statefulset="{{ $fullname }}-postgres"} < 1
+          for: 2m
+          labels: {severity: critical, app: taskboard}
+          annotations:
+            summary: "TaskBoard PostgreSQL has no ready replica"
+{{- end }}
+{{- if .Values.monitoring.grafanaDashboard.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}-{{ .Release.Namespace }}-dashboard
+  namespace: {{ .Values.monitoring.grafanaDashboard.namespace | default .Release.Namespace }}
+  labels: {{- include "taskboard.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  taskboard-{{ .Release.Namespace }}.json: |-
+{{ .Files.Get "dashboards/taskboard.json" | replace "__NAMESPACE__" .Release.Namespace | replace "__SERVICE__" (printf "%s-backend" $fullname) | indent 4 }}
+{{- end }}

@@ -1,0 +1,18 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get svc myapp-service -n s10-bluegreen -o jsonpath='selector BEFORE: {.spec.selector}{"\n"}'
+selector BEFORE: {"app":"myapp","slot":"blue"}
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl exec -n s10-bluegreen curl-client -- sh -c 'for i in $(seq 1 10); do curl -s http://myapp-service | grep -oE "(BLUE|GREEN) ENVIRONMENT"; done' | sort | uniq -c
+     10 BLUE ENVIRONMENT
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl patch service myapp-service -n s10-bluegreen -p '{"spec":{"selector":{"app":"myapp","slot":"green"}}}'
+service/myapp-service patched
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get svc myapp-service -n s10-bluegreen -o jsonpath='selector AFTER:  {.spec.selector}{"\n"}'
+selector AFTER:  {"app":"myapp","slot":"green"}
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 2; kubectl exec -n s10-bluegreen curl-client -- sh -c 'for i in $(seq 1 10); do curl -s http://myapp-service | grep -oE "(BLUE|GREEN) ENVIRONMENT"; done' | sort | uniq -c
+     10 GREEN ENVIRONMENT
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get endpointslices -n s10-bluegreen -l kubernetes.io/service-name=myapp-service
+NAME                  ADDRESSTYPE   PORTS   ENDPOINTS                                AGE
+myapp-service-mttmj   IPv4          80      10.244.0.190,10.244.0.191,10.244.0.189   18s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pods -n s10-bluegreen -l slot=green -o custom-columns=POD:.metadata.name,IP:.status.podIP,SLOT:.metadata.labels.slot
+POD                         IP             SLOT
+app-green-84df7f978-7wssz   10.244.0.190   green
+app-green-84df7f978-8m2q6   10.244.0.189   green
+app-green-84df7f978-dsw94   10.244.0.191   green

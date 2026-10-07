@@ -1,0 +1,148 @@
+# Process snapshot taken on Wednesday, 07 October 2026 17:06:16 UTC
+# Host: Vansh-G15   User: vansh   Total processes: 147
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.1  21724 12072 ?        Ss   16:56   0:00 /sbin/init
+root           2  0.0  0.0   3060  1792 ?        Sl   16:56   0:00 /init
+root           6  0.0  0.0   3076  1792 ?        Sl   16:56   0:00 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
+root          52  0.0  0.1  50468 15616 ?        S<s  16:56   0:00 /usr/lib/systemd/systemd-journald
+root          99  0.0  0.0  25284  6144 ?        Ss   16:56   0:00 /usr/lib/systemd/systemd-udevd
+systemd+     114  0.0  0.1  21344 11776 ?        Ss   16:56   0:00 /usr/lib/systemd/systemd-resolved
+systemd+     115  0.0  0.0  91036  7680 ?        Ssl  16:56   0:00 /usr/lib/systemd/systemd-timesyncd
+root         176  0.0  0.0   4240  2432 ?        Ss   16:56   0:00 /usr/sbin/cron -f -P
+message+     177  0.0  0.0   9608  4864 ?        Ss   16:56   0:00 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation 
+root         184  0.0  0.0  17976  8320 ?        Ss   16:56   0:00 /usr/lib/systemd/systemd-logind
+root         186  0.0  0.1 1756624 12288 ?       Ssl  16:56   0:00 /usr/libexec/wsl-pro-service
+root         196  0.0  0.0   3164  1920 hvc0     Ss+  16:56   0:00 /sbin/agetty -o -p -- \u --noclear --keep-baud - 115200,38400,9600 vt220
+syslog       206  0.0  0.0 222516  5632 ?        Ssl  16:56   0:00 /usr/sbin/rsyslogd -n -iNONE
+root         209 10.6  0.6 2637240 62188 ?       Ssl  16:56   1:04 /usr/bin/containerd
+root         211  0.0  0.0   3120  1792 tty1     Ss+  16:56   0:00 /sbin/agetty -o -p -- \u --noclear - linux
+root         217  0.0  0.2 107044 22272 ?        Ssl  16:56   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-
+root         270  3.0  1.5 3054740 159716 ?      Ssl  16:56   0:18 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+root         705  0.0  0.0   3092   896 ?        Ss   16:56   0:00 /init
+root         706  0.0  0.0   3108  1024 ?        S    16:56   0:00 /init
+vansh        707  0.0  0.0   3128  1536 pts/0    Ss+  16:56   0:00 sleep infinity
+root         710  0.0  0.0   6696  4224 pts/1    Ss   16:56   0:00 /bin/login -f
+vansh        763  0.0  0.1  20328 11264 ?        Ss   16:56   0:00 /usr/lib/systemd/systemd --user
+vansh        764  0.0  0.0  21168  3516 ?        S    16:56   0:00 (sd-pam)
+vansh        775  0.0  0.0   6076  3968 pts/1    S+   16:56   0:00 -bash
+root        1475  0.0  0.1 1268348 11096 ?       Sl   16:56   0:00 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 38b452bff2a1380c457264a674e8b1
+root        1499  0.1  0.1  20268 11240 ?        Ss   16:56   0:00 /sbin/init
+root        1527  0.1  0.0 1894880 5120 ?        Sl   16:56   0:00 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 32768 -container-ip 
+root        1544  0.0  0.0 1747160 4864 ?        Sl   16:56   0:00 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 32769 -container-ip 
+root        1561  0.0  0.0 1747160 4736 ?        Sl   16:56   0:00 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 32770 -container-ip 
+root        1578  0.0  0.0 1747160 5248 ?        Sl   16:56   0:00 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 32771 -container-ip 
+root        1594  0.0  0.0 1747160 4864 ?        Sl   16:56   0:00 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 32772 -container-ip 
+root        1710  0.0  0.0  25492  9984 ?        Ss   16:56   0:00 /lib/systemd/systemd-journald
+root        1761  0.0  0.0  15452  8448 ?        Ss   16:56   0:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+dhcpcd      1847  0.0  0.0   8060  2816 ?        Ss   16:56   0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-act
+root        2471  6.5  0.8 2780956 89216 ?       Ssl  16:56   0:36 /usr/bin/containerd
+root        3312  0.1  0.1 1268524 10772 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 2498755d8f269ef5cfe913971758
+root        3313  0.1  0.1 1268524 10888 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id e03da2aafb1acac5f7ffef4b077d
+65535       3361  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+65535       3363  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+root        3395  0.1  0.1 1268524 10848 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 95503ed75a0db7fa37e39ff69a48
+root        3413  0.1  0.1 1268268 10364 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 0f1400b676f53cb54587a3a5811e
+65535       3450  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+65535       3457  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+root        3488  4.4  3.0 1558356 307968 ?      Ssl  16:57   0:24 kube-apiserver --advertise-address=192.168.49.2 --allow-privileged=true --authoriza
+root        3502  2.3  0.5 11772912 59392 ?      Ssl  16:57   0:12 etcd --advertise-client-urls=https://192.168.49.2:2379 --cert-file=/var/lib/minikub
+root        3572  0.5  0.6 1312860 62848 ?       Ssl  16:57   0:02 kube-scheduler --authentication-kubeconfig=/etc/kubernetes/scheduler.conf --authori
+root        3574  1.5  1.1 1406820 113864 ?      Ssl  16:57   0:08 kube-controller-manager --authentication-kubeconfig=/etc/kubernetes/controller-mana
+root        3655  2.0  0.9 2792468 95632 ?       Ssl  16:57   0:11 /var/lib/minikube/binaries/v1.37.0/kubelet --bootstrap-kubeconfig=/etc/kubernetes/b
+root        4080  0.1  0.1 1268524 12192 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id ff878d596293ea59bde5074444ce
+65535       4108  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+root        4117  0.1  0.1 1268268 11640 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 6b6f0c0129cd625ce6d9b281e366
+65535       4141  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+root        4167  0.0  0.4 1307248 45804 ?       Ssl  16:57   0:00 /usr/local/bin/kube-proxy --config=/var/lib/kube-proxy/config.conf --hostname-overr
+root        4443  0.0  0.3 1308364 36840 ?       Ssl  16:57   0:00 /bin/kindnetd
+root        4565  0.1  0.1 1268780 10748 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id fe0444ec9ae45a13f39393c1b594
+65535       4655  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+root        4661  0.1  0.1 1268524 10668 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 74e07fc5c01b18f607309f47bb46
+root        4709  0.1  0.1 1268524 11200 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 0e8995071e6f0ab391cb64d9902d
+65535       4762  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+65535       4795  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+root        4863  0.1  0.2 737008 29172 ?        Ssl  16:57   0:00 /storage-provisioner
+65532       4876  0.1  0.5 1335756 60404 ?       Ssl  16:57   0:00 /coredns -conf /etc/coredns/Corefile
+vansh       4986  0.3  0.6 1397848 66268 ?       Ssl  16:57   0:01 /metrics-server --cert-dir=/tmp --secure-port=4443 --kubelet-preferred-address-type
+root        5233  0.1  0.1 1268268 11824 ?       Sl   16:57   0:00 /usr/bin/containerd-shim-runc-v2 -namespace k8s.io -id 372e57edb6591a5a6f0c1e8dc77b
+65535       5258  0.0  0.0   1020   640 ?        Ss   16:57   0:00 /pause
+message+    5475  0.0  0.0    224     0 ?        Ss   16:58   0:00 /usr/bin/dumb-init -- /nginx-ingress-controller --election-id=ingress-nginx-leader 
+message+    5488  0.1  0.4 1314016 47564 ?       Ssl  16:58   0:00 /nginx-ingress-controller --election-id=ingress-nginx-leader --controller-class=k8s
+message+    5534  0.0  0.1 117920 12368 ?        S    16:58   0:00 nginx: master process /usr/bin/nginx -c /etc/nginx/nginx.conf
+message+    5538  0.0  0.1 130016 17072 ?        Sl   16:58   0:00 nginx: worker process
+message+    5539  0.0  0.1 130016 17072 ?        Sl   16:58   0:00 nginx: worker process
+message+    5540  0.0  0.1 130016 16944 ?        Sl   16:58   0:00 nginx: worker process
+message+    5541  0.0  0.1 130016 16816 ?        Sl   16:58   0:00 nginx: worker process
+message+    5542  0.0  0.1 130016 17072 ?        Sl   16:58   0:00 nginx: worker process
+message+    5543  0.0  0.1 130016 16944 ?        Sl   16:58   0:00 nginx: worker process
+message+    5544  0.0  0.1 130016 17072 ?        Sl   16:58   0:00 nginx: worker process
+message+    5545  0.0  0.1 130016 17072 ?        Sl   16:58   0:00 nginx: worker process
+message+    5546  0.0  0.1 130016 16944 ?        Sl   16:58   0:00 nginx: worker process
+message+    5547  0.0  0.1 130016 16688 ?        Sl   16:58   0:00 nginx: worker process
+message+    5548  0.0  0.1 130016 16816 ?        Sl   16:58   0:00 nginx: worker process
+message+    5549  0.0  0.1 130016 16816 ?        Sl   16:58   0:00 nginx: worker process
+message+    5555  0.0  0.0 116120  4120 ?        S    16:58   0:00 nginx: cache manager process
+root        6754  0.0  0.1 370104 20224 ?        Ssl  17:02   0:00 /usr/libexec/packagekitd
+polkitd     6759  0.0  0.0 308180  7680 ?        Ssl  17:02   0:00 /usr/lib/polkit-1/polkitd --no-debug
+root        6826  0.0  0.0   3092  1024 ?        Ss   17:02   0:00 /init
+root        6827  0.0  0.0   3108  1028 ?        S    17:02   0:00 /init
+vansh       6828  0.0  0.0   4888  2432 pts/4    Ss+  17:02   0:00 bash -lc python3 -m venv ~/venvs/s1617 && ~/venvs/s1617/bin/pip install -q flask==3
+vansh       6870  4.9  1.9 210360 202172 pts/4   S+   17:02   0:11 /home/vansh/venvs/s1617/bin/python3 /home/vansh/venvs/s1617/bin/pip install -q flas
+vansh       6871  0.0  0.0   3160  1664 pts/4    S+   17:02   0:00 tail -3
+root        8028  0.0  0.0   3092   896 ?        Ss   17:02   0:00 /init
+root        8029  0.0  0.0   3108  1028 ?        S    17:02   0:00 /init
+vansh       8030  0.0  0.0   4888  2432 pts/7    Ss+  17:02   0:00 bash -lc bash /mnt/c/Users/Vansh/AppData/Local/Temp/claude/c--Users-Vansh-OneDrive-
+vansh       8040  0.0  0.0   4756  2048 pts/7    S+   17:02   0:00 bash /mnt/c/Users/Vansh/AppData/Local/Temp/claude/c--Users-Vansh-OneDrive-Desktop-d
+vansh       8041  0.0  0.0   3160  1664 pts/7    S+   17:02   0:00 tail -20
+root        8547  0.0  0.0   3092   896 ?        Ss   17:02   0:00 /init
+root        8548  0.0  0.0   3108  1156 ?        S    17:02   0:00 /init
+vansh       8549  0.0  0.0   4756  2688 pts/11   Ss+  17:02   0:00 bash /mnt/c/Users/Vansh/AppData/Local/Temp/claude/c--Users-Vansh-OneDrive-Desktop-d
+root        9347  0.0  0.0   3092  1024 ?        Ss   17:03   0:00 /init
+root        9349  0.0  0.0   3108  1156 ?        S    17:03   0:00 /init
+vansh       9351  0.0  0.0   4756  3072 pts/6    Ss+  17:03   0:00 bash /home/vansh/devops-homework/session-10-pods-replicasets-deployments/scripts/pr
+root       10495  0.0  0.0   3092  1024 ?        Ss   17:03   0:00 /init
+root       10496  0.0  0.0   3108  1028 ?        S    17:03   0:00 /init
+vansh      10497  0.0  0.0   4888  2432 pts/5    Ss+  17:03   0:00 bash -lc kubectl get nodes -o wide; bash ~/devops-homework/session-11-kubernetes-ne
+vansh      10526  0.0  0.0   4756  3072 pts/5    S+   17:03   0:00 bash /home/vansh/devops-homework/session-11-kubernetes-networking-services/scripts/
+vansh      10527  0.0  0.0   3160  1536 pts/5    S+   17:03   0:00 tail
+root       10962  0.0  0.0   3092   896 ?        Ss   17:03   0:00 /init
+root       10964  0.0  0.0   3108  1028 ?        S    17:03   0:00 /init
+vansh      10967  0.0  0.0   4888  2560 pts/8    Ss+  17:03   0:00 bash -lc sed -i 's/\r$//' /home/vansh/devops-homework/session-15-helm/scripts/00-pr
+vansh      10974  0.0  0.0   4756  3072 pts/8    S+   17:03   0:00 bash /home/vansh/devops-homework/session-15-helm/scripts/00-prepull.sh
+vansh      11791  1.2  0.1  97200 13952 pts/7    S+   17:04   0:01 curl -sSL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/latest/downlo
+root       12988  0.0  0.0   3092   896 ?        Ss   17:05   0:00 /init
+root       12989  0.0  0.0   3108  1156 ?        S    17:05   0:00 /init
+vansh      12990  0.0  0.0   4756  3072 pts/3    Ss+  17:05   0:00 bash /mnt/c/Users/Vansh/AppData/Local/Temp/claude/c--Users-Vansh-OneDrive-Desktop-d
+vansh      13072  0.6  0.8 2178384 84352 pts/5   Sl+  17:05   0:00 minikube ssh -- sudo crictl pull registry.k8s.io/e2e-test-images/jessie-dnsutils:1.
+vansh      13134  0.2  0.3 2036156 31232 pts/3   Sl+  17:05   0:00 docker pull -q node:20
+root       13184  0.0  0.0  15892  9728 ?        Ss   17:05   0:00 sshd: docker [priv]
+vansh      13190  0.0  0.0  16152  6244 ?        S    17:05   0:00 sshd: docker@pts/1
+root       13191  0.0  0.0   5268  3584 pts/1    Ss+  17:05   0:00 sudo crictl pull registry.k8s.io/e2e-test-images/jessie-dnsutils:1.3
+root       13192  0.0  0.0   5268  1536 pts/3    Ss   17:05   0:00 sudo crictl pull registry.k8s.io/e2e-test-images/jessie-dnsutils:1.3
+root       13193  0.0  0.2 1254972 25728 pts/3   Sl+  17:05   0:00 crictl pull registry.k8s.io/e2e-test-images/jessie-dnsutils:1.3
+vansh      13210  0.4  0.8 2178376 85120 pts/6   Sl+  17:05   0:00 minikube ssh -- sudo crictl pull gcr.io/google-samples/kubernetes-bootcamp:v1
+vansh      13211  0.0  0.0   3160  1664 pts/6    S+   17:05   0:00 tail -1
+root       13266  0.0  0.0  15912  9984 ?        Ss   17:05   0:00 sshd: docker [priv]
+vansh      13272  0.0  0.0  16172  6368 ?        S    17:05   0:00 sshd: docker@pts/2
+root       13273  0.0  0.0   5268  3584 pts/2    Ss+  17:05   0:00 sudo crictl pull gcr.io/google-samples/kubernetes-bootcamp:v1
+root       13274  0.0  0.0   5268  1412 pts/4    Ss   17:05   0:00 sudo crictl pull gcr.io/google-samples/kubernetes-bootcamp:v1
+root       13275  0.0  0.2 1254716 25088 pts/4   Sl+  17:05   0:00 crictl pull gcr.io/google-samples/kubernetes-bootcamp:v1
+root       13284  0.0  0.0   3092   896 ?        Ss   17:05   0:00 /init
+root       13286  0.0  0.0   3108  1024 ?        S    17:05   0:00 /init
+vansh      13288  0.0  0.0   4888  3328 pts/2    Ss+  17:05   0:00 bash -lc docker rm s18-localstack; docker run -d --name s18-localstack -p 4566:4566
+vansh      13308  0.1  0.3 2035404 31360 pts/2   Sl+  17:05   0:00 docker run -d --name s18-localstack -p 4566:4566 localstack/localstack:4.9
+vansh      13309  0.0  0.0   3160  1664 pts/2    S+   17:05   0:00 tail -1
+vansh      13352  0.2  0.8 2244232 84608 pts/8   Sl+  17:05   0:00 minikube image pull nginx:1.27-alpine
+root       13387  0.0  0.0  15892  9856 ?        Ss   17:05   0:00 sshd: docker [priv]
+vansh      13397  0.0  0.0  16152  6372 ?        S    17:05   0:00 sshd: docker@notty
+root       13400  0.0  0.0   5112  3456 ?        Ss   17:05   0:00 sudo /usr/local/bin/crictl pull nginx:1.27-alpine
+root       13401  0.2  0.2 1255548 26496 ?       Sl   17:05   0:00 /usr/local/bin/crictl pull nginx:1.27-alpine
+vansh      13493  0.2  0.3 2035652 30976 pts/11  Sl+  17:05   0:00 docker exec minikube crictl pull python:3.11-alpine
+vansh      13494  0.0  0.0   3160  1664 pts/11   S+   17:05   0:00 tail -1
+root       13523  0.0  0.2 1255228 25216 ?       Ssl  17:05   0:00 crictl pull python:3.11-alpine
+root       13547  0.0  0.0   3092   896 ?        Ss   17:06   0:00 /init
+root       13549  0.0  0.0   3108  1024 ?        S    17:06   0:00 /init
+vansh      13552  0.2  0.0   4756  3328 pts/9    Ss+  17:06   0:00 bash /mnt/c/Users/Vansh/AppData/Local/Temp/claude/c--Users-Vansh-OneDrive-Desktop-d
+vansh      13730  0.0  0.0   4756  3328 pts/9    S+   17:06   0:00 bash /usr/local/bin/snap 03-run-system-info --dir /home/vansh/devops-homework/sessi
+vansh      13743  0.0  0.0   4756  3328 pts/9    S+   17:06   0:00 bash ./system_info.sh
+vansh      13754  0.0  0.0   9720  4992 pts/9    R+   17:06   0:00 ps aux

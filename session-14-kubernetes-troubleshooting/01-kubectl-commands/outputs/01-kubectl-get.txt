@@ -1,0 +1,40 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   20m   v1.37.0
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get pods -n s14
+NAME                   READY   STATUS    RESTARTS      AGE
+multi                  2/2     Running   0             46s
+restarter              1/1     Running   2 (26s ago)   45s
+web-5644464899-j99n8   1/1     Running   0             47s
+web-5644464899-lz6f6   1/1     Running   0             47s
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get all -n s14
+NAME                       READY   STATUS    RESTARTS      AGE
+pod/multi                  2/2     Running   0             47s
+pod/restarter              1/1     Running   2 (27s ago)   46s
+pod/web-5644464899-j99n8   1/1     Running   0             48s
+pod/web-5644464899-lz6f6   1/1     Running   0             48s
+
+NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/web   ClusterIP   10.108.105.28   <none>        80/TCP    49s
+
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/web   2/2     2            2           49s
+
+NAME                             DESIRED   CURRENT   READY   AGE
+replicaset.apps/web-5644464899   2         2         2       49s
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get pods -n s14 --show-labels
+NAME                   READY   STATUS    RESTARTS      AGE   LABELS
+multi                  2/2     Running   0             47s   app=multi
+restarter              0/1     Error     2 (27s ago)   46s   app=restarter
+web-5644464899-j99n8   1/1     Running   0             48s   app=web,pod-template-hash=5644464899,tier=frontend
+web-5644464899-lz6f6   1/1     Running   0             48s   app=web,pod-template-hash=5644464899,tier=frontend
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get pods -n s14 -l app=web,tier=frontend
+NAME                   READY   STATUS    RESTARTS   AGE
+web-5644464899-j99n8   1/1     Running   0          49s
+web-5644464899-lz6f6   1/1     Running   0          49s
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get pods -n s14 --field-selector status.phase=Running
+NAME                   READY   STATUS    RESTARTS      AGE
+multi                  2/2     Running   0             50s
+restarter              0/1     Error     2 (30s ago)   49s
+web-5644464899-j99n8   1/1     Running   0             51s
+web-5644464899-lz6f6   1/1     Running   0             51s

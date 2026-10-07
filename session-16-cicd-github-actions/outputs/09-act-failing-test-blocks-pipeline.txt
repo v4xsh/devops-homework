@@ -1,0 +1,26 @@
+~/act-stage/session-16-cicd-github-actions/devops-homework$ cd $STAGE && git log --oneline -2 && git show HEAD --format= | grep '^[-+] '
+a38987a demo: introduce a bug in add()
+3ce2a37 session-16-cicd-github-actions: local act run
+-    return a + b
++    return a - b  # bug introduced on purpose
+~/act-stage/session-16-cicd-github-actions/devops-homework$ bash $S/scripts/act-run.sh 2>&1 | sed -r 's/\x1b\[[0-9;]*m//g' > $FLOG; echo "act exit code: ${PIPESTATUS[0]}"
+act exit code: 1
+~/act-stage/session-16-cicd-github-actions/devops-homework$ grep -E 'Test \(Python 3.12\).*\| (FAILED|E   |=+ .*(failed|passed))' $FLOG | cut -c1-160 | head -n 8
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | E       assert -1.0 == 5
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | E       assert 5 == 15
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | E        +  where 5 = add(10, 5)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | E       AssertionError: assert -1 == 5
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | E        +  where -1 = calculate('add', 2, 3)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | FAILED tests/test_api.py::test_add_get - assert -1.0 == 5
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | FAILED tests/test_calculator.py::test_add - assert 5 == 15
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | FAILED tests/test_calculator.py::test_calculate_dispatch[add-2-3-5] - AssertionError: assert -1 == 
+~/act-stage/session-16-cicd-github-actions/devops-homework$ grep -E 'Job (succeeded|failed)|Failure - Main' $FLOG
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ❌  Failure - Main Run unit tests with coverage [2.406192269s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] 🏁  Job failed
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ❌  Failure - Main Run unit tests with coverage [2.505590448s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] 🏁  Job failed
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ❌  Failure - Main Run unit tests with coverage [1.41470625s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] 🏁  Job failed
+~/act-stage/session-16-cicd-github-actions/devops-homework$ grep -cE '/(Build Docker image|Push image to registry|Deploy to Kubernetes) *\]' $FLOG
+0

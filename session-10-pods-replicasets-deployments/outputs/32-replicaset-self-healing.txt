@@ -1,0 +1,37 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/13-replicaset-self-healing.yaml
+replicaset.apps/yatri-backend-rs created
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl wait -n s10-lifecycle --for=condition=Ready pod -l app=yatri-backend --timeout=90s >/dev/null; kubectl get rs,pods -n s10-lifecycle -l app=yatri-backend
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/yatri-backend-rs   3         3         3       2s
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/yatri-backend-rs-6hp48   1/1     Running   0          1s
+pod/yatri-backend-rs-7fldk   1/1     Running   0          2s
+pod/yatri-backend-rs-rlw44   1/1     Running   0          1s
+~/devops-homework/session-10-pods-replicasets-deployments$ VICTIM=$(kubectl get pods -n s10-lifecycle -l app=yatri-backend -o jsonpath='{.items[0].metadata.name}'); echo "deleting $VICTIM"; kubectl delete pod $VICTIM -n s10-lifecycle
+deleting yatri-backend-rs-6hp48
+pod "yatri-backend-rs-6hp48" deleted from s10-lifecycle namespace
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 3; kubectl get pods -n s10-lifecycle -l app=yatri-backend
+NAME                     READY   STATUS    RESTARTS   AGE
+yatri-backend-rs-7fldk   1/1     Running   0          38s
+yatri-backend-rs-kbl67   1/1     Running   0          35s
+yatri-backend-rs-rlw44   1/1     Running   0          37s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe rs yatri-backend-rs -n s10-lifecycle | sed -n '/^Events:/,$p'
+Events:
+  Type    Reason            Age   From                   Message
+  ----    ------            ----  ----                   -------
+  Normal  SuccessfulCreate  38s   replicaset-controller  Created pod: yatri-backend-rs-7fldk
+  Normal  SuccessfulCreate  37s   replicaset-controller  Created pod: yatri-backend-rs-rlw44
+  Normal  SuccessfulCreate  37s   replicaset-controller  Created pod: yatri-backend-rs-6hp48
+  Normal  SuccessfulCreate  35s   replicaset-controller  Created pod: yatri-backend-rs-kbl67
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl scale rs yatri-backend-rs -n s10-lifecycle --replicas=5; sleep 4; kubectl get rs yatri-backend-rs -n s10-lifecycle
+replicaset.apps/yatri-backend-rs scaled
+NAME               DESIRED   CURRENT   READY   AGE
+yatri-backend-rs   5         5         5       43s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod -n s10-lifecycle -l app=yatri-backend -o custom-columns=POD:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name
+POD                      OWNER-KIND   OWNER
+yatri-backend-rs-7fldk   ReplicaSet   yatri-backend-rs
+yatri-backend-rs-grf4p   ReplicaSet   yatri-backend-rs
+yatri-backend-rs-kbl67   ReplicaSet   yatri-backend-rs
+yatri-backend-rs-q5x6m   ReplicaSet   yatri-backend-rs
+yatri-backend-rs-rlw44   ReplicaSet   yatri-backend-rs

@@ -1,0 +1,30 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080 -n s09
+service/kubernetes-bootcamp exposed
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get rs -n s09
+NAME                             DESIRED   CURRENT   READY   AGE
+kubernetes-bootcamp-5cc66bcc9b   1         1         1       35s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl scale deployments/kubernetes-bootcamp --replicas=4 -n s09
+deployment.apps/kubernetes-bootcamp scaled
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl rollout status deployment/kubernetes-bootcamp -n s09 --timeout=120s
+Waiting for deployment "kubernetes-bootcamp" rollout to finish: 1 of 4 updated replicas are available...
+Waiting for deployment "kubernetes-bootcamp" rollout to finish: 2 of 4 updated replicas are available...
+Waiting for deployment "kubernetes-bootcamp" rollout to finish: 3 of 4 updated replicas are available...
+deployment "kubernetes-bootcamp" successfully rolled out
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get deployments -n s09
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   4/4     4            4           36s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-5cc66bcc9b-g77xf   1/1     Running   0          2s    10.244.0.120   minikube   <none>           <none>
+kubernetes-bootcamp-5cc66bcc9b-gnlm8   1/1     Running   0          2s    10.244.0.119   minikube   <none>           <none>
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Running   0          37s   10.244.0.111   minikube   <none>           <none>
+kubernetes-bootcamp-5cc66bcc9b-skb8x   1/1     Running   0          2s    10.244.0.121   minikube   <none>           <none>
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe deployments/kubernetes-bootcamp -n s09 | sed -n '/^Events:/,$p'
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  37s   deployment-controller  Scaled up replica set kubernetes-bootcamp-5cc66bcc9b from 0 to 1
+  Normal  ScalingReplicaSet  2s    deployment-controller  Scaled up replica set kubernetes-bootcamp-5cc66bcc9b from 1 to 4
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get endpointslices -n s09 -l kubernetes.io/service-name=kubernetes-bootcamp
+NAME                        ADDRESSTYPE   PORTS   ENDPOINTS                                            AGE
+kubernetes-bootcamp-n29w7   IPv4          8080    10.244.0.111,10.244.0.120,10.244.0.121 + 1 more...   4s

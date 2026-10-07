@@ -1,0 +1,8 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pv s13-static-pv
+persistentvolume "s13-static-pv" deleted
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pod emptydir-shared hostpath-demo -n s13 --wait=false
+pod "emptydir-shared" deleted from s13 namespace
+pod "hostpath-demo" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ docker exec minikube rm -rf /tmp/s13-static-pv /tmp/s13-hostpath-data
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv,pvc -n s13 2>&1 | grep -E 's13|No resources' || echo "no s13 PV/PVC left"
+No resources found

@@ -1,0 +1,25 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/12-termination.yaml
+pod/lifecycle-termination created
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl wait -n s10-lifecycle --for=condition=Ready pod/lifecycle-termination --timeout=90s
+pod/lifecycle-termination condition met
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-termination -n s10-lifecycle -o jsonpath='terminationGracePeriodSeconds={.spec.terminationGracePeriodSeconds}{"\n"}'
+terminationGracePeriodSeconds=20
+~/devops-homework/session-10-pods-replicasets-deployments$ date +%T; kubectl delete pod lifecycle-termination -n s10-lifecycle --wait=false
+17:44:27
+pod "lifecycle-termination" deleted from s10-lifecycle namespace
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 3; kubectl get pod lifecycle-termination -n s10-lifecycle
+NAME                    READY   STATUS        RESTARTS   AGE
+lifecycle-termination   1/1     Terminating   0          5s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl logs lifecycle-termination -n s10-lifecycle
+Application running
+SIGTERM received; cleaning up...
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl wait -n s10-lifecycle --for=delete pod/lifecycle-termination --timeout=60s; date +%T
+pod/lifecycle-termination condition met
+17:44:38
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get events -n s10-lifecycle --field-selector involvedObject.name=lifecycle-termination
+LAST SEEN   TYPE     REASON      OBJECT                      MESSAGE
+13s         Normal   Scheduled   pod/lifecycle-termination   Successfully assigned s10-lifecycle/lifecycle-termination to minikube
+13s         Normal   Pulled      pod/lifecycle-termination   Container image "busybox:1.36" already present on machine and can be accessed by the pod
+13s         Normal   Created     pod/lifecycle-termination   Container created
+12s         Normal   Started     pod/lifecycle-termination   Container started
+11s         Normal   Killing     pod/lifecycle-termination   Stopping container graceful-app

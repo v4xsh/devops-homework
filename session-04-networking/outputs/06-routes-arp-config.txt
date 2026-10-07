@@ -1,0 +1,41 @@
+~$ ip route
+default via 172.17.0.1 dev eth0 proto kernel 
+172.17.0.0/20 dev eth0 proto kernel scope link src 172.17.9.114 
+172.18.0.0/16 dev docker0 proto kernel scope link src 172.18.0.1 
+192.168.49.0/24 dev br-c8ff5e58a655 proto kernel scope link src 192.168.49.1 
+~$ route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.17.0.1      0.0.0.0         UG    0      0        0 eth0
+172.17.0.0      0.0.0.0         255.255.240.0   U     0      0        0 eth0
+172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+192.168.49.0    0.0.0.0         255.255.255.0   U     0      0        0 br-c8ff5e58a655
+~$ ip neigh
+192.168.49.2 dev br-c8ff5e58a655 lladdr 42:3c:e7:ae:07:a9 REACHABLE 
+172.18.0.2 dev docker0 lladdr 3e:76:cc:c9:99:c6 REACHABLE 
+172.17.0.1 dev eth0 lladdr 00:15:5d:75:52:78 REACHABLE 
+~$ arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.49.2             ether   42:3c:e7:ae:07:a9   C                     br-c8ff5e58a655
+172.18.0.2               ether   3e:76:cc:c9:99:c6   C                     docker0
+172.17.0.1               ether   00:15:5d:75:52:78   C                     eth0
+~$ cat /etc/hosts | grep -v '^#'
+127.0.0.1	localhost
+127.0.1.1	Vansh-G15.localdomain	Vansh-G15
+
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+~$ cat /etc/resolv.conf | grep -v '^#'
+nameserver 10.255.255.254
+~$ resolvectl status 2>/dev/null | head -n 8
+Global
+         Protocols: -LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported
+  resolv.conf mode: foreign
+Current DNS Server: 10.255.255.254
+       DNS Servers: 10.255.255.254
+
+Link 2 (eth0)
+    Current Scopes: none

@@ -1,0 +1,27 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm test web1 -n s15 --logs
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:13:42 2026
+NAMESPACE: s15
+STATUS: deployed
+REVISION: 4
+TEST SUITE:     web1-webapp-test-connection
+Last Started:   Wed Oct  7 17:13:51 2026
+Last Completed: Wed Oct  7 17:13:56 2026
+Phase:          Succeeded
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace s15 -l "app.kubernetes.io/name=webapp,app.kubernetes.io/instance=web1" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace s15 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace s15 port-forward $POD_NAME 8080:$CONTAINER_PORT
+
+POD LOGS: web1-webapp-test-connection
+Connecting to web1-webapp:80 (10.104.182.13:80)
+saving to 'index.html'
+index.html           100% |********************************|   612  0:00:00 ETA
+'index.html' saved
+
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get pods -n s15
+NAME                           READY   STATUS      RESTARTS   AGE
+web1-webapp-69db6f5dc6-sdspx   1/1     Running     0          60s
+web1-webapp-test-connection    0/1     Completed   0          5s

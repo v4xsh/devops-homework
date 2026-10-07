@@ -1,0 +1,21 @@
+# FIX: template label equals selector.matchLabels
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selector-error-demo
+  namespace: s12-troubleshoot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: correct-app-name
+  template:
+    metadata:
+      labels:
+        app: correct-app-name
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine
+          resources:
+            requests: { cpu: "5m", memory: "16Mi" }

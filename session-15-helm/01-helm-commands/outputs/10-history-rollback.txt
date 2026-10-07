@@ -1,0 +1,22 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm history web1 -n s15
+REVISION	UPDATED                 	STATUS    	CHART       	APP VERSION	DESCRIPTION     
+1       	Wed Oct  7 17:12:56 2026	superseded	webapp-0.1.0	1.16.0     	Install complete
+2       	Wed Oct  7 17:13:31 2026	superseded	webapp-0.1.0	1.16.0     	Upgrade complete
+3       	Wed Oct  7 17:13:36 2026	deployed  	webapp-0.1.0	1.16.0     	Upgrade complete
+~/devops-homework/session-15-helm/01-helm-commands$ helm rollback web1 1 -n s15 --wait --timeout 120s
+Rollback was a success! Happy Helming!
+~/devops-homework/session-15-helm/01-helm-commands$ helm history web1 -n s15
+REVISION	UPDATED                 	STATUS    	CHART       	APP VERSION	DESCRIPTION     
+1       	Wed Oct  7 17:12:56 2026	superseded	webapp-0.1.0	1.16.0     	Install complete
+2       	Wed Oct  7 17:13:31 2026	superseded	webapp-0.1.0	1.16.0     	Upgrade complete
+3       	Wed Oct  7 17:13:36 2026	superseded	webapp-0.1.0	1.16.0     	Upgrade complete
+4       	Wed Oct  7 17:13:42 2026	deployed  	webapp-0.1.0	1.16.0     	Rollback to 1   
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get deploy,svc -n s15
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/web1-webapp   1/1     1            1           52s
+
+NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/web1-webapp   ClusterIP   10.104.182.13   <none>        80/TCP    52s
+~/devops-homework/session-15-helm/01-helm-commands$ helm get values web1 -n s15
+USER-SUPPLIED VALUES:
+null

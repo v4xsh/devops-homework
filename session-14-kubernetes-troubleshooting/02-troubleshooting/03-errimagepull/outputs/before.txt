@@ -1,0 +1,29 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl apply -f broken.yaml
+pod/errimagepull-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ sleep 6
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl get pod errimagepull-app -n s14
+NAME               READY   STATUS         RESTARTS   AGE
+errimagepull-app   0/1     ErrImagePull   0          9s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl describe pod errimagepull-app -n s14 | sed -n '/Events:/,$p'
+Events:
+  Type     Reason     Age   From               Message
+  ----     ------     ----  ----               -------
+  Normal   Scheduled  6s    default-scheduler  Successfully assigned s14/errimagepull-app to minikube
+  Normal   Pulling    3s    kubelet            spec.containers{web}: Pulling image "dockerr.io/library/nginx:1.27"
+  Warning  Failed     3s    kubelet            spec.containers{web}: Failed to pull image "dockerr.io/library/nginx:1.27": failed to pull and unpack image "dockerr.io/library/nginx:1.27": failed to resolve reference "dockerr.io/library/nginx:1.27": failed to do request: Head "https://dockerr.io/v2/library/nginx/manifests/1.27": dial tcp: lookup dockerr.io on 192.168.49.1:53: no such host
+  Warning  Failed     3s    kubelet            spec.containers{web}: Error: ErrImagePull
+  Normal   BackOff    3s    kubelet            spec.containers{web}: Back-off pulling image "dockerr.io/library/nginx:1.27"
+  Warning  Failed     3s    kubelet            spec.containers{web}: Error: ImagePullBackOff
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ sleep 30
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl get pod errimagepull-app -n s14
+NAME               READY   STATUS         RESTARTS   AGE
+errimagepull-app   0/1     ErrImagePull   0          39s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ docker exec minikube nslookup dockerr.io 2>&1 | tail -n 3
+
+** server can't find dockerr.io: NXDOMAIN
+
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ docker exec minikube nslookup registry-1.docker.io 2>&1 | tail -n 4
+Address: 2600:1f18:2148:bc01:7b5b:62e:250a:70a5
+Name:	registry-1.docker.io
+Address: 2600:1f18:2148:bc01:79d2:bede:5576:dbd4
+

@@ -1,0 +1,27 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl apply -f ingress-path-based.yaml -f ingress-host-based.yaml
+ingress.networking.k8s.io/path-ingress created
+ingress.networking.k8s.io/host-ingress created
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ for i in $(seq 1 40); do a=$(kubectl get ingress path-ingress -n s12 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'); b=$(kubectl get ingress host-ingress -n s12 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'); [ -n "$a" ] && [ -n "$b" ] && break; sleep 3; done
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl get ingress -n s12
+NAME           CLASS   HOSTS                   ADDRESS        PORTS   AGE
+host-ingress   nginx   app1.local,app2.local   192.168.49.2   80      30s
+path-ingress   nginx   app.local               192.168.49.2   80      30s
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl describe ingress path-ingress -n s12
+Name:             path-ingress
+Labels:           <none>
+Namespace:        s12
+Address:          192.168.49.2
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  app.local   
+              /app1(/|$)(.*)   app1-service:80 (10.244.0.60:5678,10.244.0.61:5678)
+              /app2(/|$)(.*)   app2-service:80 (10.244.0.62:5678,10.244.0.63:5678)
+Annotations:  nginx.ingress.kubernetes.io/rewrite-target: /$2
+              nginx.ingress.kubernetes.io/use-regex: true
+Events:
+  Type    Reason  Age               From                      Message
+  ----    ------  ----              ----                      -------
+  Normal  Sync    4s (x2 over 31s)  nginx-ingress-controller  Scheduled for sync

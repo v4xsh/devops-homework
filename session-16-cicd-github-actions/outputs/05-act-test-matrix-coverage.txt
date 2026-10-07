@@ -1,0 +1,35 @@
+~/devops-homework/session-16-cicd-github-actions/scripts$ grep -E 'Matrix: map|Successfully set up CPython' $LOG | sort
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | Successfully set up CPython (3.12.15)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Successfully set up CPython (3.11.17)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] 🧪  Matrix: map[python-version:3.11]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Successfully set up CPython (3.12.15)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] 🧪  Matrix: map[python-version:3.12]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Successfully set up CPython (3.13.16)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] 🧪  Matrix: map[python-version:3.13]
+~/devops-homework/session-16-cicd-github-actions/scripts$ awk '/Test \(Python 3.12\).*Run Main Run unit tests/{f=1} f&&/Test \(Python 3.12\)/{print} /Test \(Python 3.12\).*Success - Main Run unit tests/{exit}' $LOG | grep -E '\| ' | cut -c1-165 | head -n 45
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | ============================= test session starts ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | platform linux -- Python 3.12.15, pytest-8.4.2, pluggy-1.6.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | rootdir: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-act
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | configfile: pytest.ini
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | testpaths: tests
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | plugins: cov-6.0.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | collected 18 items
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | tests/test_api.py ........                                               [ 44%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | tests/test_calculator.py ..........                                      [100%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | - generated xml file: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-ci
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | ---------- coverage: platform linux, python 3.12.15-final-0 ----------
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Name                Stmts   Miss  Cover   Missing
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | app/__init__.py         0      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | app/calculator.py      16      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | app/main.py            33      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | TOTAL                  49      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Coverage HTML written to dir reports/htmlcov
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Coverage XML written to file reports/coverage.xml
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Required test coverage of 90% reached. Total coverage: 100.00%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | ============================== 18 passed in 0.67s ==============================

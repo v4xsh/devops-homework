@@ -1,0 +1,33 @@
+# Small traffic generator so the dashboards/queries have real data: ~10 req per loop, 1 of 12 is a 500.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgen
+  namespace: s20-app
+  labels:
+    app: loadgen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadgen
+  template:
+    metadata:
+      labels:
+        app: loadgen
+    spec:
+      containers:
+        - name: loadgen
+          image: busybox:1.36
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              while true; do
+                for i in 1 2 3 4 5 6 7 8 9 10; do wget -q -O /dev/null http://s20-metrics-app/work; done
+                wget -q -O /dev/null http://s20-metrics-app/
+                wget -q -O /dev/null http://s20-metrics-app/error 2>/dev/null
+                sleep 1
+              done
+          resources:
+            requests: {cpu: 10m, memory: 8Mi}
+            limits: {cpu: 50m, memory: 32Mi}

@@ -1,0 +1,26 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl scale deploy/session20-gitops-app -n s20-app --replicas=1
+deployment.apps/session20-gitops-app scaled
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get deploy session20-gitops-app -n s20-app
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+session20-gitops-app   1/1     1            1           13s
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 15
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get deploy session20-gitops-app -n s20-app
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+session20-gitops-app   5/5     5            5           29s
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl delete svc session20-gitops-app -n s20-app
+service "session20-gitops-app" deleted from s20-app namespace
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 15
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get svc session20-gitops-app -n s20-app
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+session20-gitops-app   ClusterIP   10.110.28.193   <none>        80/TCP    15s
+~/devops-homework/session-20-monitoring-observability-gitops$ argocd app history s20-gitops-instructor --grpc-web | tail -n 4
+SOURCE  https://github.com/Nency-Ravaliya/devops-heros.git
+ID      DATE                           REVISION
+0       2026-10-07 17:54:57 +0000 UTC  main (8376590)
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get events -n argocd --field-selector involvedObject.name=s20-gitops-instructor --sort-by=.lastTimestamp | tail -n 6 | cut -c1-200
+32s         Normal   ResourceUpdated      application/s20-gitops-instructor   Updated health status: Healthy -> Progressing
+32s         Normal   ResourceUpdated      application/s20-gitops-instructor   Updated health status: Progressing -> Healthy
+16s         Normal   OperationStarted     application/s20-gitops-instructor   Initiated automated sync to '8376590a668ac8d6f2700d181c0739d0ed3fc5ea'
+16s         Normal   ResourceUpdated      application/s20-gitops-instructor   Updated sync status: Synced -> OutOfSync
+16s         Normal   OperationCompleted   application/s20-gitops-instructor   Partial sync operation to 8376590a668ac8d6f2700d181c0739d0ed3fc5ea succeeded
+16s         Normal   ResourceUpdated      application/s20-gitops-instructor   Updated sync status: OutOfSync -> Synced

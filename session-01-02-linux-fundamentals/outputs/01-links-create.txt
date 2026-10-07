@@ -1,0 +1,18 @@
+~/devops-homework/tools$ mkdir -p ~/practice/links && cd ~/practice/links
+~/practice/links$ echo "Hello from the original file - Vansh Dobhal 10099" > original.txt
+~/practice/links$ ln -s original.txt soft_link.txt
+~/practice/links$ ln original.txt hard_link.txt
+~/practice/links$ ls -li
+total 8
+169970 -rw-r--r-- 2 vansh vansh 50 Oct  7 17:04 hard_link.txt
+169970 -rw-r--r-- 2 vansh vansh 50 Oct  7 17:04 original.txt
+169994 lrwxrwxrwx 1 vansh vansh 12 Oct  7 17:04 soft_link.txt -> original.txt
+~/practice/links$ stat -c '%n  inode=%i  links=%h  type=%F' original.txt soft_link.txt hard_link.txt
+original.txt  inode=169970  links=2  type=regular file
+soft_link.txt  inode=169994  links=1  type=symbolic link
+hard_link.txt  inode=169970  links=2  type=regular file
+~/practice/links$ readlink -f soft_link.txt
+/home/vansh/practice/links/original.txt
+~/practice/links$ cat soft_link.txt hard_link.txt
+Hello from the original file - Vansh Dobhal 10099
+Hello from the original file - Vansh Dobhal 10099

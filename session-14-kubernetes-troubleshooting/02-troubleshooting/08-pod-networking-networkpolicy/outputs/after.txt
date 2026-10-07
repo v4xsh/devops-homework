@@ -1,0 +1,25 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl apply -f fixed.yaml
+networkpolicy.networking.k8s.io/allow-checkout-to-payments created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl get networkpolicy -n s14
+NAME                         POD-SELECTOR       AGE
+allow-checkout-to-payments   app=payments-api   0s
+default-deny-ingress         <none>             4s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl describe networkpolicy allow-checkout-to-payments -n s14 | sed -n '/Spec:/,$p'
+Spec:
+  PodSelector:     app=payments-api
+  Allowing ingress traffic:
+    To Port: 80/TCP
+    From:
+      PodSelector: role=checkout
+  Not affecting egress traffic
+  Policy Types: Ingress
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ sleep 3
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl exec checkout -n s14 -- curl -sS -m 5 http://payments-api | grep -i '<title>'
+<title>Welcome to nginx!</title>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl run intruder -n s14 --image=curlimages/curl:8.6.0 --restart=Never --labels=role=intruder --command -- sleep 600
+pod/intruder created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl wait --for=condition=Ready pod/intruder -n s14 --timeout=60s
+pod/intruder condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl exec intruder -n s14 -- curl -sS -m 5 http://payments-api
+curl: (28) Connection timed out after 5010 milliseconds
+command terminated with exit code 28

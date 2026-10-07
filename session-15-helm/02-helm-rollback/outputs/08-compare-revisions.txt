@@ -1,0 +1,83 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ helm get values rb-web -n s15-rollback --revision 1
+USER-SUPPLIED VALUES:
+null
+~/devops-homework/session-15-helm/02-helm-rollback$ helm get values rb-web -n s15-rollback --revision 2
+USER-SUPPLIED VALUES:
+app:
+  color: green
+  message: 'Upgrade #1 - scaled to 2 replicas on nginx 1.26'
+  version: v2
+image:
+  tag: 1.26-alpine
+replicaCount: 2
+~/devops-homework/session-15-helm/02-helm-rollback$ helm get values rb-web -n s15-rollback --revision 3
+USER-SUPPLIED VALUES:
+app:
+  color: red
+  message: 'Upgrade #2 - 3 replicas on nginx 1.27 with resource limits'
+  version: v3
+image:
+  tag: 1.27-alpine
+replicaCount: 3
+resources:
+  limits:
+    cpu: 100m
+    memory: 64Mi
+  requests:
+    cpu: 10m
+    memory: 16Mi
+~/devops-homework/session-15-helm/02-helm-rollback$ diff <(helm get manifest rb-web -n s15-rollback --revision 2) <(helm get manifest rb-web -n s15-rollback --revision 3)
+11c11
+<     app.kubernetes.io/version: "v2"
+---
+>     app.kubernetes.io/version: "v3"
+15,17c15,17
+<     release=rb-web rendered-at-revision=2 chart=rollback-demo-0.1.0
+<     version=v2 color=green image=nginx:1.26-alpine replicas=2
+<     message=Upgrade #1 - scaled to 2 replicas on nginx 1.26
+---
+>     release=rb-web rendered-at-revision=3 chart=rollback-demo-0.1.0
+>     version=v3 color=red image=nginx:1.27-alpine replicas=3
+>     message=Upgrade #2 - 3 replicas on nginx 1.27 with resource limits
+28c28
+<     app.kubernetes.io/version: "v2"
+---
+>     app.kubernetes.io/version: "v3"
+49c49
+<     app.kubernetes.io/version: "v2"
+---
+>     app.kubernetes.io/version: "v3"
+52c52
+<   replicas: 2
+---
+>   replicas: 3
+63c63
+<         app.kubernetes.io/version: "v2"
+---
+>         app.kubernetes.io/version: "v3"
+67c67
+<         checksum/config: 4f1bb1c597a0b56108140429a7ad5698e76cca442871517b5ea87f7beca69495
+---
+>         checksum/config: ceb62f04c186b6fadee4266896a7914eb6deb1ad82798f804f77d7c716141fd3
+71c71
+<           image: "nginx:1.26-alpine"
+---
+>           image: "nginx:1.27-alpine"
+80a81,87
+>           resources:
+>             limits:
+>               cpu: 100m
+>               memory: 64Mi
+>             requests:
+>               cpu: 10m
+>               memory: 16Mi
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl get secrets -n s15-rollback -l owner=helm,name=rb-web
+NAME                           TYPE                 DATA   AGE
+sh.helm.release.v1.rb-web.v1   helm.sh/release.v1   1      77s
+sh.helm.release.v1.rb-web.v2   helm.sh/release.v1   1      57s
+sh.helm.release.v1.rb-web.v3   helm.sh/release.v1   1      33s
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl get rs -n s15-rollback -o custom-columns=RS:.metadata.name,DESIRED:.spec.replicas,IMAGE:.spec.template.spec.containers[0].image
+RS                  DESIRED   IMAGE
+rb-web-69c4986d9    3         nginx:1.27-alpine
+rb-web-76fc59c5fc   0         nginx:1.25-alpine
+rb-web-8c95bd676    0         nginx:1.26-alpine

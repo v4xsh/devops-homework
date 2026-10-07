@@ -1,0 +1,14 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform graph > ../diagrams/terraform-graph.dot && wc -l ../diagrams/terraform-graph.dot
+31 ../diagrams/terraform-graph.dot
+~/devops-homework/session-19-cloud-terraform/terraform$ dot -Tpng ../diagrams/terraform-graph.dot -o ../diagrams/terraform-graph.png && ls -la ../diagrams/
+total 288
+drwxrwxrwx 1 vansh vansh   4096 Oct  7 17:35 .
+drwxrwxrwx 1 vansh vansh   4096 Oct  7 17:33 ..
+-rwxrwxrwx 1 vansh vansh   2181 Oct  7 17:32 architecture.dot
+-rwxrwxrwx 1 vansh vansh 214354 Oct  7 17:33 architecture.png
+-rwxrwxrwx 1 vansh vansh   1873 Oct  7 17:40 terraform-graph.dot
+-rwxrwxrwx 1 vansh vansh  65749 Oct  7 17:40 terraform-graph.png
+~/devops-homework/session-19-cloud-terraform/terraform$ grep -E '"aws_instance.web" -> ' ../diagrams/terraform-graph.dot
+  "aws_instance.web" -> "data.aws_ami.ubuntu";
+  "aws_instance.web" -> "aws_route_table_association.public";
+  "aws_instance.web" -> "aws_security_group.web";

@@ -1,0 +1,22 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/01-running.yaml
+pod/lifecycle-running created
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl wait -n s10-lifecycle --for=condition=Ready pod/lifecycle-running --timeout=90s
+pod/lifecycle-running condition met
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-running -n s10-lifecycle -o wide
+NAME                READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+lifecycle-running   1/1     Running   0          1s    10.244.0.53   minikube   <none>           <none>
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-running -n s10-lifecycle -o jsonpath='phase={.status.phase}{"\n"}{range .status.conditions[*]}{.type}={.status}{"\n"}{end}'
+phase=Running
+PodReadyToStartContainers=True
+Initialized=True
+Ready=True
+ContainersReady=True
+PodScheduled=True
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-running -n s10-lifecycle | sed -n '/^Events:/,$p'
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  2s    default-scheduler  Successfully assigned s10-lifecycle/lifecycle-running to minikube
+  Normal  Pulled     1s    kubelet            spec.containers{nginx}: Container image "nginx:1.27" already present on machine and can be accessed by the pod
+  Normal  Created    1s    kubelet            spec.containers{nginx}: Container created
+  Normal  Started    1s    kubelet            spec.containers{nginx}: Container started

@@ -1,0 +1,18 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 03-loadbalancer/
+deployment.apps/web-app-loadbalancer created
+service/web-service-loadbalancer created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl rollout status deployment/web-app-loadbalancer -n s11 --timeout=120s
+Waiting for deployment "web-app-loadbalancer" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "web-app-loadbalancer" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "web-app-loadbalancer" rollout to finish: 2 of 3 updated replicas are available...
+deployment "web-app-loadbalancer" successfully rolled out
+~/devops-homework/session-11-kubernetes-networking-services$ echo "--- no minikube tunnel running yet -> no cloud LB -> EXTERNAL-IP stays <pending>"
+--- no minikube tunnel running yet -> no cloud LB -> EXTERNAL-IP stays <pending>
+~/devops-homework/session-11-kubernetes-networking-services$ sleep 5
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc web-service-loadbalancer -n s11
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+web-service-loadbalancer   LoadBalancer   10.104.10.192   <pending>     8081:31470/TCP   9s
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpoints web-service-loadbalancer -n s11
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                       ENDPOINTS                                      AGE
+web-service-loadbalancer   10.244.0.88:80,10.244.0.90:80,10.244.0.91:80   10s

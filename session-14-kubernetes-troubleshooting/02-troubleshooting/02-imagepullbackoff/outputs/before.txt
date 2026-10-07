@@ -1,0 +1,29 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl apply -f broken.yaml
+pod/imagepull-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ sleep 40
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl get pod imagepull-app -n s14
+NAME            READY   STATUS         RESTARTS   AGE
+imagepull-app   0/1     ErrImagePull   0          40s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl describe pod imagepull-app -n s14 | sed -n '/Containers:/,/Ready:/p'
+Containers:
+  web:
+    Container ID:   
+    Image:          nginx:1.27-does-not-exist
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl describe pod imagepull-app -n s14 | sed -n '/Events:/,$p'
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  40s                default-scheduler  Successfully assigned s14/imagepull-app to minikube
+  Normal   Pulling    23s (x2 over 40s)  kubelet            spec.containers{web}: Pulling image "nginx:1.27-does-not-exist"
+  Warning  Failed     22s (x2 over 38s)  kubelet            spec.containers{web}: Failed to pull image "nginx:1.27-does-not-exist": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27-does-not-exist": failed to resolve reference "docker.io/library/nginx:1.27-does-not-exist": docker.io/library/nginx:1.27-does-not-exist: not found
+  Warning  Failed     22s (x2 over 38s)  kubelet            spec.containers{web}: Error: ErrImagePull
+  Normal   BackOff    7s (x2 over 38s)   kubelet            spec.containers{web}: Back-off pulling image "nginx:1.27-does-not-exist"
+  Warning  Failed     7s (x2 over 38s)   kubelet            spec.containers{web}: Error: ImagePullBackOff
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl get pod imagepull-app -n s14 -o jsonpath='{.status.containerStatuses[0].state.waiting}{"\n"}'
+{"message":"rpc error: code = NotFound desc = failed to pull and unpack image \"docker.io/library/nginx:1.27-does-not-exist\": failed to resolve reference \"docker.io/library/nginx:1.27-does-not-exist\": docker.io/library/nginx:1.27-does-not-exist: not found","reason":"ErrImagePull"}

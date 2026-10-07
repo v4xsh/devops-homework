@@ -1,0 +1,27 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ export NODE_PORT=$(kubectl get services/kubernetes-bootcamp -n s09 -o go-template='{{(index .spec.ports 0).nodePort}}'); echo "NODE_PORT=$NODE_PORT"
+NODE_PORT=32264
+~/devops-homework/session-09-kubernetes-fundamentals$ for i in $(seq 1 8); do curl -s http://$(minikube ip):$NODE_PORT; done
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-g77xf | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-g77xf | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-skb8x | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-pmkff | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-g77xf | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-g77xf | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-pmkff | v=1
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-skb8x | v=1
+~/devops-homework/session-09-kubernetes-fundamentals$ for i in $(seq 1 40); do curl -s http://$(minikube ip):$NODE_PORT; done | grep -o 'kubernetes-bootcamp-[a-z0-9-]*' | sort | uniq -c
+      3 kubernetes-bootcamp-5cc66bcc9b-g77xf
+      9 kubernetes-bootcamp-5cc66bcc9b-gnlm8
+     14 kubernetes-bootcamp-5cc66bcc9b-pmkff
+     14 kubernetes-bootcamp-5cc66bcc9b-skb8x
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl scale deployments/kubernetes-bootcamp --replicas=2 -n s09
+deployment.apps/kubernetes-bootcamp scaled
+~/devops-homework/session-09-kubernetes-fundamentals$ sleep 5; kubectl get deployments -n s09
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   2/2     2            2           2m33s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -o wide
+NAME                                   READY   STATUS        RESTARTS   AGE     IP             NODE       NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-5cc66bcc9b-g77xf   1/1     Running       0          119s    10.244.0.120   minikube   <none>           <none>
+kubernetes-bootcamp-5cc66bcc9b-gnlm8   1/1     Terminating   0          119s    10.244.0.119   minikube   <none>           <none>
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Running       0          2m34s   10.244.0.111   minikube   <none>           <none>
+kubernetes-bootcamp-5cc66bcc9b-skb8x   1/1     Terminating   0          119s    10.244.0.121   minikube   <none>           <none>

@@ -1,0 +1,27 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ docker ps --filter name=s18-localstack --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+NAMES            IMAGE                       STATUS
+s18-localstack   localstack/localstack:4.9   Up 31 minutes (healthy)
+~/devops-homework/session-19-cloud-terraform/terraform$ curl -s http://localhost:4566/_localstack/health | jq '{edition, version, ec2: .services.ec2, s3: .services.s3, sts: .services.sts}'
+{
+  "edition": "community",
+  "version": "4.9.2",
+  "ec2": "running",
+  "s3": "running",
+  "sts": "available"
+}
+~/devops-homework/session-19-cloud-terraform/terraform$ tree -a --noreport .
+.
+├── .gitignore
+├── .terraform.lock.hcl
+├── ec2.tf
+├── outputs.tf
+├── provider.tf
+├── s3.tf
+├── security.tf
+├── terraform.tfstate
+├── terraform.tfstate.backup
+├── terraform.tfvars
+├── user_data.sh.tftpl
+├── variables.tf
+├── versions.tf
+└── vpc.tf

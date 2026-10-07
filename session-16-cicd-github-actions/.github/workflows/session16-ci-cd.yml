@@ -1,0 +1,279 @@
+# Session 16 - CI/CD with GitHub Actions (Calculator API)
+#
+# CI  : lint -> test (matrix of Python versions, coverage artifact) -> build Docker image (image artifact)
+# CD  : push image to GHCR (only on main) -> deploy to Kubernetes (kind cluster created on the runner)
+#
+# GitHub only reads workflows from <repo-root>/.github/workflows, so this file lives at the repo root
+# and every `run:` step works inside the session folder through `defaults.run.working-directory`.
+# A copy is kept in session-16-cicd-github-actions/.github/workflows/ for reading next to the code.
+
+name: "Session 16 - CI/CD Calculator API"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "session-16-cicd-github-actions/**"
+      - ".github/workflows/session16-ci-cd.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "session-16-cicd-github-actions/**"
+      - ".github/workflows/session16-ci-cd.yml"
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Run the CD part (push image + deploy to Kubernetes)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: s16-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APP_DIR: session-16-cicd-github-actions
+  IMAGE_NAME: s16-calculator-api
+  # ghcr.io on GitHub; a local run can point this at a local registry with `--var REGISTRY=localhost:5000`
+  REGISTRY: ${{ vars.REGISTRY || 'ghcr.io' }}
+  # kind = throw-away cluster on the runner (default); minikube = local run against my minikube
+  CLUSTER: ${{ vars.CLUSTER || 'kind' }}
+  K8S_NAMESPACE: s16
+
+defaults:
+  run:
+    shell: bash
+    working-directory: session-16-cicd-github-actions
+
+jobs:
+  # ---------------------------------------------------------------- CI
+  lint:
+    name: Lint (flake8)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install flake8
+        run: pip install flake8==7.1.1
+
+      - name: Run flake8
+        run: flake8 app tests --count --statistics
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run unit tests with coverage
+        run: |
+          mkdir -p reports
+          pytest -v \
+            --cov=app --cov-report=term-missing \
+            --cov-report=xml:reports/coverage.xml \
+            --cov-report=html:reports/htmlcov \
+            --junitxml=reports/junit.xml \
+            --cov-fail-under=90
+
+      - name: Upload coverage + test report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py${{ matrix.python-version }}
+          path: ${{ env.APP_DIR }}/reports/
+          retention-days: 7
+
+  build:
+    name: Build Docker image
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute image tag
+        id: meta
+        run: |
+          TAG="${GITHUB_SHA::7}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Image tag for this run: ${TAG}"
+
+      - name: Download coverage artifact from the test job
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-py3.12
+          path: ${{ env.APP_DIR }}/downloaded-coverage
+
+      - name: Show downloaded coverage summary
+        run: |
+          ls -l downloaded-coverage
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse("downloaded-coverage/coverage.xml").getroot()
+          print(f"line coverage from test job artifact: {float(root.get('line-rate')) * 100:.1f}%")
+          PY
+
+      - name: Use a repository secret (masked in logs)
+        env:
+          DEMO_API_KEY: ${{ secrets.DEMO_API_KEY }}
+        run: |
+          if [ -z "${DEMO_API_KEY}" ]; then
+            echo "DEMO_API_KEY is not configured (e.g. pull request from a fork) - skipping"
+          else
+            echo "DEMO_API_KEY is configured (length ${#DEMO_API_KEY} characters)"
+            echo "Printing it on purpose to show masking: ${DEMO_API_KEY}"
+          fi
+
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg GIT_SHA=${{ steps.meta.outputs.tag }} \
+            -t ${IMAGE_NAME}:${{ steps.meta.outputs.tag }} .
+          docker image ls ${IMAGE_NAME}
+
+      - name: Smoke test the container
+        run: |
+          docker run -d --name smoke-${{ github.run_id }} ${IMAGE_NAME}:${{ steps.meta.outputs.tag }}
+          sleep 3
+          docker exec smoke-${{ github.run_id }} python -c \
+            "import urllib.request as u; print(u.urlopen('http://127.0.0.1:8000/health').read().decode()); print(u.urlopen('http://127.0.0.1:8000/api/add?a=2&b=3').read().decode())"
+          docker rm -f smoke-${{ github.run_id }}
+
+      - name: Save image as tarball
+        run: docker save ${IMAGE_NAME}:${{ steps.meta.outputs.tag }} | gzip > image.tar.gz && ls -lh image.tar.gz
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: ${{ env.APP_DIR }}/image.tar.gz
+          retention-days: 3
+
+  # ---------------------------------------------------------------- CD
+  push:
+    name: Push image to registry
+    needs: build
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write          # lets GITHUB_TOKEN push to ghcr.io/<owner>/...
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: ${{ env.APP_DIR }}
+
+      - name: Load image
+        run: gunzip -c image.tar.gz | docker load
+
+      - name: Log in to GHCR
+        if: env.REGISTRY == 'ghcr.io'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag and push
+        run: |
+          TAG=${{ needs.build.outputs.image-tag }}
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          TARGET="${REGISTRY}/${OWNER}/${IMAGE_NAME}"
+          docker tag ${IMAGE_NAME}:${TAG} ${TARGET}:${TAG}
+          docker tag ${IMAGE_NAME}:${TAG} ${TARGET}:latest
+          docker push ${TARGET}:${TAG}
+          docker push ${TARGET}:latest
+          echo "Pushed ${TARGET}:${TAG}"
+
+  deploy:
+    name: Deploy to Kubernetes
+    needs: [build, push]
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Create kind cluster
+        if: env.CLUSTER == 'kind'
+        uses: helm/kind-action@v1.10.0
+        with:
+          cluster_name: s16
+
+      - name: Use kubeconfig from secret (external cluster)
+        if: env.CLUSTER != 'kind'
+        env:
+          KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG_B64 }}
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "${KUBE_CONFIG_B64}" | base64 -d > "$HOME/.kube/config"
+          kubectl cluster-info | head -n 1
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: ${{ env.APP_DIR }}
+
+      - name: Load image into the cluster node
+        run: |
+          TAG=${{ needs.build.outputs.image-tag }}
+          gunzip -c image.tar.gz | docker load
+          if [ "${CLUSTER}" = "kind" ]; then
+            kind load docker-image ${IMAGE_NAME}:${TAG} --name s16
+          else
+            # same thing `kind load` does: stream the image into the node's containerd
+            docker save ${IMAGE_NAME}:${TAG} | docker exec -i ${CLUSTER} ctr -n k8s.io images import --digests -
+          fi
+
+      - name: Apply manifests and roll out
+        run: |
+          TAG=${{ needs.build.outputs.image-tag }}
+          kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+          # deploy the exact image this run built (manifest default is the GHCR :latest tag)
+          sed "s|image: .*|image: ${IMAGE_NAME}:${TAG}|" k8s/deployment.yaml | kubectl apply -n ${K8S_NAMESPACE} -f -
+          kubectl apply -n ${K8S_NAMESPACE} -f k8s/service.yaml
+          kubectl rollout status -n ${K8S_NAMESPACE} deployment/calculator-api --timeout=120s
+          kubectl get deploy,pods,svc -n ${K8S_NAMESPACE} -o wide
+
+      - name: Smoke test through the Service
+        run: |
+          kubectl port-forward -n ${K8S_NAMESPACE} svc/calculator-api 8080:80 >/tmp/pf.log 2>&1 &
+          sleep 4
+          curl -fsS http://127.0.0.1:8080/health; echo
+          curl -fsS http://127.0.0.1:8080/version; echo
+          curl -fsS "http://127.0.0.1:8080/api/multiply?a=6&b=7"; echo

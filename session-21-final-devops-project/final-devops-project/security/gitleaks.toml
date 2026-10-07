@@ -1,0 +1,12 @@
+# gitleaks configuration: default ruleset + allowlist for paths that are not source code.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "generated reports, lock files and captured command output"
+paths = [
+  '''security/reports/''',
+  '''outputs/''',
+  '''screenshots/''',
+  '''package-lock\.json''',
+]

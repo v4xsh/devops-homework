@@ -1,0 +1,26 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ cd task1-monitoring/sample-app
+~/devops-homework/session-20-monitoring-observability-gitops/task1-monitoring/sample-app$ cat Dockerfile
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt \
+ && useradd --uid 10001 --no-create-home appuser
+COPY app.py .
+USER 10001
+EXPOSE 8080
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "4", "app:app"]
+~/devops-homework/session-20-monitoring-observability-gitops/task1-monitoring/sample-app$ docker build -t s20-metrics-app:1.0.0 . 2>&1 | tail -n 8
+#10 exporting config sha256:f3745bf13467fae4b495347fa61e0234ce9c78eecdcbefe343d2a7c5e1cf59af 0.0s done
+#10 exporting attestation manifest sha256:b729b507da3861cac392491908bc7edf7c8a41e7182690c768bf5b65fb6c1f6c 0.0s done
+#10 exporting manifest list sha256:cf2698132988feb78de74fdd0682867ff240bfd2d8b506f795f4563b2b487726
+#10 exporting manifest list sha256:cf2698132988feb78de74fdd0682867ff240bfd2d8b506f795f4563b2b487726 0.0s done
+#10 naming to docker.io/library/s20-metrics-app:1.0.0 done
+#10 unpacking to docker.io/library/s20-metrics-app:1.0.0
+#10 unpacking to docker.io/library/s20-metrics-app:1.0.0 0.4s done
+#10 DONE 1.9s
+~/devops-homework/session-20-monitoring-observability-gitops/task1-monitoring/sample-app$ docker images s20-metrics-app
+IMAGE                   ID             DISK USAGE   CONTENT SIZE   EXTRA
+s20-metrics-app:1.0.0   cf2698132988        206MB         48.5MB        
+~/devops-homework/session-20-monitoring-observability-gitops/task1-monitoring/sample-app$ minikube image load s20-metrics-app:1.0.0 && minikube image ls | grep s20-metrics-app
+docker.io/library/s20-metrics-app:1.0.0

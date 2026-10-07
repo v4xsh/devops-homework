@@ -1,0 +1,25 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/04-selector-mismatch-broken.yaml
+The Deployment "selector-error-demo" is invalid: spec.template.metadata.labels: Invalid value: {"app":"wrong-app-name"}: `selector` does not match template `labels`
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get deploy selector-error-demo -n s12-troubleshoot
+Error from server (NotFound): deployments.apps "selector-error-demo" not found
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ diff manifests/04-selector-mismatch-broken.yaml manifests/04-selector-mismatch-fixed.yaml
+1,2c1
+< # Copied from instructor's session10 troubleshooting/selector-mismatch.yaml (namespace added)
+< # INTENTIONALLY BROKEN: selector.matchLabels does not match the pod template labels
+---
+> # FIX: template label equals selector.matchLabels
+16c15
+<         app: wrong-app-name      # BUG
+---
+>         app: correct-app-name
+20a20,21
+>           resources:
+>             requests: { cpu: "5m", memory: "16Mi" }
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/04-selector-mismatch-fixed.yaml
+deployment.apps/selector-error-demo created
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout status deployment/selector-error-demo -n s12-troubleshoot --timeout=120s
+Waiting for deployment "selector-error-demo" rollout to finish: 0 of 1 updated replicas are available...
+deployment "selector-error-demo" successfully rolled out
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get deploy,pods -n s12-troubleshoot -l app=correct-app-name
+NAME                                       READY   STATUS    RESTARTS   AGE
+pod/selector-error-demo-7c44fc9d96-wpjjf   1/1     Running   0          1s

@@ -1,0 +1,29 @@
+~/devops-homework/session-06-docker-fundamentals$ docker ps --filter name=s06- --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES            IMAGE                STATUS              PORTS
+s06-nginx-app    s06-nginx-app:1.0    Up 35 seconds       0.0.0.0:8006->80/tcp, [::]:8006->80/tcp
+s06-react-app    s06-react-app:1.0    Up About a minute   0.0.0.0:8005->80/tcp, [::]:8005->80/tcp
+s06-apache-app   s06-apache-app:1.0   Up 3 minutes        0.0.0.0:8004->80/tcp, [::]:8004->80/tcp
+s06-java-app     s06-java-app:1.0     Up 4 minutes        0.0.0.0:8003->8080/tcp, [::]:8003->8080/tcp
+s06-python-app   s06-python-app:1.0   Up 6 minutes        0.0.0.0:8002->5000/tcp, [::]:8002->5000/tcp
+s06-nodejs-app   s06-nodejs-app:1.0   Up 7 minutes        0.0.0.0:8001->3000/tcp, [::]:8001->3000/tcp
+~/devops-homework/session-06-docker-fundamentals$ docker images --filter reference='s06-*' --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
+REPOSITORY       TAG       IMAGE ID       SIZE
+s06-nginx-app    1.0       89c241b642e3   93.6MB
+s06-react-app    1.0       8902e0f64819   93.8MB
+s06-apache-app   1.0       a625cfe85cb5   105MB
+s06-java-app     1.0       8bd95bbd6812   265MB
+s06-python-app   1.0       1842d830b5a2   185MB
+s06-nodejs-app   1.0       e01d9613b1a7   208MB
+~/devops-homework/session-06-docker-fundamentals$ for p in 8001 8002 8003 8004 8005 8006; do echo "--- localhost:$p"; curl -s localhost:$p | grep -o 'Hello World from [A-Za-z.() ]* in Docker[^<]*' | head -n 1; done
+--- localhost:8001
+Hello World from Node.js (Express) in Docker - Vansh Dobhal (Roll No. 10099)
+--- localhost:8002
+Hello World from Python (Flask) in Docker - Vansh Dobhal (Roll No. 10099)
+--- localhost:8003
+Hello World from Java in Docker - Vansh Dobhal (Roll No. 10099)
+--- localhost:8004
+Hello World from Apache httpd in Docker - Vansh Dobhal (Roll No. 10099)
+--- localhost:8005
+Hello World from React in Docker - Vansh Dobhal (Roll No. 10099)
+--- localhost:8006
+Hello World from Nginx in Docker - Vansh Dobhal (Roll No. 10099)

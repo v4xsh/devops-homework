@@ -1,0 +1,51 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl apply -f broken.yaml
+namespace/s14-mini created
+deployment.apps/orders-api created
+service/orders-api created
+pod/dns-client created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl rollout status deploy/orders-api -n s14-mini --timeout=90s
+Waiting for deployment "orders-api" rollout to finish: 0 of 1 updated replicas are available...
+deployment "orders-api" successfully rolled out
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl wait --for=condition=Ready pod/dns-client -n s14 --timeout=90s
+pod/dns-client condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ sleep 12
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl logs dns-client -n s14 --tail=4
+request FAILED
+17:30:08 calling http://orders-api
+wget: bad address 'orders-api'
+request FAILED
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl exec dns-client -n s14 -- nslookup orders-api
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+** server can't find orders-api.cluster.local: NXDOMAIN
+
+** server can't find orders-api.cluster.local: NXDOMAIN
+
+** server can't find orders-api.s14.svc.cluster.local: NXDOMAIN
+
+** server can't find orders-api.svc.cluster.local: NXDOMAIN
+
+** server can't find orders-api.s14.svc.cluster.local: NXDOMAIN
+
+** server can't find orders-api.svc.cluster.local: NXDOMAIN
+
+command terminated with exit code 1
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl exec dns-client -n s14 -- cat /etc/resolv.conf
+search s14.svc.cluster.local svc.cluster.local cluster.local
+nameserver 10.96.0.10
+options ndots:5
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl get svc -A | grep -E 'NAMESPACE|orders-api'
+NAMESPACE       NAME                                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+s14-mini        orders-api                           ClusterIP      10.102.105.22    <none>        80/TCP                         14s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl get pods -n kube-system -l k8s-app=kube-dns
+NAME                       READY   STATUS    RESTARTS   AGE
+coredns-559f6c778d-jxzsm   1/1     Running   0          32m
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl exec dns-client -n s14 -- nslookup kubernetes.default.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	kubernetes.default.svc.cluster.local
+Address: 10.96.0.1
+
+

@@ -1,0 +1,31 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f dns-test-pod.yaml
+pod/dns-test created
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl wait --for=condition=Ready pod/dns-test -n s14-mini --timeout=60s
+pod/dns-test condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl exec dns-test -n s14-mini -- nslookup troubleshooting-service
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+** server can't find troubleshooting-service.cluster.local: NXDOMAIN
+
+** server can't find troubleshooting-service.svc.cluster.local: NXDOMAIN
+
+Name:	troubleshooting-service.s14-mini.svc.cluster.local
+Address: 10.111.64.188
+
+** server can't find troubleshooting-service.cluster.local: NXDOMAIN
+
+
+** server can't find troubleshooting-service.svc.cluster.local: NXDOMAIN
+
+command terminated with exit code 1
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl exec dns-test -n s14-mini -- nslookup troubleshooting-service.s14-mini.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	troubleshooting-service.s14-mini.svc.cluster.local
+Address: 10.111.64.188
+
+
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl exec dns-test -n s14-mini -- wget -qO- -T 3 http://troubleshooting-service | grep '<title>'
+<title>Welcome to nginx!</title>

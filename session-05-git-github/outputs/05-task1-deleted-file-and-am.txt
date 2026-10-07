@@ -1,0 +1,20 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ echo "line 3" >> app.txt
+~/practice/git-homework$ rm new_file.txt
+~/practice/git-homework$ git status --short
+ M app.txt
+ D new_file.txt
+~/practice/git-homework$ git commit -am "commit -am also stages deletions of tracked files"
+[main 670d217] commit -am also stages deletions of tracked files
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ delete mode 100644 new_file.txt
+~/practice/git-homework$ git show --stat --oneline HEAD
+670d217 commit -am also stages deletions of tracked files
+ app.txt      | 1 +
+ new_file.txt | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+~/practice/git-homework$ git log --oneline
+670d217 commit -am also stages deletions of tracked files
+df8bc52 Add new_file.txt with explicit git add + commit -m
+183a17b commit -a: auto-stage modified tracked files
+7cfaa34 Initial commit: README and app.txt

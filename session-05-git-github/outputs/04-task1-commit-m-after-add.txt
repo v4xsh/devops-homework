@@ -1,0 +1,15 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ git add new_file.txt
+~/practice/git-homework$ git status --short
+A  new_file.txt
+~/practice/git-homework$ git commit -m "Add new_file.txt with explicit git add + commit -m"
+[main df8bc52] Add new_file.txt with explicit git add + commit -m
+ 1 file changed, 1 insertion(+)
+ create mode 100644 new_file.txt
+~/practice/git-homework$ git status
+On branch main
+nothing to commit, working tree clean
+~/practice/git-homework$ git log --oneline
+df8bc52 Add new_file.txt with explicit git add + commit -m
+183a17b commit -a: auto-stage modified tracked files
+7cfaa34 Initial commit: README and app.txt

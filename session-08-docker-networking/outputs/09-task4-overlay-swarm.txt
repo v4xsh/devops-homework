@@ -1,0 +1,31 @@
+~/devops-homework/session-08-docker-networking$ docker swarm init --advertise-addr $(hostname -I | awk '{print $1}')
+Swarm initialized: current node (h103l9fmxu7ax09eppka73mqq) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-44urofkoq5r56vt5kc5nbcqwzxypnb9lqpxh189f4sxryim7z4-9zk79ras7hc7rk9d0pk2v68ma 172.17.9.114:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+~/devops-homework/session-08-docker-networking$ docker node ls
+ID                            HOSTNAME    STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+h103l9fmxu7ax09eppka73mqq *   Vansh-G15   Ready     Active         Leader           29.8.2
+~/devops-homework/session-08-docker-networking$ docker network create -d overlay --attachable s08-overlay-net
+plt3jy7echa483vvk8um7ny0y
+~/devops-homework/session-08-docker-networking$ docker network ls --filter driver=overlay
+NETWORK ID     NAME              DRIVER    SCOPE
+rd8t88c6x92y   ingress           overlay   swarm
+plt3jy7echa4   s08-overlay-net   overlay   swarm
+~/devops-homework/session-08-docker-networking$ docker service create --name s08-web --network s08-overlay-net --replicas 2 -p 8024:80 nginx:alpine >/dev/null
+image nginx:alpine could not be accessed on a registry to record
+its digest. Each node will access nginx:alpine independently,
+possibly leading to different nodes running different
+versions of the image.
+
+~/devops-homework/session-08-docker-networking$ until [ "$(docker service ls --filter name=s08-web --format '{{.Replicas}}')" = "2/2" ]; do sleep 2; done
+~/devops-homework/session-08-docker-networking$ docker service ls
+ID             NAME      MODE         REPLICAS   IMAGE          PORTS
+rirrd1hqknjb   s08-web   replicated   2/2        nginx:alpine   *:8024->80/tcp
+~/devops-homework/session-08-docker-networking$ docker service ps s08-web --format "table {{.Name}}\t{{.Node}}\t{{.CurrentState}}"
+NAME        NODE        CURRENT STATE
+s08-web.1   Vansh-G15   Running 6 seconds ago
+s08-web.2   Vansh-G15   Running 6 seconds ago

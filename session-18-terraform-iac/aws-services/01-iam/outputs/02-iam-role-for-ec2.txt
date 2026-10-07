@@ -1,0 +1,31 @@
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam create-role --role-name s18-ec2-app-role --assume-role-policy-document file://policies/ec2-trust-policy.json --query 'Role.[RoleName,Arn]' --output text
+s18-ec2-app-role	arn:aws:iam::000000000000:role/s18-ec2-app-role
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam attach-role-policy --role-name s18-ec2-app-role --policy-arn arn:aws:iam::000000000000:policy/S3ReadOnlyReportsBucket && echo "permission policy attached to role"
+permission policy attached to role
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam create-instance-profile --instance-profile-name s18-ec2-app-profile --query 'InstanceProfile.Arn' --output text
+arn:aws:iam::000000000000:instance-profile/s18-ec2-app-profile
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam add-role-to-instance-profile --instance-profile-name s18-ec2-app-profile --role-name s18-ec2-app-role && echo "role added to instance profile"
+role added to instance profile
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam get-role --role-name s18-ec2-app-role --query 'Role.AssumeRolePolicyDocument'
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam list-attached-role-policies --role-name s18-ec2-app-role --output table
+------------------------------------------------------------------------------
+|                          ListAttachedRolePolicies                          |
++----------------------------------------------------------------------------+
+||                             AttachedPolicies                             ||
+|+------------+-------------------------------------------------------------+|
+||  PolicyArn |  arn:aws:iam::000000000000:policy/S3ReadOnlyReportsBucket   ||
+||  PolicyName|  S3ReadOnlyReportsBucket                                    ||
+|+------------+-------------------------------------------------------------+|

@@ -1,0 +1,18 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl patch svc shop-web -n s14 -p '{"spec":{"selector":{"app":"shop-web"}}}'
+service/shop-web patched
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ sleep 3
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get endpoints shop-web -n s14
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS                             AGE
+shop-web   10.244.0.218:8080,10.244.0.219:8080   9s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl exec svc-client -n s14 -- curl -sS -m 3 http://shop-web
+curl: (7) Failed to connect to shop-web port 80 after 1 ms: Couldn't connect to server
+command terminated with exit code 7
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ POD=$(kubectl get pods -n s14 -l app=shop-web -o jsonpath='{.items[0].metadata.name}'); POD_IP=$(kubectl get pod $POD -n s14 -o jsonpath='{.status.podIP}'); echo "$POD $POD_IP"
+shop-web-866b54d69b-4rgqz 10.244.0.219
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl exec svc-client -n s14 -- curl -sS -m 3 -o /dev/null -w "direct pod:80 -> HTTP %{http_code}\n" http://$POD_IP:80
+direct pod:80 -> HTTP 200
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get pod $POD -n s14 -o jsonpath='containerPort={.spec.containers[0].ports[0].containerPort}{"\n"}'
+containerPort=80
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get svc shop-web -n s14 -o jsonpath='service port={.spec.ports[0].port} targetPort={.spec.ports[0].targetPort}{"\n"}'
+service port=80 targetPort=8080

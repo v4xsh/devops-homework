@@ -1,0 +1,21 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl delete pod project-broken-pod -n s14-mini
+pod "project-broken-pod" deleted from s14-mini namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f fixed-pod.yaml
+pod/project-broken-pod created
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl wait --for=condition=Ready pod/project-broken-pod -n s14-mini --timeout=90s
+pod/project-broken-pod condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pod project-broken-pod -n s14-mini
+NAME                 READY   STATUS    RESTARTS   AGE
+project-broken-pod   1/1     Running   0          1s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl events -n s14-mini --for pod/project-broken-pod
+LAST SEEN           TYPE      REASON      OBJECT                   MESSAGE
+47s                 Normal    Scheduled   Pod/project-broken-pod   Successfully assigned s14-mini/project-broken-pod to minikube
+31s (x2 over 47s)   Normal    Pulling     Pod/project-broken-pod   Pulling image "nginx:this-tag-does-not-exist"
+29s (x2 over 45s)   Warning   Failed      Pod/project-broken-pod   Failed to pull image "nginx:this-tag-does-not-exist": failed to pull and unpack image "docker.io/library/nginx:this-tag-does-not-exist": failed to resolve reference "docker.io/library/nginx:this-tag-does-not-exist": unexpected status from HEAD request to https://registry-1.docker.io/v2/library/nginx/manifests/this-tag-does-not-exist: 429 Too Many Requests
+29s (x2 over 45s)   Warning   Failed      Pod/project-broken-pod   Error: ErrImagePull
+15s (x2 over 44s)   Normal    BackOff     Pod/project-broken-pod   Back-off pulling image "nginx:this-tag-does-not-exist"
+15s (x2 over 44s)   Warning   Failed      Pod/project-broken-pod   Error: ImagePullBackOff
+1s                  Normal    Scheduled   Pod/project-broken-pod   Successfully assigned s14-mini/project-broken-pod to minikube
+0s                  Normal    Pulled      Pod/project-broken-pod   Container image "nginx:1.27" already present on machine and can be accessed by the pod
+0s                  Normal    Created     Pod/project-broken-pod   Container created
+0s                  Normal    Started     Pod/project-broken-pod   Container started

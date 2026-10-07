@@ -1,0 +1,31 @@
+~/devops-homework/session-07-docker-images$ docker history s07-node-app:multi --format "table {{.CreatedBy}}\t{{.Size}}" --no-trunc | cut -c1-110
+CREATED BY                                                                                                    
+CMD ["node" "server.js"]                                                                                      
+EXPOSE [3000/tcp]                                                                                             
+USER node                                                                                                     
+COPY package.json server.js ./ # buildkit                                                                     
+COPY /app/node_modules ./node_modules # buildkit                                                              
+WORKDIR /app                                                                                                  
+ENV NODE_ENV=production                                                                                       
+CMD ["node"]                                                                                                  
+ENTRYPOINT ["docker-entrypoint.sh"]                                                                           
+COPY docker-entrypoint.sh /usr/local/bin/ # buildkit                                                          
+RUN /bin/sh -c apk add --no-cache --virtual .build-deps-yarn curl gnupg tar   && export GNUPGHOME="$(mktemp -d
+ENV YARN_VERSION=1.22.22                                                                                      
+RUN /bin/sh -c addgroup -g 1000 node     && adduser -u 1000 -G node -s /bin/sh -D node     && apk add --no-cac
+ENV NODE_VERSION=20.20.2                                                                                      
+CMD ["/bin/sh"]                                                                                               
+ADD alpine-minirootfs-3.23.4-x86_64.tar.gz / # buildkit                                                       
+~/devops-homework/session-07-docker-images$ docker history s07-node-app:single --format "table {{.CreatedBy}}\t{{.Size}}" | head -n 8
+CREATED BY                                      SIZE
+CMD ["node" "server.js"]                        0B
+EXPOSE [3000/tcp]                               0B
+RUN /bin/sh -c npm install # buildkit           12.8MB
+COPY . . # buildkit                             16.4kB
+WORKDIR /app                                    8.19kB
+CMD ["node"]                                    0B
+ENTRYPOINT ["docker-entrypoint.sh"]             0B
+~/devops-homework/session-07-docker-images$ docker image inspect s07-node-app:multi --format '{{len .RootFS.Layers}} layers'
+7 layers
+~/devops-homework/session-07-docker-images$ docker image inspect s07-node-app:single --format '{{len .RootFS.Layers}} layers'
+11 layers

@@ -1,0 +1,50 @@
+~/devops-homework/tools$ sudo systemctl status cron --no-pager | head -n 12
+● cron.service - Regular background program processing daemon
+     Loaded: loaded (/usr/lib/systemd/system/cron.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2026-10-07 16:56:14 UTC; 8min ago
+       Docs: man:cron(8)
+   Main PID: 176 (cron)
+      Tasks: 1 (limit: 11922)
+     Memory: 440.0K (peak: 1.7M)
+        CPU: 7ms
+     CGroup: /system.slice/cron.service
+             └─176 /usr/sbin/cron -f -P
+
+Oct 07 16:56:14 Vansh-G15 systemd[1]: Started cron.service - Regular background program processing daemon.
+~/devops-homework/tools$ sudo journalctl -u cron --no-pager -n 10 -o short-iso
+2026-10-07T16:53:05+00:00 Vansh-G15 cron[189]: (CRON) INFO (pidfile fd = 3)
+2026-10-07T16:53:05+00:00 Vansh-G15 cron[189]: (CRON) INFO (Running @reboot jobs)
+2026-10-07T16:53:59+00:00 Vansh-G15 systemd[1]: Started cron.service - Regular background program processing daemon.
+2026-10-07T16:53:59+00:00 Vansh-G15 (cron)[186]: cron.service: Referenced but unset environment variable evaluates to an empty string: EXTRA_OPTS
+2026-10-07T16:53:59+00:00 Vansh-G15 cron[186]: (CRON) INFO (pidfile fd = 3)
+2026-10-07T16:53:59+00:00 Vansh-G15 cron[186]: (CRON) INFO (Running @reboot jobs)
+-- Boot 349759b5206b408d9bb9966a39834e28 --
+2026-10-07T16:56:14+00:00 Vansh-G15 systemd[1]: Started cron.service - Regular background program processing daemon.
+2026-10-07T16:56:14+00:00 Vansh-G15 (cron)[176]: cron.service: Referenced but unset environment variable evaluates to an empty string: EXTRA_OPTS
+2026-10-07T16:56:14+00:00 Vansh-G15 cron[176]: (CRON) INFO (pidfile fd = 3)
+2026-10-07T16:56:14+00:00 Vansh-G15 cron[176]: (CRON) INFO (Running @reboot jobs)
+~/devops-homework/tools$ sudo journalctl -u docker --since "1 hour ago" --no-pager -n 10 -o short-iso
+2026-10-07T16:56:24+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:24.383672063Z" level=error msg="Error setting up exec command in container minikube: container 07c4c19f10b615c21c1a504c82b905b90f75354ce6d3b6301aec6f9ed3803954 is not running"
+2026-10-07T16:56:42+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:42.165345535Z" level=info msg="image pulled" digest="sha256:4a1c825b61479e6c898851ea66f13c620aaeab6002746e95067fc2c4b38a0b24" remote="gcr.io/k8s-minikube/kicbase@sha256:4a1c825b61479e6c898851ea66f13c620aaeab6002746e95067fc2c4b38a0b24"
+2026-10-07T16:56:46+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:46.486377845Z" level=info msg="sbJoin: gwep4 ''->'3770dd4f8234', gwep6 ''->''" eid=3770dd4f8234 ep=minikube-preload-sidecar net=bridge nid=1e08fe18e0c9
+2026-10-07T16:56:46+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:46.531577512Z" level=info msg="received task-delete event from containerd" container=57107cb6939c4ad79c7be95cf410b1aed8ffdc1217c61b3cca7abad5d6e332ed module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+2026-10-07T16:56:47+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:47.423265141Z" level=info msg="sbJoin: gwep4 ''->'0b909ea741ce', gwep6 ''->''" eid=0b909ea741ce ep=peaceful_carson net=bridge nid=1e08fe18e0c9
+2026-10-07T16:56:47+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:47.461926578Z" level=info msg="received task-delete event from containerd" container=1637f933d66f7a51192f180b14bdc7001a67d3e381b3d9ce68d7eeff4f1933b1 module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+2026-10-07T16:56:48+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T16:56:48.876237543Z" level=info msg="sbJoin: gwep4 ''->'20f111d291b3', gwep6 ''->''" eid=20f111d291b3 ep=minikube net=minikube nid=c8ff5e58a655
+2026-10-07T17:03:14+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T17:03:14.538927458Z" level=info msg="image pulled" digest="sha256:0c644ede65c2d0c95737e09a39007828bd381bdb07ca8200c6bf17d66a4ed191" remote="docker.io/localstack/localstack:latest"
+2026-10-07T17:03:18+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T17:03:18.469446446Z" level=info msg="sbJoin: gwep4 ''->'3f7c43d2f0a1', gwep6 ''->''" eid=3f7c43d2f0a1 ep=s18-localstack net=bridge nid=1e08fe18e0c9
+2026-10-07T17:03:23+00:00 Vansh-G15 dockerd[270]: time="2026-10-07T17:03:23.077071478Z" level=info msg="received task-delete event from containerd" container=01c1d8066b3fa5c6de3ba188cb5d8b93802714eed0ae1b31991d759944e3fae4 module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+~/devops-homework/tools$ logger -t vansh-homework "Session 2 journalctl practice by Vansh Dobhal (10099)"
+~/devops-homework/tools$ sleep 1
+~/devops-homework/tools$ sudo journalctl -t vansh-homework --since "5 min ago" --no-pager -o short-iso
+2026-10-07T17:03:04+00:00 Vansh-G15 vansh-homework[9072]: Session 2 journalctl practice by Vansh Dobhal (10099)
+2026-10-07T17:04:16+00:00 Vansh-G15 vansh-homework[12232]: Session 2 journalctl practice by Vansh Dobhal (10099)
+~/devops-homework/tools$ sudo journalctl -u docker -p warning --no-pager -n 5
+-- No entries --
+~/devops-homework/tools$ sudo journalctl -u cron -o json --no-pager -n 1 | jq '{MESSAGE, _PID, _SYSTEMD_UNIT, PRIORITY}'
+{
+  "MESSAGE": "(CRON) INFO (Running @reboot jobs)",
+  "_PID": "176",
+  "_SYSTEMD_UNIT": "cron.service",
+  "PRIORITY": "6"
+}

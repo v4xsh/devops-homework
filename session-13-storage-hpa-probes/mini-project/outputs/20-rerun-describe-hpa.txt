@@ -1,0 +1,30 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl describe hpa web-app-hpa -n s13-mini | sed -n '/Metrics:/,$p'
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  1% (1m) / 50%
+Min replicas:                                          2
+Max replicas:                                          5
+Deployment pods:                                       2 current / 2 desired
+Conditions:
+  Type            Status  Reason            Message
+  ----            ------  ------            -------
+  AbleToScale     True    ReadyForNewScale  recommended size matches current size
+  ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooFewReplicas    the desired replica count is less than the minimum replica count
+  ScaledToZero    False   NotScaledToZero   the HPA controller did not scale the workload to zero
+Events:
+  Type     Reason                        Age                  From                       Message
+  ----     ------                        ----                 ----                       -------
+  Warning  FailedComputeMetricsReplicas  27m (x4 over 28m)    horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Normal   SuccessfulRescale             26m                  horizontal-pod-autoscaler  New size: 3; reason: cpu resource utilization (percentage of request) above target
+  Warning  FailedComputeMetricsReplicas  15m (x9 over 29m)    horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedGetResourceMetric       15m (x5 over 28m)    horizontal-pod-autoscaler  failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Warning  FailedGetResourceMetric       14m (x10 over 29m)   horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Normal   SuccessfulRescale             11m                  horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             9m19s (x2 over 25m)  horizontal-pod-autoscaler  New size: 5; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             2m33s                horizontal-pod-autoscaler  New size: 2; reason: All metrics below target
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get events -n s13-mini --field-selector reason=SuccessfulRescale --sort-by=.lastTimestamp
+LAST SEEN   TYPE     REASON              OBJECT                                MESSAGE
+26m         Normal   SuccessfulRescale   horizontalpodautoscaler/web-app-hpa   New size: 3; reason: cpu resource utilization (percentage of request) above target
+11m         Normal   SuccessfulRescale   horizontalpodautoscaler/web-app-hpa   New size: 4; reason: cpu resource utilization (percentage of request) above target
+9m19s       Normal   SuccessfulRescale   horizontalpodautoscaler/web-app-hpa   New size: 5; reason: cpu resource utilization (percentage of request) above target
+2m33s       Normal   SuccessfulRescale   horizontalpodautoscaler/web-app-hpa   New size: 2; reason: All metrics below target

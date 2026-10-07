@@ -1,0 +1,20 @@
+~/devops-homework/tools$ cd ~/practice/cheatsheet
+~/practice/cheatsheet$ echo 'echo "hello from script"' > run.sh
+~/practice/cheatsheet$ ls -l run.sh
+-rw-r--r-- 1 vansh vansh 25 Oct  7 17:04 run.sh
+~/practice/cheatsheet$ chmod u+x run.sh && ls -l run.sh && ./run.sh
+-rwxr--r-- 1 vansh vansh 25 Oct  7 17:04 run.sh
+hello from script
+~/practice/cheatsheet$ chmod 640 docs/notes.md && ls -l docs/notes.md
+-rw-r----- 1 vansh vansh 0 Oct  7 17:04 docs/notes.md
+~/practice/cheatsheet$ chmod 755 run.sh && stat -c '%A %a %n' run.sh
+-rwxr-xr-x 755 run.sh
+~/practice/cheatsheet$ sudo chown root:root backup/app.log.bak && ls -l backup/app.log.bak
+-rw-r--r-- 1 root root 55 Oct  7 17:04 backup/app.log.bak
+~/practice/cheatsheet$ sudo chown vansh:vansh backup/app.log.bak && ls -l backup/app.log.bak
+-rw-r--r-- 1 vansh vansh 55 Oct  7 17:04 backup/app.log.bak
+~/practice/cheatsheet$ umask
+0022
+~/practice/cheatsheet$ whoami; id
+vansh
+uid=1000(vansh) gid=1000(vansh) groups=1000(vansh),27(sudo),989(docker)

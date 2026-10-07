@@ -1,0 +1,25 @@
+~/devops-homework/session-15-helm/mini-project$ cd ~/devops-homework/session-15-helm/mini-project
+~/devops-homework/session-15-helm/mini-project$ tree -a notes-chart
+notes-chart
+├── .helmignore
+├── Chart.yaml
+├── templates
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
+│   ├── configmap.yaml
+│   ├── deployment.yaml
+│   └── service.yaml
+├── values-prod.yaml
+└── values.yaml
+
+2 directories, 9 files
+~/devops-homework/session-15-helm/mini-project$ helm lint notes-chart
+==> Linting notes-chart
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-15-helm/mini-project$ helm lint notes-chart -f notes-chart/values-prod.yaml --strict
+==> Linting notes-chart
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed

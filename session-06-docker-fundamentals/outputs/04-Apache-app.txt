@@ -1,0 +1,43 @@
+~/devops-homework/session-06-docker-fundamentals$ cd ~/devops-homework/session-06-docker-fundamentals/Apache-app
+~/devops-homework/session-06-docker-fundamentals/Apache-app$ ls -A
+Dockerfile
+index.html
+~/devops-homework/session-06-docker-fundamentals/Apache-app$ docker build --progress=plain -t s06-apache-app:1.0 . 2>&1 | tail -n 20
+
+#5 [1/2] FROM docker.io/library/httpd:2.4-alpine@sha256:3440c39d8d6f54fa9ad2549e5a60c19ddd435faadc29c1ad28aa795f71888889
+#5 extracting sha256:8e97dd6176d7ad95a03527a95c49545e107c16bd82433ac3fb31ce345635f4cb 0.1s done
+#5 DONE 11.2s
+
+#6 [2/2] COPY index.html /usr/local/apache2/htdocs/index.html
+#6 DONE 0.7s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 1.6s done
+#7 exporting manifest sha256:b7a3fb55e905a270e95f3566cffd259046a0f7424909267e79c8b20a441ac76d 0.0s done
+#7 exporting config sha256:10fd5ea60169de9aa6e4bc2ffa3563da13d98db9743d966d078595d8391796e9 0.0s done
+#7 exporting attestation manifest sha256:7d39d3e300a9fc7cf5ec23d9f15b3009f18c85b185deddf6d27c5cc6d0965e76
+#7 exporting attestation manifest sha256:7d39d3e300a9fc7cf5ec23d9f15b3009f18c85b185deddf6d27c5cc6d0965e76 0.0s done
+#7 exporting manifest list sha256:a625cfe85cb580f6e921092596da7edb56fb13f06d02213de44f87dd504b09b0 0.0s done
+#7 naming to docker.io/library/s06-apache-app:1.0 done
+#7 unpacking to docker.io/library/s06-apache-app:1.0
+#7 unpacking to docker.io/library/s06-apache-app:1.0 0.3s done
+#7 DONE 2.1s
+~/devops-homework/session-06-docker-fundamentals/Apache-app$ docker run -d --name s06-apache-app -p 8004:80 s06-apache-app:1.0
+6a1f4770ee65f1254d56e954a865bb0296712e20066da82f6681d774f5f0b481
+~/devops-homework/session-06-docker-fundamentals/Apache-app$ sleep 4
+~/devops-homework/session-06-docker-fundamentals/Apache-app$ docker ps --filter name=s06-apache-app --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES            IMAGE                STATUS         PORTS
+s06-apache-app   s06-apache-app:1.0   Up 4 seconds   0.0.0.0:8004->80/tcp, [::]:8004->80/tcp
+~/devops-homework/session-06-docker-fundamentals/Apache-app$ curl -s localhost:8004
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apache Hello World</title>
+</head>
+<body>
+  <h1>Hello World from Apache httpd in Docker - Vansh Dobhal (Roll No. 10099)</h1>
+  <p>Served by the official httpd:alpine image.</p>
+</body>
+</html>

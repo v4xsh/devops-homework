@@ -1,0 +1,102 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 25; pkill -f 'get pods -n s10-rolling -w'; wait 2>/dev/null; echo "watch + curl loop finished"
+watch + curl loop finished
+~/devops-homework/session-10-pods-replicasets-deployments$ cat outputs/01-rolling-watch.log | grep -v curl-client
+17:25:45.584  EVENT      NAME                           READY   STATUS    RESTARTS   AGE
+17:25:45.587  ADDED      app-rolling-86d7d44d5b-5kqb8   1/1     Running   0          12s
+17:25:45.591  ADDED      app-rolling-86d7d44d5b-5z2xd   1/1     Running   0          12s
+17:25:45.593  ADDED      app-rolling-86d7d44d5b-cndgm   1/1     Running   0          12s
+17:25:45.596  ADDED      app-rolling-86d7d44d5b-l2r25   1/1     Running   0          12s
+17:25:48.242  ADDED      app-rolling-56bff6d88c-gw5sj   0/1     Pending   0          0s
+17:25:48.274  MODIFIED   app-rolling-56bff6d88c-gw5sj   0/1     Pending   0          0s
+17:25:48.869  MODIFIED   app-rolling-56bff6d88c-gw5sj   0/1     ContainerCreating   0          0s
+17:25:49.475  MODIFIED   app-rolling-56bff6d88c-gw5sj   0/1     ContainerCreating   0          1s
+17:25:50.500  MODIFIED   app-rolling-56bff6d88c-gw5sj   0/1     Running             0          2s
+17:25:56.391  MODIFIED   app-rolling-56bff6d88c-gw5sj   1/1     Running             0          8s
+17:25:56.460  MODIFIED   app-rolling-56bff6d88c-gw5sj   1/1     Running             0          8s
+17:25:56.524  MODIFIED   app-rolling-86d7d44d5b-5z2xd   1/1     Terminating         0          23s
+17:25:56.984  MODIFIED   app-rolling-86d7d44d5b-5z2xd   1/1     Terminating         0          23s
+17:25:57.289  ADDED      app-rolling-56bff6d88c-k2m29   0/1     Pending             0          0s
+17:25:57.310  MODIFIED   app-rolling-56bff6d88c-k2m29   0/1     Pending             0          0s
+17:25:57.374  MODIFIED   app-rolling-56bff6d88c-k2m29   0/1     ContainerCreating   0          0s
+17:25:58.080  MODIFIED   app-rolling-86d7d44d5b-5z2xd   0/1     Completed           0          25s
+17:25:58.487  MODIFIED   app-rolling-86d7d44d5b-5z2xd   0/1     Completed           0          25s
+17:25:58.565  MODIFIED   app-rolling-86d7d44d5b-5z2xd   0/1     Completed           0          25s
+17:25:58.592  DELETED    app-rolling-86d7d44d5b-5z2xd   0/1     Completed           0          25s
+17:25:58.761  MODIFIED   app-rolling-56bff6d88c-k2m29   0/1     ContainerCreating   0          1s
+17:25:59.186  MODIFIED   app-rolling-56bff6d88c-k2m29   0/1     Running             0          2s
+17:26:04.856  MODIFIED   app-rolling-56bff6d88c-k2m29   1/1     Running             0          7s
+17:26:05.308  MODIFIED   app-rolling-56bff6d88c-k2m29   1/1     Running             0          8s
+17:26:06.059  MODIFIED   app-rolling-86d7d44d5b-l2r25   1/1     Terminating         0          33s
+17:26:06.068  ADDED      app-rolling-56bff6d88c-pchfs   0/1     Pending             0          0s
+17:26:06.093  MODIFIED   app-rolling-86d7d44d5b-l2r25   1/1     Terminating         0          33s
+17:26:06.096  MODIFIED   app-rolling-56bff6d88c-pchfs   0/1     Pending             0          0s
+17:26:06.117  MODIFIED   app-rolling-56bff6d88c-pchfs   0/1     ContainerCreating   0          0s
+17:26:06.871  MODIFIED   app-rolling-86d7d44d5b-l2r25   0/1     Completed           0          33s
+17:26:07.282  MODIFIED   app-rolling-56bff6d88c-pchfs   0/1     ContainerCreating   0          1s
+17:26:07.601  MODIFIED   app-rolling-86d7d44d5b-l2r25   0/1     Completed           0          34s
+17:26:07.611  DELETED    app-rolling-86d7d44d5b-l2r25   0/1     Completed           0          34s
+17:26:07.690  MODIFIED   app-rolling-56bff6d88c-pchfs   0/1     Running             0          1s
+17:26:13.610  MODIFIED   app-rolling-56bff6d88c-pchfs   1/1     Running             0          7s
+17:26:13.672  MODIFIED   app-rolling-86d7d44d5b-cndgm   1/1     Terminating         0          40s
+17:26:13.724  ADDED      app-rolling-56bff6d88c-5gb2v   0/1     Pending             0          0s
+17:26:13.736  MODIFIED   app-rolling-56bff6d88c-5gb2v   0/1     Pending             0          0s
+17:26:13.774  MODIFIED   app-rolling-86d7d44d5b-cndgm   1/1     Terminating         0          40s
+17:26:13.807  MODIFIED   app-rolling-56bff6d88c-5gb2v   0/1     ContainerCreating   0          0s
+17:26:14.148  MODIFIED   app-rolling-86d7d44d5b-cndgm   0/1     Completed           0          41s
+17:26:14.616  MODIFIED   app-rolling-56bff6d88c-5gb2v   0/1     ContainerCreating   0          1s
+17:26:14.691  MODIFIED   app-rolling-86d7d44d5b-cndgm   0/1     Completed           0          41s
+17:26:14.711  MODIFIED   app-rolling-86d7d44d5b-cndgm   0/1     Completed           0          41s
+17:26:14.729  DELETED    app-rolling-86d7d44d5b-cndgm   0/1     Completed           0          41s
+17:26:15.325  MODIFIED   app-rolling-56bff6d88c-5gb2v   0/1     Running             0          2s
+17:26:21.712  MODIFIED   app-rolling-56bff6d88c-5gb2v   1/1     Running             0          8s
+17:26:21.768  MODIFIED   app-rolling-56bff6d88c-5gb2v   1/1     Running             0          8s
+17:26:21.773  MODIFIED   app-rolling-86d7d44d5b-5kqb8   1/1     Terminating         0          48s
+17:26:21.810  MODIFIED   app-rolling-86d7d44d5b-5kqb8   1/1     Terminating         0          48s
+17:26:22.676  MODIFIED   app-rolling-86d7d44d5b-5kqb8   0/1     Completed           0          49s
+17:26:22.775  MODIFIED   app-rolling-86d7d44d5b-5kqb8   0/1     Completed           0          49s
+17:26:22.782  DELETED    app-rolling-86d7d44d5b-5kqb8   0/1     Completed           0          49s
+~/devops-homework/session-10-pods-replicasets-deployments$ awk '{print $2,$3}' outputs/01-rolling-curl-during-update.log | sort | uniq -c
+      2 FAIL(no response)
+     39 VERSION: v1
+     29 VERSION: v2
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe deployment app-rolling -n s10-rolling | sed -n '/^Events:/,$p'
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  79s   deployment-controller  Scaled up replica set app-rolling-86d7d44d5b from 0 to 4
+  Normal  ScalingReplicaSet  64s   deployment-controller  Scaled up replica set app-rolling-56bff6d88c from 0 to 1
+  Normal  ScalingReplicaSet  56s   deployment-controller  Scaled down replica set app-rolling-86d7d44d5b from 4 to 3
+  Normal  ScalingReplicaSet  56s   deployment-controller  Scaled up replica set app-rolling-56bff6d88c from 1 to 2
+  Normal  ScalingReplicaSet  47s   deployment-controller  Scaled down replica set app-rolling-86d7d44d5b from 3 to 2
+  Normal  ScalingReplicaSet  46s   deployment-controller  Scaled up replica set app-rolling-56bff6d88c from 2 to 3
+  Normal  ScalingReplicaSet  39s   deployment-controller  Scaled down replica set app-rolling-86d7d44d5b from 2 to 1
+  Normal  ScalingReplicaSet  39s   deployment-controller  Scaled up replica set app-rolling-56bff6d88c from 3 to 4
+  Normal  ScalingReplicaSet  31s   deployment-controller  Scaled down replica set app-rolling-86d7d44d5b from 1 to 0
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout undo deployment/app-rolling -n s10-rolling --to-revision=1 && kubectl rollout status deployment/app-rolling -n s10-rolling --timeout=180s
+Warning: resource deployments/app-rolling was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/app-rolling rolled back
+Waiting for deployment spec update to be observed...
+Waiting for deployment "app-rolling" rollout to finish: 0 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "app-rolling" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "app-rolling" rollout to finish: 1 old replicas are pending termination...
+deployment "app-rolling" successfully rolled out
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl exec -n s10-rolling curl-client -- curl -s http://app-rolling-service | grep -o 'VERSION: v[12]'
+VERSION: v1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout history deployment/app-rolling -n s10-rolling
+deployment.apps/app-rolling 
+REVISION  CHANGE-CAUSE
+2         v2 - nginx:1.25-alpine
+3         v1 - nginx:1.24-alpine
+

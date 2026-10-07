@@ -1,0 +1,30 @@
+~/act-stage/session-17-devsecops/devops-homework$ awk '/Run Main Tag and push the scanned image/{f=1} f&&/\| /{print} /Success - Main Tag and push/{exit}' $LOG3 | grep -E 'Loaded image|push refers|digest|pushed' | cut -c1-168
+[Session 17 - DevSecOps Pipeline/9. Push Image                ]   | Loaded image: s17-devsecops-api:f3b6064
+[Session 17 - DevSecOps Pipeline/9. Push Image                ]   | The push refers to repository [localhost:5000/v4xsh/s17-devsecops-api]
+[Session 17 - DevSecOps Pipeline/9. Push Image                ]   | f3b6064: digest: sha256:28ee5ec7da43d3c821b265a6cf1a42b6476cd4160c0a1c068c3aad6d7fd81969 size: 856
+[Session 17 - DevSecOps Pipeline/9. Push Image                ]   | pushed localhost:5000/v4xsh/s17-devsecops-api:f3b6064
+~/act-stage/session-17-devsecops/devops-homework$ curl -s http://localhost:5000/v2/v4xsh/s17-devsecops-api/tags/list; echo
+{"name":"v4xsh/s17-devsecops-api","tags":["f3b6064"]}
+
+~/act-stage/session-17-devsecops/devops-homework$ awk '/Run Main Create namespace and app secret/{f=1} f&&/\| /{print} /Success - Main Create namespace/{exit}' $LOG3
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | namespace/s17 created
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | secret/devsecops-api created
+~/act-stage/session-17-devsecops/devops-homework$ awk '/Run Main Deploy and wait for rollout/{f=1} f&&/\| /{print} /Success - Main Deploy and wait/{exit}' $LOG3 | cut -c1-168
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | deployment.apps/devsecops-api created
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | service/devsecops-api created
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | Waiting for deployment "devsecops-api" rollout to finish: 0 of 2 updated replicas are available...
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | Waiting for deployment "devsecops-api" rollout to finish: 1 of 2 updated replicas are available...
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | deployment "devsecops-api" successfully rolled out
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | NAME                            READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS      IMAGES       
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | deployment.apps/devsecops-api   2/2     2            2           9s    devsecops-api   s17-devsecops
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | 
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | NAME                                READY   STATUS    RESTARTS   AGE   IP             NODE       NOM
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | pod/devsecops-api-c579ddf9c-dc426   1/1     Running   0          9s    10.244.0.158   minikube   <no
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | pod/devsecops-api-c579ddf9c-tdsjj   1/1     Running   0          9s    10.244.0.159   minikube   <no
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | 
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | service/devsecops-api   ClusterIP   10.106.193.233   <none>        80/TCP    9s    app=devsecops-api
+~/act-stage/session-17-devsecops/devops-homework$ awk '/Run Main Smoke test/{f=1} f&&/\| /{print} /Success - Main Smoke test/{exit}' $LOG3 | grep -v '|\s*$'
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | {"status":"ok"}
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | {"app":"s17-devsecops-api","git_sha":"f3b6064","notes":0,"version":"1.0.0"}
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ]   | {"body":"by the pipeline","id":1,"sha256":"0f3ea7400649e866abf61289ec39df7f47289267c9c42afcfdbf7590fafd27a9","title":"deployed"}

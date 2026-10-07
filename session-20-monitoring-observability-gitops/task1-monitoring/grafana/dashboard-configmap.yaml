@@ -1,0 +1,50 @@
+# Grafana's dashboard sidecar loads every ConfigMap labelled grafana_dashboard=1 (searchNamespace: ALL).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: s20-metrics-app-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  s20-metrics-app.json: |
+    {
+      "uid": "s20-metrics-app",
+      "title": "Session 20 - s20-metrics-app (Vansh Dobhal 10099)",
+      "tags": ["session20", "flask"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "refresh": "10s",
+      "time": {"from": "now-30m", "to": "now"},
+      "panels": [
+        {"id": 1, "type": "stat", "title": "Healthy targets (up)", "gridPos": {"h": 5, "w": 6, "x": 0, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum(up{namespace=\"s20-app\", service=\"s20-metrics-app\"})"}]},
+        {"id": 2, "type": "stat", "title": "Requests / s", "gridPos": {"h": 5, "w": 6, "x": 6, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "reqps", "decimals": 2}},
+         "targets": [{"refId": "A", "expr": "sum(rate(app_requests_total{namespace=\"s20-app\"}[1m]))"}]},
+        {"id": 3, "type": "stat", "title": "5xx error ratio", "gridPos": {"h": 5, "w": 6, "x": 12, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 1}},
+         "targets": [{"refId": "A", "expr": "sum(rate(app_requests_total{namespace=\"s20-app\",status=~\"5..\"}[2m])) / sum(rate(app_requests_total{namespace=\"s20-app\"}[2m]))"}]},
+        {"id": 4, "type": "stat", "title": "Pod restarts (1h)", "gridPos": {"h": 5, "w": 6, "x": 18, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"s20-app\"}[1h]))"}]},
+        {"id": 5, "type": "timeseries", "title": "Request rate by endpoint & status", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 5},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "reqps"}},
+         "targets": [{"refId": "A", "expr": "sum by (endpoint, status) (rate(app_requests_total{namespace=\"s20-app\"}[1m]))", "legendFormat": "{{endpoint}} {{status}}"}]},
+        {"id": 6, "type": "timeseries", "title": "p95 latency by endpoint", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 5},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "s"}},
+         "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le, endpoint) (rate(app_request_duration_seconds_bucket{namespace=\"s20-app\"}[2m])))", "legendFormat": "{{endpoint}}"}]},
+        {"id": 7, "type": "timeseries", "title": "CPU usage (cores) per pod", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 13},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"s20-app\", container=\"app\"}[1m]))", "legendFormat": "{{pod}}"}]},
+        {"id": 8, "type": "timeseries", "title": "Memory working set per pod", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 13},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "bytes"}},
+         "targets": [{"refId": "A", "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"s20-app\", container=\"app\"})", "legendFormat": "{{pod}}"}]}
+      ]
+    }

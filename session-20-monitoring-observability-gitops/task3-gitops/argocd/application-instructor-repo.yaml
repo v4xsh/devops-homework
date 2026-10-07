@@ -1,0 +1,27 @@
+# Live demo Application: Argo CD pulls the instructor's public repo (the "argocd project" lab, where the
+# last commit "replicas from 2 to 5" changed the Deployment) and keeps namespace s20-app in sync with it.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: s20-gitops-instructor
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Nency-Ravaliya/devops-heros.git
+    targetRevision: main
+    path: session20-monitoring-observability-gitops/07-argocd/app
+    directory:
+      # the Application manifest itself lives in the same folder - never let Argo apply it as a workload
+      exclude: argocd-application.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: s20-app
+  syncPolicy:
+    automated:
+      prune: true      # delete resources that were removed from Git
+      selfHeal: true   # revert manual changes made in the cluster
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,17 @@
+~/devops-homework/session-08-docker-networking$ cd ~/devops-homework/session-08-docker-networking/03-bind-mount
+~/devops-homework/session-08-docker-networking/03-bind-mount$ sleep 5
+~/devops-homework/session-08-docker-networking/03-bind-mount$ sed -i 's#<h1>Hello students</h1>#<h1>Hello students - UPDATED on the host without restarting the container!</h1>#' site/index.html
+~/devops-homework/session-08-docker-networking/03-bind-mount$ cat site/index.html
+<h1>Hello students - UPDATED on the host without restarting the container!</h1>
+<p>Served from a bind-mounted folder on the host - Vansh Dobhal (10099)</p>
+~/devops-homework/session-08-docker-networking/03-bind-mount$ curl -s localhost:8023
+<h1>Hello students - UPDATED on the host without restarting the container!</h1>
+<p>Served from a bind-mounted folder on the host - Vansh Dobhal (10099)</p>
+~/devops-homework/session-08-docker-networking/03-bind-mount$ docker exec s08-bind-nginx cat /usr/share/nginx/html/index.html
+<h1>Hello students - UPDATED on the host without restarting the container!</h1>
+<p>Served from a bind-mounted folder on the host - Vansh Dobhal (10099)</p>
+~/devops-homework/session-08-docker-networking/03-bind-mount$ docker inspect -f 'StartedAt={{.State.StartedAt}} RestartCount={{.RestartCount}}' s08-bind-nginx
+StartedAt=2026-10-07T17:46:03.093681259Z RestartCount=0
+~/devops-homework/session-08-docker-networking/03-bind-mount$ docker ps --filter name=s08-bind-nginx --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES            STATUS          PORTS
+s08-bind-nginx   Up 11 seconds   0.0.0.0:8023->80/tcp, [::]:8023->80/tcp

@@ -1,0 +1,43 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Running   0          10s   10.244.0.111   minikube   <none>           <none>
+~/devops-homework/session-09-kubernetes-fundamentals$ export POD_NAME=$(kubectl get pods -n s09 -l app=kubernetes-bootcamp -o jsonpath='{.items[0].metadata.name}'); echo "POD_NAME=$POD_NAME"
+POD_NAME=kubernetes-bootcamp-5cc66bcc9b-pmkff
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe pod $POD_NAME -n s09 | sed -n '1,/^Conditions:/p'
+Name:             kubernetes-bootcamp-5cc66bcc9b-pmkff
+Namespace:        s09
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Wed, 07 Oct 2026 17:23:50 +0000
+Labels:           app=kubernetes-bootcamp
+                  pod-template-hash=5cc66bcc9b
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.111
+IPs:
+  IP:           10.244.0.111
+Controlled By:  ReplicaSet/kubernetes-bootcamp-5cc66bcc9b
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   containerd://198f3a78b392445cb9058d4bfa89727941b7c765e6f7a5d8f8e966f08e02f36c
+    Image:          gcr.io/google-samples/kubernetes-bootcamp:v1
+    Image ID:       gcr.io/google-samples/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Wed, 07 Oct 2026 17:23:57 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-cpwdd (ro)
+Conditions:
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe pod $POD_NAME -n s09 | sed -n '/^Events:/,$p'
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  12s   default-scheduler  Successfully assigned s09/kubernetes-bootcamp-5cc66bcc9b-pmkff to minikube
+  Normal  Pulled     6s    kubelet            spec.containers{kubernetes-bootcamp}: Container image "gcr.io/google-samples/kubernetes-bootcamp:v1" already present on machine and can be accessed by the pod
+  Normal  Created    5s    kubelet            spec.containers{kubernetes-bootcamp}: Container created
+  Normal  Started    5s    kubelet            spec.containers{kubernetes-bootcamp}: Container started

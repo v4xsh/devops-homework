@@ -1,0 +1,59 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ export POD_NAME=$(kubectl get pods -n s09 -l app=kubernetes-bootcamp -o jsonpath='{.items[0].metadata.name}')
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl proxy --port=8099 >/tmp/s09-proxy.log 2>&1 & sleep 2
+~/devops-homework/session-09-kubernetes-fundamentals$ curl -s http://localhost:8099/version | head -n 5
+{
+  "major": "1",
+  "minor": "37",
+  "emulationMajor": "1",
+  "emulationMinor": "37",
+~/devops-homework/session-09-kubernetes-fundamentals$ curl -s http://localhost:8099/api/v1/namespaces/s09/pods/$POD_NAME:8080/proxy/
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-pmkff | v=1
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl logs $POD_NAME -n s09
+Kubernetes Bootcamp App Started At: 2026-10-07T17:23:57.506Z | Running On:  kubernetes-bootcamp-5cc66bcc9b-pmkff 
+
+Running On: kubernetes-bootcamp-5cc66bcc9b-pmkff | Total Requests: 1 | App Uptime: 9.17 seconds | Log Time: 2026-10-07T17:24:06.676Z
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl exec $POD_NAME -n s09 -- env | grep -E 'HOSTNAME|KUBERNETES_SERVICE|NPM_CONFIG|NODE_VERSION'
+HOSTNAME=kubernetes-bootcamp-5cc66bcc9b-pmkff
+NPM_CONFIG_LOGLEVEL=info
+NODE_VERSION=6.3.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl exec $POD_NAME -n s09 -- sh -c 'ls /; head -n 12 server.js'
+bin
+boot
+core
+dev
+etc
+home
+lib
+lib64
+media
+mnt
+opt
+proc
+root
+run
+sbin
+server.js
+srv
+sys
+tmp
+usr
+var
+var http = require('http');
+var requests=0;
+var podname= process.env.HOSTNAME;
+var startTime;
+var host;
+var handleRequest = function(request, response) {
+  response.setHeader('Content-Type', 'text/plain');
+  response.writeHead(200);
+  response.write("Hello Kubernetes bootcamp! | Running on: ");
+  response.write(host);
+  response.end(" | v=1\n");
+  console.log("Running On:" ,host, "| Total Requests:", ++requests,"| App Uptime:", (new Date() - startTime)/1000 , "seconds", "| Log Time:",new Date());
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl exec $POD_NAME -n s09 -- curl -s http://localhost:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-pmkff | v=1
+~/devops-homework/session-09-kubernetes-fundamentals$ pkill -f 'kubectl proxy --port=8099'; echo "proxy stopped"
+proxy stopped

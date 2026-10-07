@@ -1,0 +1,43 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform apply -no-color -auto-approve tfplan
+aws_vpc.main: Creating...
+aws_s3_bucket.artifacts: Creating...
+aws_s3_bucket.artifacts: Creation complete after 1s [id=vansh-dobhal-10099-s19-artifacts]
+aws_s3_bucket_public_access_block.artifacts: Creating...
+aws_s3_bucket_server_side_encryption_configuration.artifacts: Creating...
+aws_s3_bucket_versioning.artifacts: Creating...
+aws_s3_bucket_public_access_block.artifacts: Creation complete after 0s [id=vansh-dobhal-10099-s19-artifacts]
+aws_s3_bucket_server_side_encryption_configuration.artifacts: Creation complete after 0s [id=vansh-dobhal-10099-s19-artifacts]
+aws_s3_bucket_versioning.artifacts: Creation complete after 1s [id=vansh-dobhal-10099-s19-artifacts]
+aws_vpc.main: Still creating... [00m10s elapsed]
+aws_vpc.main: Creation complete after 11s [id=vpc-163f2a080834ae667]
+aws_internet_gateway.main: Creating...
+aws_subnet.public: Creating...
+aws_security_group.web: Creating...
+aws_internet_gateway.main: Creation complete after 0s [id=igw-613f6a9edd214c755]
+aws_route_table.public: Creating...
+aws_security_group.web: Creation complete after 0s [id=sg-2befe72ec5e567990]
+aws_route_table.public: Creation complete after 0s [id=rtb-b76dcc28b082dbcab]
+aws_subnet.public: Still creating... [00m10s elapsed]
+aws_subnet.public: Creation complete after 10s [id=subnet-ac1f83a4d7b25ee74]
+aws_route_table_association.public: Creating...
+aws_route_table_association.public: Creation complete after 0s [id=rtbassoc-1d909c6b12de9a2df]
+aws_instance.web: Creating...
+aws_instance.web: Still creating... [00m10s elapsed]
+aws_instance.web: Creation complete after 10s [id=i-9878221feb6427ab4]
+aws_s3_object.user_data_artifact: Creating...
+aws_s3_object.user_data_artifact: Creation complete after 0s [id=vansh-dobhal-10099-s19-artifacts/artifacts/i-9878221feb6427ab4/user_data.sh]
+
+Apply complete! Resources: 12 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+ami_id = "ami-1e749f67"
+artifact_bucket = "vansh-dobhal-10099-s19-artifacts"
+instance_id = "i-9878221feb6427ab4"
+instance_public_ip = "54.214.106.197"
+internet_gateway_id = "igw-613f6a9edd214c755"
+public_subnet_id = "subnet-ac1f83a4d7b25ee74"
+security_group_id = "sg-2befe72ec5e567990"
+user_data_artifact_key = "artifacts/i-9878221feb6427ab4/user_data.sh"
+vpc_id = "vpc-163f2a080834ae667"
+website_url = "http://54.214.106.197"

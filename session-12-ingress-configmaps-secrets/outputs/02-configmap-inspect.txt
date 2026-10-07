@@ -1,0 +1,52 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl describe configmap app-literal-config -n s12
+Name:         app-literal-config
+Namespace:    s12
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+APP_COLOR:
+----
+blue
+
+APP_MODE:
+----
+demo
+
+FEATURE_FLAGS:
+----
+search,booking
+
+
+BinaryData
+====
+
+Events:  <none>
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl get configmap app-file-config -n s12 -o yaml
+apiVersion: v1
+data:
+  app.properties: |
+    # application settings loaded with: kubectl create configmap ... --from-file
+    app.name=yatri-booking
+    app.theme=dark
+    cache.ttl.seconds=300
+    feature.new-checkout=true
+  nginx-extra.conf: |
+    # small nginx snippet stored in a ConfigMap and mounted as a file
+    location /healthz {
+        return 200 "ok\n";
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2026-10-07T17:38:18Z"
+  name: app-file-config
+  namespace: s12
+  resourceVersion: "12081"
+  uid: cbd1ba24-631e-4247-a507-cb8e3936ff23
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl get configmap yatri-app-config -n s12 -o jsonpath='{.data.settings\.json}'
+{
+  "region": "ap-south-1",
+  "maxPassengers": 6,
+  "supportEmail": "support@yatri.example"
+}

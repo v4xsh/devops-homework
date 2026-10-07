@@ -1,0 +1,27 @@
+# Non-secret settings -> ConfigMap, credentials -> Secret.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskboard-config
+  namespace: final-k8s
+  labels: {app.kubernetes.io/part-of: taskboard}
+data:
+  APP_ENV: "k8s"
+  APP_VERSION: "1.0.1"
+  LOG_LEVEL: "INFO"
+  DB_HOST: "taskboard-postgres"
+  DB_PORT: "5432"
+  DB_NAME: "taskboard"
+  DB_USER: "taskboard"
+---
+# Lab-only credentials. In a real environment this object is created by External Secrets / Sealed Secrets
+# or `kubectl create secret generic ... --from-literal`, never committed in plain text.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: taskboard-db
+  namespace: final-k8s
+  labels: {app.kubernetes.io/part-of: taskboard}
+type: Opaque
+stringData:
+  db-password: "k8s-lab-password-10099"

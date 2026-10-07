@@ -1,0 +1,24 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ IP=$(minikube ip)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -H "Host: app1.local" http://$IP/
+Hello from APP1 (pod app1-78d86657b5-gn5fs)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -H "Host: app2.local" http://$IP/
+Hello from APP2 (pod app2-77d95b6975-6f27f)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ echo "--- same IP, same port 80: only the Host header differs"
+--- same IP, same port 80: only the Host header differs
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -o /dev/null -w "Host: unknown.local -> HTTP %{http_code}\n" -H "Host: unknown.local" http://$IP/
+Host: unknown.local -> HTTP 404
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ echo "--- using real name resolution instead of -H, via curl --resolve"
+--- using real name resolution instead of -H, via curl --resolve
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s --resolve app1.local:80:$IP http://app1.local/
+Hello from APP1 (pod app1-78d86657b5-gn5fs)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s --resolve app2.local:80:$IP http://app2.local/
+Hello from APP2 (pod app2-77d95b6975-n6lnm)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ echo "--- load balancing across the 2 replicas behind app1"
+--- load balancing across the 2 replicas behind app1
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ for i in 1 2 3 4 5 6; do curl -s -H "Host: app1.local" http://$IP/; done
+Hello from APP1 (pod app1-78d86657b5-gn5fs)
+Hello from APP1 (pod app1-78d86657b5-gn5fs)
+Hello from APP1 (pod app1-78d86657b5-ftbdt)
+Hello from APP1 (pod app1-78d86657b5-gn5fs)
+Hello from APP1 (pod app1-78d86657b5-ftbdt)
+Hello from APP1 (pod app1-78d86657b5-gn5fs)

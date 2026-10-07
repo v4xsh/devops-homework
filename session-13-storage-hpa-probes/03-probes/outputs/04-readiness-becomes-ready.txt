@@ -1,0 +1,20 @@
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl exec readiness-demo -n s13 -- sh -c 'echo ok > /usr/share/nginx/html/ready.html'
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 8
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod readiness-demo -n s13 -o wide
+NAME             READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+readiness-demo   1/1     Running   0          33s   10.244.0.81   minikube   <none>           <none>
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get endpoints readiness-demo -n s13
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME             ENDPOINTS        AGE
+readiness-demo   10.244.0.81:80   32s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl exec readiness-demo -n s13 -- rm /usr/share/nginx/html/ready.html
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 8
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod readiness-demo -n s13
+NAME             READY   STATUS    RESTARTS   AGE
+readiness-demo   0/1     Running   0          42s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get endpoints readiness-demo -n s13
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME             ENDPOINTS   AGE
+readiness-demo               41s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod readiness-demo -n s13 -o jsonpath='restartCount={.status.containerStatuses[0].restartCount}{"\n"}'
+restartCount=0

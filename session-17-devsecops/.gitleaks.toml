@@ -1,0 +1,19 @@
+# Gitleaks (secret scanning) configuration
+title = "session-17-devsecops gitleaks config"
+
+# start from the ~150 built-in rules (AWS keys, GitHub tokens, private keys, Slack, Stripe, generic API keys ...)
+[extend]
+useDefault = true
+
+# project-specific rule: our (fictional) internal API token format
+[[rules]]
+id = "s17-internal-api-token"
+description = "Session 17 internal API token"
+regex = '''s17tok_[A-Za-z0-9]{32}'''
+keywords = ["s17tok_"]
+
+[allowlist]
+description = "binary evidence files are not source code"
+paths = [
+  '''screenshots/.*\.png$''',
+]

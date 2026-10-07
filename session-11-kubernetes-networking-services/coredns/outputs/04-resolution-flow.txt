@@ -1,0 +1,24 @@
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- cluster zone: answered authoritatively by the kubernetes plugin (aa flag)"
+--- cluster zone: answered authoritatively by the kubernetes plugin (aa flag)
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- dig web-service-clusterip.s11.svc.cluster.local +noall +comments +answer | grep -E "flags|IN"
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+; EDNS: version: 0, flags:; udp: 4096
+web-service-clusterip.s11.svc.cluster.local. 30	IN A 10.102.6.189
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- external zone: not cluster.local, so the forward plugin sends it to the node's resolver"
+--- external zone: not cluster.local, so the forward plugin sends it to the node's resolver
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- dig example.com +noall +comments +answer | grep -E "flags|IN"
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 7
+; EDNS: version: 0, flags:; udp: 4096
+example.com.		30	IN	A	104.20.23.154
+example.com.		30	IN	A	172.66.147.243
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- the hosts plugin serves host.minikube.internal"
+--- the hosts plugin serves host.minikube.internal
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- dig +short host.minikube.internal
+192.168.49.1
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- query a CoreDNS pod directly instead of the kube-dns ClusterIP"
+--- query a CoreDNS pod directly instead of the kube-dns ClusterIP
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ COREDNS_IP=$(kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[0].status.podIP}'); echo "CoreDNS pod IP: $COREDNS_IP"
+CoreDNS pod IP: 10.244.0.4
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- dig @$COREDNS_IP +short kube-dns.kube-system.svc.cluster.local
+10.96.0.10

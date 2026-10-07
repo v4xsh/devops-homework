@@ -1,0 +1,25 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl exec dns-client -n s14 -- nslookup orders-api.s14-mini.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+
+Name:	orders-api.s14-mini.svc.cluster.local
+Address: 10.102.105.22
+
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl delete pod dns-client -n s14 --wait=true
+pod "dns-client" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl apply -f fixed.yaml
+namespace/s14-mini unchanged
+deployment.apps/orders-api unchanged
+service/orders-api unchanged
+pod/dns-client created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl wait --for=condition=Ready pod/dns-client -n s14 --timeout=90s
+pod/dns-client condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ sleep 12
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl logs dns-client -n s14 --tail=4
+17:30:51 calling http://orders-api.s14-mini.svc.cluster.local
+<title>Welcome to nginx!</title>
+17:30:56 calling http://orders-api.s14-mini.svc.cluster.local
+<title>Welcome to nginx!</title>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/07-dns$ kubectl exec dns-client -n s14 -- printenv ORDERS_URL
+http://orders-api.s14-mini.svc.cluster.local

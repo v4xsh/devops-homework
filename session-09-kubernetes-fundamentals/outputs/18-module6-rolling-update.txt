@@ -1,0 +1,61 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl scale deployments/kubernetes-bootcamp --replicas=4 -n s09 && kubectl rollout status deployment/kubernetes-bootcamp -n s09 --timeout=120s
+deployment.apps/kubernetes-bootcamp scaled
+Waiting for deployment "kubernetes-bootcamp" rollout to finish: 2 of 4 updated replicas are available...
+Waiting for deployment "kubernetes-bootcamp" rollout to finish: 3 of 4 updated replicas are available...
+deployment "kubernetes-bootcamp" successfully rolled out
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -o custom-columns='POD:.metadata.name,IMAGE:.spec.containers[0].image,BEING-DELETED-AT:.metadata.deletionTimestamp'
+POD                                    IMAGE                                          BEING-DELETED-AT
+kubernetes-bootcamp-5cc66bcc9b-8ljhj   gcr.io/google-samples/kubernetes-bootcamp:v1   <none>
+kubernetes-bootcamp-5cc66bcc9b-dng27   gcr.io/google-samples/kubernetes-bootcamp:v1   <none>
+kubernetes-bootcamp-5cc66bcc9b-g77xf   gcr.io/google-samples/kubernetes-bootcamp:v1   <none>
+kubernetes-bootcamp-5cc66bcc9b-gnlm8   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:48Z
+kubernetes-bootcamp-5cc66bcc9b-pmkff   gcr.io/google-samples/kubernetes-bootcamp:v1   <none>
+kubernetes-bootcamp-5cc66bcc9b-skb8x   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:48Z
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=docker.io/jocatalin/kubernetes-bootcamp:v2 -n s09
+deployment.apps/kubernetes-bootcamp image updated
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl annotate deployment/kubernetes-bootcamp -n s09 kubernetes.io/change-cause='update image to jocatalin/kubernetes-bootcamp:v2' --overwrite
+deployment.apps/kubernetes-bootcamp annotated
+~/devops-homework/session-09-kubernetes-fundamentals$ sleep 2; kubectl get pods -n s09
+NAME                                   READY   STATUS        RESTARTS   AGE
+kubernetes-bootcamp-5b97597885-22kwc   1/1     Running       0          3s
+kubernetes-bootcamp-5b97597885-mwnqb   1/1     Running       0          2s
+kubernetes-bootcamp-5b97597885-tkn49   1/1     Running       0          2s
+kubernetes-bootcamp-5b97597885-vtk7z   1/1     Running       0          3s
+kubernetes-bootcamp-5cc66bcc9b-8ljhj   1/1     Terminating   0          4s
+kubernetes-bootcamp-5cc66bcc9b-dng27   1/1     Terminating   0          4s
+kubernetes-bootcamp-5cc66bcc9b-g77xf   1/1     Terminating   0          2m6s
+kubernetes-bootcamp-5cc66bcc9b-gnlm8   1/1     Terminating   0          2m6s
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Terminating   0          2m41s
+kubernetes-bootcamp-5cc66bcc9b-skb8x   1/1     Terminating   0          2m6s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl rollout status deployments/kubernetes-bootcamp -n s09 --timeout=120s
+deployment "kubernetes-bootcamp" successfully rolled out
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09
+NAME                                   READY   STATUS        RESTARTS   AGE
+kubernetes-bootcamp-5b97597885-22kwc   1/1     Running       0          4s
+kubernetes-bootcamp-5b97597885-mwnqb   1/1     Running       0          3s
+kubernetes-bootcamp-5b97597885-tkn49   1/1     Running       0          3s
+kubernetes-bootcamp-5b97597885-vtk7z   1/1     Running       0          4s
+kubernetes-bootcamp-5cc66bcc9b-8ljhj   1/1     Terminating   0          5s
+kubernetes-bootcamp-5cc66bcc9b-dng27   1/1     Terminating   0          5s
+kubernetes-bootcamp-5cc66bcc9b-g77xf   1/1     Terminating   0          2m7s
+kubernetes-bootcamp-5cc66bcc9b-gnlm8   1/1     Terminating   0          2m7s
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Terminating   0          2m42s
+kubernetes-bootcamp-5cc66bcc9b-skb8x   1/1     Terminating   0          2m7s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get rs -n s09
+NAME                             DESIRED   CURRENT   READY   AGE
+kubernetes-bootcamp-5b97597885   4         4         4       5s
+kubernetes-bootcamp-5cc66bcc9b   0         0         0       2m43s
+~/devops-homework/session-09-kubernetes-fundamentals$ export NODE_PORT=$(kubectl get services/kubernetes-bootcamp -n s09 -o go-template='{{(index .spec.ports 0).nodePort}}'); curl -s http://$(minikube ip):$NODE_PORT
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5b97597885-22kwc | v=2
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -o custom-columns='POD:.metadata.name,IMAGE:.spec.containers[0].image,BEING-DELETED-AT:.metadata.deletionTimestamp'
+POD                                    IMAGE                                          BEING-DELETED-AT
+kubernetes-bootcamp-5b97597885-22kwc   docker.io/jocatalin/kubernetes-bootcamp:v2     <none>
+kubernetes-bootcamp-5b97597885-mwnqb   docker.io/jocatalin/kubernetes-bootcamp:v2     <none>
+kubernetes-bootcamp-5b97597885-tkn49   docker.io/jocatalin/kubernetes-bootcamp:v2     <none>
+kubernetes-bootcamp-5b97597885-vtk7z   docker.io/jocatalin/kubernetes-bootcamp:v2     <none>
+kubernetes-bootcamp-5cc66bcc9b-8ljhj   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:59Z
+kubernetes-bootcamp-5cc66bcc9b-dng27   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:58Z
+kubernetes-bootcamp-5cc66bcc9b-g77xf   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:59Z
+kubernetes-bootcamp-5cc66bcc9b-gnlm8   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:48Z
+kubernetes-bootcamp-5cc66bcc9b-pmkff   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:27:00Z
+kubernetes-bootcamp-5cc66bcc9b-skb8x   gcr.io/google-samples/kubernetes-bootcamp:v1   2026-10-07T17:26:48Z

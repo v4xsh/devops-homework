@@ -1,0 +1,10 @@
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- cat /etc/resolv.conf
+search s11.svc.cluster.local svc.cluster.local cluster.local
+nameserver 10.96.0.10
+options ndots:5
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get pod dnsutils -n s11 -o jsonpath='{.spec.dnsPolicy}{"\n"}'
+ClusterFirst
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ minikube ssh -- sudo grep -A2 clusterDNS /var/lib/kubelet/config.yaml
+clusterDNS:
+- 10.96.0.10
+clusterDomain: cluster.local

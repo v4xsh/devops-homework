@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskboard-frontend
+  namespace: final-ts
+  labels: {app: taskboard-frontend, app.kubernetes.io/part-of: taskboard}
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: taskboard-frontend}
+  template:
+    metadata:
+      labels: {app: taskboard-frontend, app.kubernetes.io/part-of: taskboard}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: frontend
+          image: ghcr.io/v4xsh/taskboard-frontend:1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - {name: http, containerPort: 8080}
+          env:
+            - name: BACKEND_URL
+              value: http://taskboard-backend:8000
+          startupProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 2
+            failureThreshold: 15
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 15
+          readinessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 5
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 20m, memory: 32Mi}
+            limits: {cpu: 200m, memory: 96Mi}
+          volumeMounts:   # nginx needs a few writable paths when the root FS is read-only
+            - {name: tmp, mountPath: /tmp}
+            - {name: confd, mountPath: /etc/nginx/conf.d}
+      volumes:
+        - {name: tmp, emptyDir: {}}
+        - {name: confd, emptyDir: {}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taskboard-frontend
+  namespace: final-ts
+  labels: {app: taskboard-frontend, app.kubernetes.io/part-of: taskboard}
+spec:
+  selector: {app: taskboard-frontend}
+  ports:
+    - {name: http, port: 80, targetPort: http}

@@ -1,0 +1,9 @@
+~/devops-homework/session-08-docker-networking$ docker service rm s08-web
+s08-web
+~/devops-homework/session-08-docker-networking$ sleep 5
+~/devops-homework/session-08-docker-networking$ docker network rm s08-overlay-net
+s08-overlay-net
+~/devops-homework/session-08-docker-networking$ docker swarm leave --force
+Node left the swarm.
+~/devops-homework/session-08-docker-networking$ docker info --format 'Swarm: {{.Swarm.LocalNodeState}}'
+Swarm: inactive

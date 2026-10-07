@@ -1,0 +1,19 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl apply -f broken.yaml
+pod/containercreating-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ sleep 60
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl get pod containercreating-app -n s14
+NAME                    READY   STATUS              RESTARTS   AGE
+containercreating-app   0/1     ContainerCreating   0          60s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl describe pod containercreating-app -n s14 | sed -n '/Volumes:/,/Optional/p'
+Volumes:
+  content:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      web-content
+    Optional:  false
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl events -n s14 --for pod/containercreating-app
+LAST SEEN           TYPE      REASON        OBJECT                      MESSAGE
+60s                 Normal    Scheduled     Pod/containercreating-app   Successfully assigned s14/containercreating-app to minikube
+28s (x7 over 60s)   Warning   FailedMount   Pod/containercreating-app   MountVolume.SetUp failed for volume "content" : configmap "web-content" not found
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/05-containercreating$ kubectl get configmap -n s14
+NAME               DATA   AGE
+kube-root-ca.crt   1      24m

@@ -1,0 +1,37 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 04-externalname/service.yaml
+service/external-docs-service created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc external-docs-service -n s11 -o wide
+NAME                    TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+external-docs-service   ExternalName   <none>       example.com   <none>    0s    <none>
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl describe svc external-docs-service -n s11
+Name:              external-docs-service
+Namespace:         s11
+Labels:            <none>
+Annotations:       <none>
+Selector:          <none>
+Type:              ExternalName
+IP Families:       <none>
+IP:                
+IPs:               <none>
+External Name:     example.com
+Session Affinity:  None
+Events:            <none>
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpoints external-docs-service -n s11
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+Error from server (NotFound): endpoints "external-docs-service" not found
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- nslookup external-docs-service.s11.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+external-docs-service.s11.svc.cluster.local	canonical name = example.com.
+Name:	example.com
+Address: 172.66.147.243
+Name:	example.com
+Address: 104.20.23.154
+
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- dig +noall +answer external-docs-service.s11.svc.cluster.local
+external-docs-service.s11.svc.cluster.local. 30	IN CNAME example.com.
+example.com.		30	IN	A	104.20.23.154
+example.com.		30	IN	A	172.66.147.243
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 curl-client -- curl -s -o /dev/null -w "HTTP %{http_code} from %{remote_ip}\n" -H "Host: example.com" http://external-docs-service
+HTTP 200 from 104.20.23.154

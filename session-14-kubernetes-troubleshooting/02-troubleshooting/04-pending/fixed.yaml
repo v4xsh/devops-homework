@@ -1,0 +1,17 @@
+# FIX: realistic requests that fit on the node (minikube node: 12 CPU / ~9.7GiB allocatable)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-app
+  namespace: s14
+spec:
+  containers:
+    - name: hungry-app
+      image: nginx:alpine
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 250m
+          memory: 128Mi

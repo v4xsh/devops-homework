@@ -1,0 +1,22 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl delete -f load-generator.yaml
+deployment.apps "load-generator" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ date '+%H:%M:%S'
+17:27:25
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get hpa -n s13
+NAME             REFERENCE               TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+php-apache-hpa   Deployment/php-apache   cpu: 90%/50%   1         10        10         6m1s
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl top pods -n s13
+NAME                              CPU(cores)   MEMORY(bytes)   
+load-generator-7c5886f4b6-86nr6   23m          0Mi             
+load-generator-7c5886f4b6-kvlgs   22m          0Mi             
+load-generator-7c5886f4b6-wp2tf   22m          0Mi             
+php-apache-7545b76d78-56fzn       161m         14Mi            
+php-apache-7545b76d78-62d62       176m         13Mi            
+php-apache-7545b76d78-9vq6d       139m         12Mi            
+php-apache-7545b76d78-bdctn       159m         12Mi            
+php-apache-7545b76d78-gkr8c       174m         25Mi            
+php-apache-7545b76d78-lhh7j       177m         12Mi            
+php-apache-7545b76d78-mwcdz       196m         12Mi            
+php-apache-7545b76d78-ngxnx       143m         11Mi            
+php-apache-7545b76d78-rd7sf       186m         12Mi            
+php-apache-7545b76d78-skz4t       181m         16Mi            

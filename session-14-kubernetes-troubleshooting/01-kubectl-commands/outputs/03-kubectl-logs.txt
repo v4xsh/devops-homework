@@ -1,0 +1,29 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl logs deploy/web -n s14 --tail=4
+Found 2 pods, using pod/web-5644464899-j99n8
+2026/10/07 17:16:51 [notice] 1#1: start worker process 38
+2026/10/07 17:16:51 [notice] 1#1: start worker process 39
+2026/10/07 17:16:51 [notice] 1#1: start worker process 40
+2026/10/07 17:16:51 [notice] 1#1: start worker process 41
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl logs multi -n s14 -c sidecar --tail=3
+17:17:41 sidecar tick 11
+17:17:46 sidecar tick 12
+17:17:51 sidecar tick 13
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl logs multi -n s14 -c sidecar --since=12s --timestamps
+2026-10-07T17:17:41.471317787Z 17:17:41 sidecar tick 11
+2026-10-07T17:17:46.477532456Z 17:17:46 sidecar tick 12
+2026-10-07T17:17:51.479364908Z 17:17:51 sidecar tick 13
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl logs -n s14 -l app=web --prefix --tail=2
+[pod/web-5644464899-j99n8/nginx] 2026/10/07 17:16:51 [notice] 1#1: start worker process 40
+[pod/web-5644464899-j99n8/nginx] 2026/10/07 17:16:51 [notice] 1#1: start worker process 41
+[pod/web-5644464899-lz6f6/nginx] 2026/10/07 17:16:51 [notice] 1#1: start worker process 39
+[pod/web-5644464899-lz6f6/nginx] 2026/10/07 17:16:51 [notice] 1#1: start worker process 40
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get pod restarter -n s14
+NAME        READY   STATUS   RESTARTS      AGE
+restarter   0/1     Error    2 (47s ago)   66s
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl logs restarter -n s14 --previous
+17:17:23 starting worker
+17:17:31 ERROR: lost connection to queue, exiting
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl logs multi -n s14 2>&1 | head -3
+Defaulted container "nginx" out of: nginx, sidecar
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/

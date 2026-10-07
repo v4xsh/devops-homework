@@ -1,0 +1,13 @@
+~/devops-homework/session-11-kubernetes-networking-services$ minikube ip
+192.168.49.2
+~/devops-homework/session-11-kubernetes-networking-services$ echo "--- from the WSL host via <NodeIP>:<nodePort>"
+--- from the WSL host via <NodeIP>:<nodePort>
+~/devops-homework/session-11-kubernetes-networking-services$ for i in 1 2 3 4; do curl -s http://$(minikube ip):31111; done
+Hello from pod web-app-nodeport-5d7dc5f7c7-tz596 (NodePort backend)
+Hello from pod web-app-nodeport-5d7dc5f7c7-rvntm (NodePort backend)
+Hello from pod web-app-nodeport-5d7dc5f7c7-tz596 (NodePort backend)
+Hello from pod web-app-nodeport-5d7dc5f7c7-rvntm (NodePort backend)
+~/devops-homework/session-11-kubernetes-networking-services$ echo "--- from inside the cluster via the ClusterIP part of the NodePort service"
+--- from inside the cluster via the ClusterIP part of the NodePort service
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 curl-client -- curl -s http://web-service-nodeport
+Hello from pod web-app-nodeport-5d7dc5f7c7-rvntm (NodePort backend)

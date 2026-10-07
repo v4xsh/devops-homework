@@ -1,0 +1,26 @@
+~/devops-homework/session-06-docker-fundamentals$ curl -s localhost:8005
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World from React - Vansh Dobhal</title>
+    <script type="module" crossorigin src="/assets/index-vw8PGiz3.js"></script>
+  </head>
+  <body>
+    <noscript>Hello World from React in Docker - Vansh Dobhal (Roll No. 10099)</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+~/devops-homework/session-06-docker-fundamentals$ curl -s localhost:8005/$(curl -s localhost:8005 | grep -o 'assets/index-[^"]*\.js') | grep -o 'Hello World from React[^"]*' | head -n 1
+Hello World from React in Docker - Vansh Dobhal (Roll No. 10099)
+~/devops-homework/session-06-docker-fundamentals$ docker logs s06-nodejs-app
+Node.js app listening on port 3000
+~/devops-homework/session-06-docker-fundamentals$ docker logs s06-python-app 2>&1 | tail -n 5
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.18.0.5:5000
+[33mPress CTRL+C to quit[0m
+172.18.0.1 - - [07/Oct/2026 17:12:57] "GET / HTTP/1.1" 200 -
+172.18.0.1 - - [07/Oct/2026 17:18:58] "GET / HTTP/1.1" 200 -
+~/devops-homework/session-06-docker-fundamentals$ docker logs s06-java-app
+Java app listening on port 8080

@@ -1,0 +1,32 @@
+~$ curl -sI https://example.com
+HTTP/2 200 
+date: Wed, 07 Oct 2026 17:12:41 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+last-modified: Fri, 02 Oct 2026 16:11:02 GMT
+allow: GET, HEAD
+accept-ranges: bytes
+age: 11844
+cf-cache-status: HIT
+cf-ray: a46e883cb9632da3-BOM
+alt-svc: h3=":443"; ma=86400
+
+~$ curl -sv https://example.com -o /dev/null 2>&1 | grep -E '^(\* (Connected|SSL connection|Server certificate|  subject)|> (GET|Host)|< HTTP)'
+* Connected to example.com (104.20.23.154) port 443
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / id-ecPublicKey
+* Server certificate:
+> GET / HTTP/2
+> Host: example.com
+< HTTP/2 200 
+~$ curl -s -o /dev/null -w "code=%{http_code} dns=%{time_namelookup}s connect=%{time_connect}s total=%{time_total}s\n" https://github.com
+code=200 dns=0.046278s connect=0.136462s total=0.550625s
+~$ curl -sL -o /dev/null -w "final URL after redirects: %{url_effective}\n" http://github.com
+final URL after redirects: https://github.com/
+~$ wget --spider https://example.com 2>&1 | tail -n 5
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Remote file exists and could contain further links,
+but recursion is disabled -- not retrieving.
+
+~$ curl -s https://api.ipify.org; echo "  <- my public IP"
+202.131.146.146  <- my public IP

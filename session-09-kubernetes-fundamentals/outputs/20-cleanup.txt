@@ -1,0 +1,8 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl delete service kubernetes-bootcamp -n s09
+service "kubernetes-bootcamp" deleted from s09 namespace
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl delete deployment kubernetes-bootcamp -n s09
+deployment.apps "kubernetes-bootcamp" deleted from s09 namespace
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl delete namespace s09
+namespace "s09" deleted
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get ns s09 2>&1 || true
+Error from server (NotFound): namespaces "s09" not found

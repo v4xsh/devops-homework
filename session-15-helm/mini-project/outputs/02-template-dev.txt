@@ -1,0 +1,56 @@
+~/devops-homework/session-15-helm/mini-project$ cd ~/devops-homework/session-15-helm/mini-project
+~/devops-homework/session-15-helm/mini-project$ helm template notes-dev notes-chart -n s15-mini --show-only templates/configmap.yaml
+---
+# Source: notes-chart/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notes-dev-config
+  labels:
+    helm.sh/chart: notes-chart-0.1.0
+    app: notes-dev
+    app.kubernetes.io/name: notes-chart
+    app.kubernetes.io/instance: notes-dev
+    environment: development
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  APP_NAME: "notes-app"
+  ENVIRONMENT: "development"
+  LOG_LEVEL: "debug"
+  index.html: |
+    <h1>notes-app (DEVELOPMENT)</h1>
+    <p>release=notes-dev namespace=s15-mini revision=1 chart=notes-chart-0.1.0 replicas=1</p>
+    <p>owner=Vansh Dobhal (10099)</p>
+    <ul>
+      <li>1. Learn helm create / install / upgrade</li>
+      <li>2. Practise helm rollback</li>
+    </ul>
+~/devops-homework/session-15-helm/mini-project$ helm template notes-dev notes-chart -n s15-mini --show-only templates/service.yaml
+---
+# Source: notes-chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: notes-dev-svc
+  labels:
+    helm.sh/chart: notes-chart-0.1.0
+    app: notes-dev
+    app.kubernetes.io/name: notes-chart
+    app.kubernetes.io/instance: notes-dev
+    environment: development
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  selector:
+    app: notes-dev
+    app.kubernetes.io/name: notes-chart
+    app.kubernetes.io/instance: notes-dev
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 31590
+~/devops-homework/session-15-helm/mini-project$ helm template notes-dev notes-chart --set image.repository="" 2>&1 | grep Error
+Error: execution error at (notes-chart/templates/deployment.yaml:22:20): image.repository is required

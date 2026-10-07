@@ -1,0 +1,20 @@
+# Copied from instructor's session10 troubleshooting/selector-mismatch.yaml (namespace added)
+# INTENTIONALLY BROKEN: selector.matchLabels does not match the pod template labels
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selector-error-demo
+  namespace: s12-troubleshoot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: correct-app-name
+  template:
+    metadata:
+      labels:
+        app: wrong-app-name      # BUG
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine

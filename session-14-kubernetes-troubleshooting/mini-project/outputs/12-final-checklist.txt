@@ -1,0 +1,18 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pods -n s14-mini -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+dns-test                               1/1     Running   0          68s   10.244.0.73   minikube   <none>           <none>
+project-broken-pod                     1/1     Running   0          18s   10.244.0.82   minikube   <none>           <none>
+troubleshooting-app-59d4957864-87hlc   1/1     Running   0          78s   10.244.0.70   minikube   <none>           <none>
+troubleshooting-app-59d4957864-bnth2   1/1     Running   0          78s   10.244.0.71   minikube   <none>           <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get svc,endpoints -n s14-mini
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/troubleshooting-service   ClusterIP   10.111.64.188   <none>        80/TCP    79s
+
+NAME                                ENDPOINTS                       AGE
+endpoints/troubleshooting-service   10.244.0.70:80,10.244.0.71:80   79s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get events -n s14-mini --field-selector type=Warning --sort-by=.lastTimestamp | tail -n 5
+LAST SEEN   TYPE      REASON   OBJECT                   MESSAGE
+47s         Warning   Failed   pod/project-broken-pod   Failed to pull image "nginx:this-tag-does-not-exist": failed to pull and unpack image "docker.io/library/nginx:this-tag-does-not-exist": failed to resolve reference "docker.io/library/nginx:this-tag-does-not-exist": unexpected status from HEAD request to https://registry-1.docker.io/v2/library/nginx/manifests/this-tag-does-not-exist: 429 Too Many Requests
+47s         Warning   Failed   pod/project-broken-pod   Error: ErrImagePull
+33s         Warning   Failed   pod/project-broken-pod   Error: ImagePullBackOff

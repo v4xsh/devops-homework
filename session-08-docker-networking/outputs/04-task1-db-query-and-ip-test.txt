@@ -1,0 +1,14 @@
+~/devops-homework/session-08-docker-networking$ docker run --rm --network s08-db-net -e MYSQL_PWD mysql:8 mysql -h s08-database -uroot -e "SELECT @@hostname AS db_host, VERSION() AS version; SHOW DATABASES LIKE 'appdb';"
+db_host	version
+6ca73a26db50	8.4.11
+Database (appdb)
+appdb
+~/devops-homework/session-08-docker-networking$ DBIP=$(docker inspect -f '{{(index .NetworkSettings.Networks "s08-db-net").IPAddress}}' s08-database); echo "database IP on s08-db-net = $DBIP"
+database IP on s08-db-net = 172.21.0.3
+~/devops-homework/session-08-docker-networking$ docker exec s08-frontend ping -c 2 -W 2 $DBIP
+PING 172.21.0.3 (172.21.0.3): 56 data bytes
+
+--- 172.21.0.3 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+~/devops-homework/session-08-docker-networking$ curl -s localhost:8021
+<h1>FRONTEND container (s08-frontend) - Vansh Dobhal (10099)</h1>

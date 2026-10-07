@@ -1,0 +1,31 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl apply -f broken.yaml
+deployment.apps/shop-web created
+service/shop-web created
+pod/svc-client created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl rollout status deploy/shop-web -n s14 --timeout=90s
+Waiting for deployment "shop-web" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "shop-web" rollout to finish: 1 of 2 updated replicas are available...
+deployment "shop-web" successfully rolled out
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl wait --for=condition=Ready pod/svc-client -n s14 --timeout=90s
+pod/svc-client condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl exec svc-client -n s14 -- curl -sS -m 3 http://shop-web
+curl: (7) Failed to connect to shop-web port 80 after 4 ms: Couldn't connect to server
+command terminated with exit code 7
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get svc shop-web -n s14
+NAME       TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+shop-web   ClusterIP   10.104.27.7   <none>        80/TCP    3s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get endpoints shop-web -n s14
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS   AGE
+shop-web   <none>      3s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get endpointslices -n s14 -l kubernetes.io/service-name=shop-web
+NAME             ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+shop-web-jpf2j   IPv4          <unset>   <unset>     3s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl describe svc shop-web -n s14 | grep -E 'Selector|TargetPort|Endpoints'
+Selector:                 app=shopweb
+TargetPort:               8080/TCP
+Endpoints:                
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get pods -n s14 -l app=shop-web --show-labels
+NAME                        READY   STATUS    RESTARTS   AGE   LABELS
+shop-web-866b54d69b-4rgqz   1/1     Running   0          2s    app=shop-web,pod-template-hash=866b54d69b
+shop-web-866b54d69b-t2nsw   1/1     Running   0          3s    app=shop-web,pod-template-hash=866b54d69b

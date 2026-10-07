@@ -1,0 +1,17 @@
+# Static provisioning: the admin creates the PV by hand (cluster-scoped object).
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: s13-static-pv
+  labels:
+    owner: vansh-10099
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /tmp/s13-static-pv
+    type: DirectoryOrCreate

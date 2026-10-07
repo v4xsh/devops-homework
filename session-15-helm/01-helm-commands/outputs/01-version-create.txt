@@ -1,0 +1,30 @@
+~/devops-homework/session-15-helm/01-helm-commands$ cd ~/devops-homework/session-15-helm/01-helm-commands
+~/devops-homework/session-15-helm/01-helm-commands$ helm version --short
+v3.16.2+g13654a5
+~/devops-homework/session-15-helm/01-helm-commands$ helm create webapp
+Creating webapp
+~/devops-homework/session-15-helm/01-helm-commands$ tree -a webapp
+webapp
+├── .helmignore
+├── Chart.yaml
+├── charts
+├── templates
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
+│   ├── deployment.yaml
+│   ├── hpa.yaml
+│   ├── ingress.yaml
+│   ├── service.yaml
+│   ├── serviceaccount.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
+
+4 directories, 11 files
+~/devops-homework/session-15-helm/01-helm-commands$ cat webapp/Chart.yaml | grep -v '^#' | grep -v '^$'
+apiVersion: v2
+name: webapp
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.16.0"

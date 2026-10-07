@@ -1,0 +1,21 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ grep -n 'excluded_urls' task1-monitoring/sample-app/app.py
+55:    FlaskInstrumentor().instrument_app(app, excluded_urls="/metrics,/healthz,/readyz")
+~/devops-homework/session-20-monitoring-observability-gitops$ cd task1-monitoring/sample-app && docker build -q -t s20-metrics-app:1.1.0 . && minikube image load s20-metrics-app:1.1.0 && cd "$OLDPWD"
+sha256:a44404304a5d0ef1884bf6a190ac84ac591ad3109fc721ca5af73a1e7e0ce515
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task1-monitoring/k8s/app.yaml
+namespace/s20-app unchanged
+deployment.apps/s20-metrics-app configured
+service/s20-metrics-app unchanged
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl rollout status deploy/s20-metrics-app -n s20-app --timeout=180s
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 old replicas are pending termination...
+deployment "s20-metrics-app" successfully rolled out
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get pods -n s20-app -l app=s20-metrics-app -o custom-columns=NAME:.metadata.name,IMAGE:.spec.containers[0].image,READY:.status.containerStatuses[0].ready
+NAME                               IMAGE                   READY
+s20-metrics-app-5c7f5f65df-brfkz   s20-metrics-app:1.0.0   true
+s20-metrics-app-5c7f5f65df-mrfwl   s20-metrics-app:1.0.0   true
+s20-metrics-app-69b7cfb67-ccn9j    s20-metrics-app:1.1.0   true
+s20-metrics-app-69b7cfb67-xlnf8    s20-metrics-app:1.1.0   true

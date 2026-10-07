@@ -1,0 +1,89 @@
+# Default values for the taskboard chart.
+
+backend:
+  image:
+    repository: ghcr.io/v4xsh/taskboard-backend
+    tag: "1.0.1"
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  port: 8000
+  probes:
+    livenessPath: /health
+    readinessPath: /ready
+  resources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+
+frontend:
+  image:
+    repository: ghcr.io/v4xsh/taskboard-frontend
+    tag: "1.0.1"
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  port: 8080
+  resources:
+    requests: {cpu: 20m, memory: 32Mi}
+    limits: {cpu: 200m, memory: 96Mi}
+
+# Non-secret application settings (rendered into a ConfigMap)
+config:
+  appEnv: dev
+  logLevel: INFO
+  dbName: taskboard
+  dbUser: taskboard
+
+# DB credentials. Leave dbPassword empty to auto-generate one on first install (kept on upgrades),
+# or point existingSecret at a Secret managed outside Helm (External Secrets, Sealed Secrets...).
+secret:
+  existingSecret: ""
+  passwordKey: db-password
+  dbPassword: ""
+
+postgres:
+  enabled: true
+  image: postgres:16-alpine
+  storage:
+    size: 1Gi
+    storageClassName: ""   # "" = cluster default (minikube: standard)
+  resources:
+    requests: {cpu: 50m, memory: 96Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+  # used only when postgres.enabled=false (e.g. AWS RDS created by Terraform)
+  externalHost: ""
+
+ingress:
+  enabled: true
+  className: nginx
+  host: taskboard.local
+  annotations: {}
+  tls: []
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 80
+
+monitoring:
+  serviceMonitor:
+    enabled: true
+    interval: 15s
+    labels: {}
+  prometheusRule:
+    enabled: true
+    labels: {}
+  grafanaDashboard:
+    enabled: true
+    namespace: monitoring    # where the Grafana sidecar looks (searchNamespace: ALL also works)
+
+imagePullSecrets: []
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile: {type: RuntimeDefault}
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities: {drop: ["ALL"]}

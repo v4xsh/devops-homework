@@ -1,0 +1,30 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/05-crashloopbackoff.yaml
+pod/lifecycle-crashloop created
+~/devops-homework/session-10-pods-replicasets-deployments$ for i in $(seq 1 100); do echo "$(date +%T) $(kubectl get pod lifecycle-crashloop -n s10-lifecycle --no-headers | awk '{print $3, "restarts="$4}')"; sleep 1; done | uniq -f1
+17:48:13 ContainerCreating restarts=0
+17:48:16 Running restarts=0
+17:48:19 Running restarts=1
+17:48:22 Error restarts=1
+17:48:34 Running restarts=2
+17:48:38 Error restarts=2
+17:49:08 Running restarts=3
+17:49:11 Error restarts=3
+17:50:05 Running restarts=4
+17:50:10 Error restarts=4
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-crashloop -n s10-lifecycle
+NAME                  READY   STATUS   RESTARTS      AGE
+lifecycle-crashloop   0/1     Error    4 (98s ago)   2m35s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl logs lifecycle-crashloop -n s10-lifecycle
+Application started
+Application crashed
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-crashloop -n s10-lifecycle -o jsonpath='restartPolicy={.spec.restartPolicy} restartCount={.status.containerStatuses[0].restartCount} waiting={.status.containerStatuses[0].state.waiting.reason} lastExit={.status.containerStatuses[0].lastState.terminated.exitCode}{"\n"}'
+restartPolicy=Always restartCount=4 waiting= lastExit=1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-crashloop -n s10-lifecycle | sed -n '/^Events:/,$p'
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  2m37s                default-scheduler  Successfully assigned s10-lifecycle/lifecycle-crashloop to minikube
+  Normal   Pulled     45s (x5 over 2m36s)  kubelet            spec.containers{crashing-app}: Container image "busybox:1.36" already present on machine and can be accessed by the pod
+  Normal   Created    44s (x5 over 2m36s)  kubelet            spec.containers{crashing-app}: Container created
+  Normal   Started    44s (x5 over 2m35s)  kubelet            spec.containers{crashing-app}: Container started
+  Warning  BackOff    41s (x4 over 2m28s)  kubelet            spec.containers{crashing-app}: Back-off restarting failed container crashing-app in pod lifecycle-crashloop_s10-lifecycle(61e57fff-8e5c-4602-abda-413c70930802)

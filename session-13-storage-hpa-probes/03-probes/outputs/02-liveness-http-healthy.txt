@@ -1,0 +1,15 @@
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl apply -f 02-liveness-http.yaml
+pod/liveness-demo created
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl wait --for=condition=Ready pod/liveness-demo -n s13 --timeout=60s
+pod/liveness-demo condition met
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 20
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod liveness-demo -n s13
+NAME            READY   STATUS    RESTARTS   AGE
+liveness-demo   1/1     Running   0          23s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl describe pod liveness-demo -n s13 | grep -E 'Liveness|Restart Count'
+    Restart Count:  0
+    Liveness:       http-get http://:80/ delay=5s timeout=2s period=5s successThreshold=1 failureThreshold=3
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl logs liveness-demo -n s13 --tail=3
+10.244.0.1 - - [07/Oct/2026:17:41:51 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.37" "-"
+10.244.0.1 - - [07/Oct/2026:17:41:56 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.37" "-"
+10.244.0.1 - - [07/Oct/2026:17:42:01 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.37" "-"

@@ -1,0 +1,21 @@
+~$ cd ~/devops-homework/session-03-shell-scripting
+~/devops-homework/session-03-shell-scripting$ chmod +x system_info.sh && ls -l system_info.sh
+-rwxrwxrwx 1 vansh vansh 3079 Oct  7 17:06 system_info.sh
+~/devops-homework/session-03-shell-scripting$ bash -n system_info.sh && echo "syntax OK"
+syntax OK
+~/devops-homework/session-03-shell-scripting$ shellcheck system_info.sh && echo "shellcheck: no warnings"
+shellcheck: no warnings
+~/devops-homework/session-03-shell-scripting$ grep -nE 'read -r -p|mkdir|touch|> "\$process_file"|df -h|^ps|=\$\(' system_info.sh
+8:#   2. Prints disk usage (df -h) and the running processes (ps)
+11:#   5. Creates that directory (mkdir) and an empty file inside it (touch)
+22:current_date=$(date '+%A, %d %B %Y %H:%M:%S %Z')   # command substitution $(...)
+23:host_name=$(hostname)
+24:user_name=$(whoami)
+25:disk_usage=$(df -h /)                               # root filesystem only
+26:process_count=$(ps -e --no-headers | wc -l)         # number of processes
+37:echo "---- Disk usage (df -h /) ----"
+41:ps                                                  # processes of this terminal session
+47:read -r -p "Enter a directory name to create: " dir_name
+63:    mkdir -p "$dir_name"
+68:touch "$process_file"
+76:} > "$process_file"            # '>' overwrites the file each run

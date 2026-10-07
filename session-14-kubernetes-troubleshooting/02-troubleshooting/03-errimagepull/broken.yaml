@@ -1,0 +1,10 @@
+# BUG: registry hostname is wrong (typo "dockerr.io") -> DNS lookup of the registry fails
+apiVersion: v1
+kind: Pod
+metadata:
+  name: errimagepull-app
+  namespace: s14
+spec:
+  containers:
+    - name: web
+      image: dockerr.io/library/nginx:1.27

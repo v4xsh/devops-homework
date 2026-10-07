@@ -1,0 +1,10 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f hpa.yaml
+horizontalpodautoscaler.autoscaling/web-app-hpa created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ sleep 60
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get hpa -n s13-mini
+NAME          REFERENCE            TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+web-app-hpa   Deployment/web-app   cpu: <unknown>/50%   2         5         2          61s
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl top pods -n s13-mini
+NAME                      CPU(cores)   MEMORY(bytes)   
+web-app-d45775485-5dsfz   9m           11Mi            
+web-app-d45775485-hdxv5   6m           11Mi            

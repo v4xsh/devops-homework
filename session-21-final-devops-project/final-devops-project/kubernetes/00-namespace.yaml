@@ -1,0 +1,9 @@
+# Plain-manifest deployment of TaskBoard (the Helm chart in ../helm renders the same objects).
+#   kubectl apply -f kubernetes/
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: final-k8s
+  labels:
+    app.kubernetes.io/part-of: taskboard
+    owner: vansh-dobhal-10099

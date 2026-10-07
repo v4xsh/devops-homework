@@ -1,0 +1,16 @@
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl apply -f 05-startup-too-short.yaml
+pod/startup-too-short created
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 50
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod startup-too-short -n s13
+NAME                READY   STATUS    RESTARTS     AGE
+startup-too-short   0/1     Running   3 (5s ago)   50s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl events -n s13 --for pod/startup-too-short
+LAST SEEN           TYPE      REASON      OBJECT                  MESSAGE
+50s                 Normal    Scheduled   Pod/startup-too-short   Successfully assigned s13/startup-too-short to minikube
+10s (x3 over 40s)   Normal    Killing     Pod/startup-too-short   Container nginx failed startup probe, will be restarted
+5s (x4 over 49s)    Normal    Pulled      Pod/startup-too-short   Container image "nginx:1.27" already present on machine and can be accessed by the pod
+5s (x4 over 49s)    Normal    Created     Pod/startup-too-short   Container created
+5s (x4 over 49s)    Normal    Started     Pod/startup-too-short   Container started
+2s (x17 over 48s)   Warning   Unhealthy   Pod/startup-too-short   Startup probe failed: Get "http://10.244.0.106:80/": dial tcp 10.244.0.106:80: connect: connection refused
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl logs startup-too-short -n s13 --previous
+warming cache for 25s...

@@ -1,0 +1,12 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl apply -f load-generator.yaml
+deployment.apps/load-generator created
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl rollout status deployment/load-generator -n s13 --timeout=120s
+Waiting for deployment "load-generator" rollout to finish: 0 of 1 updated replicas are available...
+deployment "load-generator" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ sleep 5
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl logs deploy/load-generator -n s13
+load-generator load-generator-7c5886f4b6-kvlgs started, hitting http://php-apache.s13.svc.cluster.local
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get pods -n s13 -o wide
+NAME                              READY   STATUS    RESTARTS   AGE    IP            NODE       NOMINATED NODE   READINESS GATES
+load-generator-7c5886f4b6-kvlgs   1/1     Running   0          6s     10.244.0.92   minikube   <none>           <none>
+php-apache-7545b76d78-gkr8c       1/1     Running   0          103s   10.244.0.72   minikube   <none>           <none>

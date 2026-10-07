@@ -1,0 +1,33 @@
+~/devops-homework/session-07-docker-images$ cd ~/devops-homework/session-07-docker-images/task3-apps/python-app
+~/devops-homework/session-07-docker-images/task3-apps/python-app$ docker build --progress=plain -f Dockerfile.single -t s07-python-app:single . 2>&1 | grep -E '^#[0-9]+ \[|naming' | tail -n 12
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
+#6 [2/4] WORKDIR /app
+#7 [3/4] COPY . .
+#8 [4/4] RUN pip install -r requirements.txt
+#9 naming to docker.io/library/s07-python-app:single done
+~/devops-homework/session-07-docker-images/task3-apps/python-app$ docker build --progress=plain -t s07-python-app:multi . 2>&1 | grep -E '^#[0-9]+ \[|naming' | tail -n 14
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 [internal] load .dockerignore
+#4 [internal] load build context
+#5 [builder 1/5] FROM docker.io/library/python:3.12-slim@sha256:05cda9777409a9c3ffddd94a4c476b79f0769a0b4857f0c7ed9226b6800b0d6f
+#6 [builder 2/5] WORKDIR /app
+#4 [internal] load build context
+#7 [builder 3/5] RUN python -m venv /opt/venv
+#8 [builder 4/5] COPY requirements.txt .
+#9 [builder 5/5] RUN pip install --no-cache-dir -r requirements.txt
+#10 [stage-1 2/5] COPY --from=builder /opt/venv /opt/venv
+#11 [stage-1 3/5] WORKDIR /app
+#12 [stage-1 4/5] COPY app.py .
+#13 [stage-1 5/5] RUN useradd --create-home appuser
+#14 naming to docker.io/library/s07-python-app:multi done
+~/devops-homework/session-07-docker-images/task3-apps/python-app$ docker images s07-python-app --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
+REPOSITORY       TAG       IMAGE ID       SIZE
+s07-python-app   multi     8c90575248e5   205MB
+s07-python-app   single    bd1dadc1a991   1.63GB

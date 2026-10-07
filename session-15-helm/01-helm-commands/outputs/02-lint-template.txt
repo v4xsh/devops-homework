@@ -1,0 +1,71 @@
+~/devops-homework/session-15-helm/01-helm-commands$ cd ~/devops-homework/session-15-helm/01-helm-commands
+~/devops-homework/session-15-helm/01-helm-commands$ helm lint webapp
+==> Linting webapp
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-15-helm/01-helm-commands$ helm lint webapp --strict
+==> Linting webapp
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-15-helm/01-helm-commands$ helm template web1 webapp -n s15 --show-only templates/deployment.yaml
+---
+# Source: webapp/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web1-webapp
+  labels:
+    helm.sh/chart: webapp-0.1.0
+    app.kubernetes.io/name: webapp
+    app.kubernetes.io/instance: web1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: webapp
+      app.kubernetes.io/instance: web1
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: webapp-0.1.0
+        app.kubernetes.io/name: webapp
+        app.kubernetes.io/instance: web1
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: web1-webapp
+      securityContext:
+        {}
+      containers:
+        - name: webapp
+          securityContext:
+            {}
+          image: "nginx:1.16.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}
+~/devops-homework/session-15-helm/01-helm-commands$ helm template web1 webapp -n s15 | grep -E '^(kind|  name):'
+kind: ServiceAccount
+  name: web1-webapp
+kind: Service
+  name: web1-webapp
+kind: Deployment
+  name: web1-webapp
+kind: Pod
+  name: "web1-webapp-test-connection"

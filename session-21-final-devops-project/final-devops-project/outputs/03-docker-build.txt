@@ -1,0 +1,49 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker build -f docker/backend.Dockerfile -t taskboard-backend:1.0.0 -t ghcr.io/v4xsh/taskboard-backend:1.0.0 . 2>&1 | grep -E '^#[0-9]+ \[|DONE|naming|ERROR' | grep -vE 'CACHED' | tail -n 14
+#11 DONE 0.1s
+#10 [builder 4/4] RUN python -m venv /opt/venv  && /opt/venv/bin/pip install --upgrade pip  && /opt/venv/bin/pip install -r requirements.txt
+#10 DONE 22.9s
+#12 [runtime 4/7] COPY --from=builder /opt/venv /opt/venv
+#12 DONE 1.8s
+#13 [runtime 5/7] COPY --chown=10001:10001 application/backend/alembic.ini ./
+#13 DONE 0.0s
+#14 [runtime 6/7] COPY --chown=10001:10001 application/backend/alembic ./alembic
+#14 DONE 0.0s
+#15 [runtime 7/7] COPY --chown=10001:10001 application/backend/app ./app
+#15 DONE 0.0s
+#16 naming to docker.io/library/taskboard-backend:1.0.0 done
+#16 naming to ghcr.io/v4xsh/taskboard-backend:1.0.0 done
+#16 DONE 5.2s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker build -f docker/frontend.Dockerfile -t taskboard-frontend:1.0.0 -t ghcr.io/v4xsh/taskboard-frontend:1.0.0 . 2>&1 | grep -E '^#[0-9]+ \[|DONE|naming|ERROR' | grep -vE 'CACHED' | tail -n 14
+#9 DONE 10.8s
+#13 [runtime 3/4] COPY docker/nginx/default.conf.template /etc/nginx/templates/default.conf.template
+#13 DONE 0.1s
+#12 [build 4/6] RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+#12 DONE 4.7s
+#14 [build 5/6] COPY application/frontend/ ./
+#14 DONE 0.1s
+#15 [build 6/6] RUN npm run build
+#15 DONE 3.1s
+#16 [runtime 4/4] COPY --from=build /app/dist /usr/share/nginx/html
+#16 DONE 0.1s
+#17 naming to docker.io/library/taskboard-frontend:1.0.0 done
+#17 naming to ghcr.io/v4xsh/taskboard-frontend:1.0.0 done
+#17 DONE 2.2s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}' | grep -E '^taskboard-'
+taskboard-frontend:1.0.0                                 112MB
+taskboard-backend:1.0.0                                  308MB
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker inspect taskboard-backend:1.0.0 taskboard-frontend:1.0.0 --format '{{index .Config.Labels "org.opencontainers.image.title"}}  User={{.Config.User}}  ExposedPorts={{json .Config.ExposedPorts}}'
+taskboard-backend  User=10001:10001  ExposedPorts={"8000/tcp":{}}
+taskboard-frontend  User=101  ExposedPorts={"8080/tcp":{}}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker run --rm --entrypoint id taskboard-backend:1.0.0
+uid=10001(app) gid=10001(app) groups=10001(app)
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker run --rm --entrypoint id taskboard-frontend:1.0.0
+uid=101(nginx) gid=101(nginx) groups=101(nginx),101(nginx)
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker history taskboard-backend:1.0.0 --format '{{.Size}}\t{{.CreatedBy}}' | head -n 8 | cut -c1-120
+0B	CMD ["uvicorn" "app.main:app" "--host" "0.0.…
+0B	HEALTHCHECK {Test:[CMD-SHELL python -c "impo…
+0B	EXPOSE [8000/tcp]
+0B	USER 10001:10001
+36.9kB	COPY --chown=10001:10001 application/backend…
+28.7kB	COPY --chown=10001:10001 application/backend…
+12.3kB	COPY --chown=10001:10001 application/backend…
+101MB	COPY /opt/venv /opt/venv # buildkit

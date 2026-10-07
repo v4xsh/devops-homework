@@ -1,0 +1,12 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl scale deployment/load-generator -n s13 --replicas=3
+deployment.apps/load-generator scaled
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl rollout status deployment/load-generator -n s13 --timeout=120s
+Waiting for deployment "load-generator" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "load-generator" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "load-generator" rollout to finish: 2 of 3 updated replicas are available...
+deployment "load-generator" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get pods -n s13 -l app=load-generator
+NAME                              READY   STATUS    RESTARTS   AGE
+load-generator-7c5886f4b6-86nr6   1/1     Running   0          2s
+load-generator-7c5886f4b6-kvlgs   1/1     Running   0          2m31s
+load-generator-7c5886f4b6-wp2tf   1/1     Running   0          2s

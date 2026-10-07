@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: s12
+  labels: { owner: vansh-dobhal, session: "12" }
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: s12-troubleshoot
+  labels: { owner: vansh-dobhal, session: "12" }

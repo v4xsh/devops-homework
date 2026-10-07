@@ -1,0 +1,30 @@
+~/devops-homework/session-07-docker-images$ cp -r ~/devops-homework/session-07-docker-images/task3-apps/node-app /tmp/s07-ignore-demo && cd /tmp/s07-ignore-demo
+/tmp/s07-ignore-demo$ mkdir -p /tmp/s07-ignore-demo/node_modules/junk && head -c 80M /dev/urandom > /tmp/s07-ignore-demo/node_modules/junk/big.bin && du -sh /tmp/s07-ignore-demo/node_modules
+81M	/tmp/s07-ignore-demo/node_modules
+/tmp/s07-ignore-demo$ cat .dockerignore
+node_modules
+npm-debug.log
+.git
+Dockerfile*
+.dockerignore
+*.md
+/tmp/s07-ignore-demo$ docker build --progress=plain -f Dockerfile.single -t s07-ignore-demo:with-ignore . 2>&1 | grep "transferring context.*done"
+#3 transferring context: 103B done
+#5 transferring context: 605B 0.0s done
+/tmp/s07-ignore-demo$ mv .dockerignore .dockerignore.off
+/tmp/s07-ignore-demo$ docker build --progress=plain -f Dockerfile.single -t s07-ignore-demo:without-ignore . 2>&1 | grep "transferring context.*done"
+#3 transferring context: 2B done
+#4 transferring context: 83.91MB 1.5s done
+/tmp/s07-ignore-demo$ mv .dockerignore.off .dockerignore
+/tmp/s07-ignore-demo$ docker images s07-ignore-demo --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+REPOSITORY        TAG              SIZE
+s07-ignore-demo   without-ignore   1.76GB
+s07-ignore-demo   with-ignore      1.59GB
+/tmp/s07-ignore-demo$ docker history s07-ignore-demo:without-ignore --format "{{.CreatedBy}} => {{.Size}}" | grep -E "COPY|npm install"
+RUN /bin/sh -c npm install # buildkit => 12.8MB
+COPY . . # buildkit => 83.9MB
+COPY docker-entrypoint.sh /usr/local/bin/ # … => 20.5kB
+/tmp/s07-ignore-demo$ docker history s07-ignore-demo:with-ignore --format "{{.CreatedBy}} => {{.Size}}" | grep -E "COPY|npm install"
+RUN /bin/sh -c npm install # buildkit => 12.8MB
+COPY . . # buildkit => 16.4kB
+COPY docker-entrypoint.sh /usr/local/bin/ # … => 20.5kB

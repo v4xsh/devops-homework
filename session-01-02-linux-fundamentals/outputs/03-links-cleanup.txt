@@ -1,0 +1,16 @@
+~/devops-homework/tools$ cd ~/practice/links
+~/practice/links$ ln -s /etc dir_soft_link
+~/practice/links$ ls -ld dir_soft_link
+lrwxrwxrwx 1 vansh vansh 4 Oct  7 17:04 dir_soft_link -> /etc
+~/practice/links$ ln /etc dir_hard_link
+ln: /etc: hard link not allowed for directory
+~/practice/links$ ln /mnt/c/Windows/win.ini cross_fs_hard_link
+ln: failed to create hard link 'cross_fs_hard_link' => '/mnt/c/Windows/win.ini': Invalid cross-device link
+~/practice/links$ rm soft_link.txt dir_soft_link
+~/practice/links$ unlink hard_link.txt
+~/practice/links$ ls -la
+total 8
+drwxr-xr-x 2 vansh vansh 4096 Oct  7 17:04 .
+drwxr-xr-x 3 vansh vansh 4096 Oct  7 17:04 ..
+~/practice/links$ cd ~ && rmdir ~/practice/links && echo "links practice directory removed"
+links practice directory removed

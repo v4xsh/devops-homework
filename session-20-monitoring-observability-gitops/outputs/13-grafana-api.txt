@@ -1,0 +1,20 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:13000/api/health | jq -c .
+{"database":"ok","version":"13.2.3","commit":"90ffed056f0884267356c12a0eeb72a022af53f1"}
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -u admin:s20-grafana-admin localhost:13000/api/datasources | jq -r '.[] | [.uid, .name, .type, .url] | @tsv' | column -t
+alertmanager  Alertmanager  alertmanager  http://kps-alertmanager.monitoring:9093/
+prometheus    Prometheus    prometheus    http://kps-prometheus.monitoring:9090/
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -u admin:s20-grafana-admin 'localhost:13000/api/search?type=dash-db' | jq -r '.[] | [.uid, .title] | @tsv' | grep -E 's20|Compute Resources / Namespace \(Pods\)|Node Exporter / Nodes'
+85a562078cdf77779eaa1add43ccec1e	Kubernetes / Compute Resources / Namespace (Pods)
+7d57716318ee0dddbac5a7f451fb7753	Node Exporter / Nodes
+s20-metrics-app	Session 20 - s20-metrics-app (Vansh Dobhal 10099)
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -u admin:s20-grafana-admin localhost:13000/api/dashboards/uid/s20-metrics-app | jq -r '.dashboard.panels[] | "panel \(.id): \(.title)"'
+panel 1: Healthy targets (up)
+panel 2: Requests / s
+panel 3: 5xx error ratio
+panel 4: Pod restarts (1h)
+panel 5: Request rate by endpoint & status
+panel 6: p95 latency by endpoint
+panel 7: CPU usage (cores) per pod
+panel 8: Memory working set per pod
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -u admin:s20-grafana-admin -G localhost:13000/api/datasources/proxy/uid/prometheus/api/v1/query --data-urlencode 'query=sum(rate(app_requests_total{namespace="s20-app"}[1m]))' | jq -c '.data.result'
+[{"metric":{},"value":[1791394878.291,"8.133333333333333"]}]

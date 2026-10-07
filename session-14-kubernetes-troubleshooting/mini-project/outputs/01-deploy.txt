@@ -1,0 +1,17 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f namespace.yaml
+namespace/s14-mini created
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f deployment.yaml
+deployment.apps/troubleshooting-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl apply -f service.yaml
+service/troubleshooting-service created
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl rollout status deployment/troubleshooting-app -n s14-mini --timeout=120s
+Waiting for deployment "troubleshooting-app" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "troubleshooting-app" rollout to finish: 1 of 2 updated replicas are available...
+deployment "troubleshooting-app" successfully rolled out
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pods -n s14-mini
+NAME                                   READY   STATUS    RESTARTS   AGE
+troubleshooting-app-59d4957864-87hlc   1/1     Running   0          1s
+troubleshooting-app-59d4957864-bnth2   1/1     Running   0          1s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get service -n s14-mini
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+troubleshooting-service   ClusterIP   10.111.64.188   <none>        80/TCP    1s

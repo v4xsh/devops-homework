@@ -1,0 +1,26 @@
+~/devops-homework/tools$ sudo useradd testuser2
+~/devops-homework/tools$ grep '^testuser2:' /etc/passwd
+testuser2:x:1002:1002::/home/testuser2:/bin/sh
+~/devops-homework/tools$ ls -ld /home/testuser2
+ls: cannot access '/home/testuser2': No such file or directory
+~/devops-homework/tools$ id testuser2
+uid=1002(testuser2) gid=1002(testuser2) groups=1002(testuser2)
+~/devops-homework/tools$ sudo useradd -m -s /bin/bash -c "Test User Three" testuser3
+~/devops-homework/tools$ grep '^testuser3:' /etc/passwd
+testuser3:x:1003:1003:Test User Three:/home/testuser3:/bin/bash
+~/devops-homework/tools$ sudo ls -la /home/testuser3
+total 20
+drwxr-x--- 2 testuser3 testuser3 4096 Oct  7 17:04 .
+drwxr-xr-x 5 root      root      4096 Oct  7 17:04 ..
+-rw-r--r-- 1 testuser3 testuser3  220 Mar 31  2024 .bash_logout
+-rw-r--r-- 1 testuser3 testuser3 3771 Mar 31  2024 .bashrc
+-rw-r--r-- 1 testuser3 testuser3  807 Mar 31  2024 .profile
+~/devops-homework/tools$ grep -E '^#?(DSHELL|DHOME|USERGROUPS|EXTRA_GROUPS|ADD_EXTRA_GROUPS)=' /etc/adduser.conf
+#DSHELL=/bin/bash
+#USERGROUPS=yes
+#EXTRA_GROUPS="users"
+#ADD_EXTRA_GROUPS=0
+~/devops-homework/tools$ grep -E '^#? ?(SHELL|HOME|CREATE_HOME)=' /etc/default/useradd; grep -E '^CREATE_HOME' /etc/login.defs || echo 'CREATE_HOME not set in /etc/login.defs -> useradd does NOT create a home without -m'
+SHELL=/bin/sh
+# HOME=/home
+CREATE_HOME not set in /etc/login.defs -> useradd does NOT create a home without -m

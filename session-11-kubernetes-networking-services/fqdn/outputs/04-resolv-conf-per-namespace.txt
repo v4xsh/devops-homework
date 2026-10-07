@@ -1,0 +1,8 @@
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s11 dnsutils -- cat /etc/resolv.conf
+search s11.svc.cluster.local svc.cluster.local cluster.local
+nameserver 10.96.0.10
+options ndots:5
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- cat /etc/resolv.conf
+search s12.svc.cluster.local svc.cluster.local cluster.local
+nameserver 10.96.0.10
+options ndots:5

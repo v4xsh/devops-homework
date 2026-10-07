@@ -1,0 +1,34 @@
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ ls -la
+total 16
+drwxrwxrwx 1 vansh vansh 4096 Oct  7 17:24 .
+drwxrwxrwx 1 vansh vansh 4096 Oct  7 17:09 ..
+-rwxrwxrwx 1 vansh vansh   60 Oct  7 17:09 .gitignore
+-rwxrwxrwx 1 vansh vansh 1199 Oct  7 17:09 main.tf
+drwxrwxrwx 1 vansh vansh 4096 Oct  7 17:11 outputs
+-rwxrwxrwx 1 vansh vansh  881 Oct  7 17:09 outputs.tf
+-rwxrwxrwx 1 vansh vansh 1981 Oct  7 17:24 provider.tf
+drwxrwxrwx 1 vansh vansh 4096 Oct  7 17:11 screenshots
+-rwxrwxrwx 1 vansh vansh  271 Oct  7 17:10 terraform.tfvars
+-rwxrwxrwx 1 vansh vansh 1039 Oct  7 17:09 variables.tf
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform init -no-color
+Initializing the backend...
+
+Initializing provider plugins...
+- Finding hashicorp/aws versions matching "~> 6.0, < 6.23.0"...
+- Installing hashicorp/aws v6.22.1...
+- Installed hashicorp/aws v6.22.1 (signed by HashiCorp)
+
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.

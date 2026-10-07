@@ -1,0 +1,15 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ date +%T; kubectl exec client -n s15-rollback -- wget -qO- http://rb-web
+17:24:48
+release=rb-web rendered-at-revision=2 chart=rollback-demo-0.1.0
+version=v2 color=green image=nginx:1.26-alpine replicas=2
+message=Upgrade #1 - scaled to 2 replicas on nginx 1.26
+~/devops-homework/session-15-helm/02-helm-rollback$ sleep 90
+~/devops-homework/session-15-helm/02-helm-rollback$ date +%T; kubectl exec client -n s15-rollback -- wget -qO- http://rb-web
+17:26:18
+release=rb-web rendered-at-revision=2 chart=rollback-demo-0.1.0
+version=v2 color=green image=nginx:1.26-alpine replicas=2
+message=Upgrade #1 - scaled to 2 replicas on nginx 1.26
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl get pods -n s15-rollback -l app.kubernetes.io/instance=rb-web -o custom-columns=POD:.metadata.name,STATUS:.status.phase,IMAGE:.spec.containers[0].image,RESTARTS:.status.containerStatuses[0].restartCount
+POD                      STATUS    IMAGE               RESTARTS
+rb-web-8c95bd676-4xt9j   Running   nginx:1.26-alpine   0
+rb-web-8c95bd676-nw7cs   Running   nginx:1.26-alpine   0

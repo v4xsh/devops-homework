@@ -1,0 +1,35 @@
+~$ export LINES=50
+~$ date
+Wed Oct  7 17:06:13 UTC 2026
+~$ hostname
+Vansh-G15
+~$ whoami
+vansh
+~$ df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   15G  942G   2% /
+~$ ps
+    PID TTY          TIME CMD
+  13552 pts/9    00:00:00 bash
+  13632 pts/9    00:00:00 bash
+  13658 pts/9    00:00:00 ps
+~$ my_name="Vansh Dobhal"; roll=10099; echo "Name: $my_name | Roll: $roll"
+Name: Vansh Dobhal | Roll: 10099
+~$ today=$(date +%F); echo "Stored in a variable: $today"
+Stored in a variable: 2026-10-07
+~$ read -p "Enter directory name: " d <<< "demo_dir"; echo "You typed: $d"
+You typed: demo_dir
+~$ cd /tmp && mkdir -p demo_dir && touch demo_dir/file.txt && ls -l demo_dir
+total 0
+-rw-r--r-- 1 vansh vansh 0 Oct  7 17:06 file.txt
+/tmp$ ps > demo_dir/file.txt && cat demo_dir/file.txt
+    PID TTY          TIME CMD
+  13552 pts/9    00:00:00 bash
+  13632 pts/9    00:00:00 bash
+  13678 pts/9    00:00:00 ps
+/tmp$ echo "first" > demo_dir/r.txt; echo "second" > demo_dir/r.txt; cat demo_dir/r.txt
+second
+/tmp$ echo "third" >> demo_dir/r.txt; cat demo_dir/r.txt
+second
+third
+/tmp$ rm -rf /tmp/demo_dir

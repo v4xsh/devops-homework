@@ -1,0 +1,21 @@
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ echo "version 1 - uploaded by Vansh Dobhal" > hello.txt
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3 cp hello.txt s3://vansh-dobhal-10099-s18-demo/hello.txt
+Completed 37 Bytes/37 Bytes (569 Bytes/s) with 1 file(s) remainingupload: ./hello.txt to s3://vansh-dobhal-10099-s18-demo/hello.txt 
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ echo "version 2 - updated by Vansh Dobhal" > hello.txt
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3 cp hello.txt s3://vansh-dobhal-10099-s18-demo/hello.txt
+Completed 36 Bytes/36 Bytes (1.5 KiB/s) with 1 file(s) remainingupload: ./hello.txt to s3://vansh-dobhal-10099-s18-demo/hello.txt
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3api list-object-versions --bucket vansh-dobhal-10099-s18-demo --query 'Versions[].{Key:Key,VersionId:VersionId,IsLatest:IsLatest,Size:Size}' --output table
+-----------------------------------------------------------------------
+|                         ListObjectVersions                          |
++----------+------------+-------+-------------------------------------+
+| IsLatest |    Key     | Size  |              VersionId              |
++----------+------------+-------+-------------------------------------+
+|  True    |  hello.txt |  36   |  AaEXWUUnfSeqI78TNzjVa341nphkpjPc   |
+|  False   |  hello.txt |  37   |  AaEXWUUmp9CwN9PYkp5ixTm0w9aP.31T   |
++----------+------------+-------+-------------------------------------+
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --endpoint-url=http://localhost:4566 s3api head-object --bucket vansh-dobhal-10099-s18-demo --key hello.txt --query '{SSE:ServerSideEncryption,VersionId:VersionId}'
+{
+    "SSE": "AES256",
+    "VersionId": "AaEXWUUnfSeqI78TNzjVa341nphkpjPc"
+}
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ rm -f hello.txt

@@ -1,0 +1,17 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/06-imagepullbackoff.yaml
+pod/lifecycle-image-error created
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 20; kubectl get pod lifecycle-image-error -n s10-lifecycle
+NAME                    READY   STATUS             RESTARTS   AGE
+lifecycle-image-error   0/1     ImagePullBackOff   0          21s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-image-error -n s10-lifecycle -o jsonpath='phase={.status.phase} waiting={.status.containerStatuses[0].state.waiting.reason}{"\n"}'
+phase=Pending waiting=ImagePullBackOff
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-image-error -n s10-lifecycle | sed -n '/^Events:/,$p'
+Events:
+  Type     Reason     Age               From               Message
+  ----     ------     ----              ----               -------
+  Normal   Scheduled  23s               default-scheduler  Successfully assigned s10-lifecycle/lifecycle-image-error to minikube
+  Normal   BackOff    19s               kubelet            spec.containers{broken-image}: Back-off pulling image "jakwehrgkaejw:kahsdfgkhj"
+  Warning  Failed     19s               kubelet            spec.containers{broken-image}: Error: ImagePullBackOff
+  Normal   Pulling    8s (x2 over 22s)  kubelet            spec.containers{broken-image}: Pulling image "jakwehrgkaejw:kahsdfgkhj"
+  Warning  Failed     7s (x2 over 20s)  kubelet            spec.containers{broken-image}: Failed to pull image "jakwehrgkaejw:kahsdfgkhj": failed to pull and unpack image "docker.io/library/jakwehrgkaejw:kahsdfgkhj": failed to resolve reference "docker.io/library/jakwehrgkaejw:kahsdfgkhj": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+  Warning  Failed     7s (x2 over 20s)  kubelet            spec.containers{broken-image}: Error: ErrImagePull

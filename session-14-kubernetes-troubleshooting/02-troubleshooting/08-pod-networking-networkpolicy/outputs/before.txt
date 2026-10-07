@@ -1,0 +1,39 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl apply -f broken.yaml
+pod/payments-api created
+service/payments-api created
+pod/checkout created
+networkpolicy.networking.k8s.io/default-deny-ingress created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl wait --for=condition=Ready pod/payments-api pod/checkout -n s14 --timeout=90s
+pod/payments-api condition met
+pod/checkout condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl exec checkout -n s14 -- curl -sS -m 5 http://payments-api
+curl: (7) Failed to connect to payments-api port 80 after 4 ms: Couldn't connect to server
+command terminated with exit code 7
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl get endpoints payments-api -n s14
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME           ENDPOINTS         AGE
+payments-api   10.244.0.224:80   1s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl exec checkout -n s14 -- nslookup payments-api.s14.svc.cluster.local 2>&1 | tail -n 3
+Address: 10.108.3.208
+
+
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl exec payments-api -n s14 -- curl -s -o /dev/null -w "inside payments-api: localhost -> HTTP %{http_code}\n" localhost
+inside payments-api: localhost -> HTTP 200
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl get networkpolicy -n s14
+NAME                   POD-SELECTOR   AGE
+default-deny-ingress   <none>         1s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl describe networkpolicy default-deny-ingress -n s14
+Name:         default-deny-ingress
+Namespace:    s14
+Created on:   2026-10-07 17:31:14 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Not affecting egress traffic
+  Policy Types: Ingress
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/08-pod-networking-networkpolicy$ kubectl get pods -n kube-system -l app=kindnet
+NAME            READY   STATUS    RESTARTS   AGE
+kindnet-f2x6d   1/1     Running   0          33m

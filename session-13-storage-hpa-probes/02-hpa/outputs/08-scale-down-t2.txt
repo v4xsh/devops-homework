@@ -1,0 +1,30 @@
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ sleep 50
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ date '+%H:%M:%S'
+17:29:13
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get hpa -n s13
+NAME             REFERENCE               TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+php-apache-hpa   Deployment/php-apache   cpu: 20%/50%   1         10        10         7m49s
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl top pods -n s13
+NAME                          CPU(cores)   MEMORY(bytes)   
+php-apache-7545b76d78-56fzn   41m          13Mi            
+php-apache-7545b76d78-62d62   25m          13Mi            
+php-apache-7545b76d78-9vq6d   48m          12Mi            
+php-apache-7545b76d78-bdctn   49m          13Mi            
+php-apache-7545b76d78-gkr8c   50m          23Mi            
+php-apache-7545b76d78-lhh7j   40m          12Mi            
+php-apache-7545b76d78-mwcdz   44m          13Mi            
+php-apache-7545b76d78-ngxnx   31m          11Mi            
+php-apache-7545b76d78-rd7sf   49m          13Mi            
+php-apache-7545b76d78-skz4t   31m          15Mi            
+~/devops-homework/session-13-storage-hpa-probes/02-hpa$ kubectl get pods -n s13 -l app=php-apache
+NAME                          READY   STATUS    RESTARTS   AGE
+php-apache-7545b76d78-56fzn   1/1     Running   0          3m17s
+php-apache-7545b76d78-62d62   1/1     Running   0          5m17s
+php-apache-7545b76d78-9vq6d   1/1     Running   0          3m17s
+php-apache-7545b76d78-bdctn   1/1     Running   0          3m17s
+php-apache-7545b76d78-gkr8c   1/1     Running   0          8m23s
+php-apache-7545b76d78-lhh7j   1/1     Running   0          5m17s
+php-apache-7545b76d78-mwcdz   1/1     Running   0          5m17s
+php-apache-7545b76d78-ngxnx   1/1     Running   0          3m17s
+php-apache-7545b76d78-rd7sf   1/1     Running   0          4m17s
+php-apache-7545b76d78-skz4t   1/1     Running   0          5m17s

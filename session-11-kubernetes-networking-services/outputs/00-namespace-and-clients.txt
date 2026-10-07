@@ -1,0 +1,12 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 00-namespace/namespace.yaml
+namespace/s11 created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 00-namespace/client-pods.yaml
+pod/curl-client created
+pod/dnsutils created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl wait --for=condition=Ready pod/curl-client pod/dnsutils -n s11 --timeout=120s
+pod/curl-client condition met
+pod/dnsutils condition met
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get pods -n s11 -o wide
+NAME          READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+curl-client   1/1     Running   0          1s    10.244.0.16   minikube   <none>           <none>
+dnsutils      1/1     Running   0          1s    10.244.0.17   minikube   <none>           <none>

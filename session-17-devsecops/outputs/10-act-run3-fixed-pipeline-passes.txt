@@ -1,0 +1,25 @@
+~/act-stage/session-17-devsecops/devops-homework$ cd $STAGE && git log --oneline -3 && git show HEAD --format= | grep -E '^[-+][A-Za-z]'
+f3b6064 fix: Flask 3.1.3, gunicorn 23.0.0, python:3.12-slim base
+901b54d chore: pin older Flask/gunicorn and python:3.9.7-slim-buster base (vulnerable on purpose)
+e9a46c0 session-17-devsecops: local act run
+-ARG BASE_IMAGE=public.ecr.aws/docker/library/python:3.9.7-slim-buster
++ARG BASE_IMAGE=python:3.12-slim
+-Flask==3.1.2
+-gunicorn==20.1.0
++Flask==3.1.3
++gunicorn==23.0.0
+~/act-stage/session-17-devsecops/devops-homework$ bash $S/scripts/act-run.sh push 2>&1 | sed -r 's/\x1b\[[0-9;]*m//g' > $LOG3; echo "act exit code: ${PIPESTATUS[0]}"
+act exit code: 0
+~/act-stage/session-17-devsecops/devops-homework$ grep -E 'Job (succeeded|failed)|Failure - Main' $LOG3
+[Session 17 - DevSecOps Pipeline/1. Build] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/2. Unit Test] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/3. SAST (Bandit + Semgrep)] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/4. SCA (pip-audit + Trivy fs)] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/5. Secret Scan (Gitleaks)    ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/6. Docker Build              ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/7. Image Scan (Trivy)        ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/9. Push Image                ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/10. Deploy to Kubernetes     ] 🏁  Job succeeded
+~/act-stage/session-17-devsecops/devops-homework$ grep -cE 'Success - Main' $LOG3
+48

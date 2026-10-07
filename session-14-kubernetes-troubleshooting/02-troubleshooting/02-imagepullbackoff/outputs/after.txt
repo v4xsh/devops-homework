@@ -1,0 +1,23 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl delete pod imagepull-app -n s14 --wait=true
+pod "imagepull-app" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl apply -f fixed.yaml
+pod/imagepull-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl wait --for=condition=Ready pod/imagepull-app -n s14 --timeout=90s
+pod/imagepull-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl get pod imagepull-app -n s14 -o wide
+NAME            READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+imagepull-app   1/1     Running   0          2s    10.244.0.110   minikube   <none>           <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl get pod imagepull-app -n s14 -o jsonpath='{.spec.containers[0].image}{"  ->  "}{.status.containerStatuses[0].imageID}{"\n"}'
+nginx:1.27  ->  docker.io/library/nginx@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/02-imagepullbackoff$ kubectl events -n s14 --for pod/imagepull-app
+LAST SEEN           TYPE      REASON      OBJECT              MESSAGE
+50s                 Normal    Scheduled   Pod/imagepull-app   Successfully assigned s14/imagepull-app to minikube
+33s (x2 over 50s)   Normal    Pulling     Pod/imagepull-app   Pulling image "nginx:1.27-does-not-exist"
+32s (x2 over 48s)   Warning   Failed      Pod/imagepull-app   Failed to pull image "nginx:1.27-does-not-exist": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27-does-not-exist": failed to resolve reference "docker.io/library/nginx:1.27-does-not-exist": docker.io/library/nginx:1.27-does-not-exist: not found
+32s (x2 over 48s)   Warning   Failed      Pod/imagepull-app   Error: ErrImagePull
+17s (x2 over 48s)   Normal    BackOff     Pod/imagepull-app   Back-off pulling image "nginx:1.27-does-not-exist"
+17s (x2 over 48s)   Warning   Failed      Pod/imagepull-app   Error: ImagePullBackOff
+5s                  Normal    Scheduled   Pod/imagepull-app   Successfully assigned s14/imagepull-app to minikube
+4s                  Normal    Pulled      Pod/imagepull-app   Container image "nginx:1.27" already present on machine and can be accessed by the pod
+4s                  Normal    Created     Pod/imagepull-app   Container created
+4s                  Normal    Started     Pod/imagepull-app   Container started

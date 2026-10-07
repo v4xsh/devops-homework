@@ -1,0 +1,6 @@
+# Files that must not be packaged into the chart .tgz
+.git/
+*.swp
+*.bak
+*.tmp
+.vscode/

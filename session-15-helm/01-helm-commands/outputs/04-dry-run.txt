@@ -1,0 +1,25 @@
+~/devops-homework/session-15-helm/01-helm-commands$ cd ~/devops-homework/session-15-helm/01-helm-commands
+~/devops-homework/session-15-helm/01-helm-commands$ helm install web1 webapp -n s15 --create-namespace --dry-run --set replicaCount=2 | head -12
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:12:50 2026
+NAMESPACE: s15
+STATUS: pending-install
+REVISION: 1
+HOOKS:
+---
+# Source: webapp/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "web1-webapp-test-connection"
+~/devops-homework/session-15-helm/01-helm-commands$ helm install web1 webapp -n s15 --create-namespace --dry-run --set replicaCount=2 | grep -E 'replicas:|image:|kind:'
+kind: Pod
+      image: busybox
+kind: ServiceAccount
+kind: Service
+kind: Deployment
+  replicas: 2
+          image: "nginx:1.16.0"
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get all -n s15 2>&1 | head -3
+NAME                              READY   STATUS      RESTARTS   AGE
+pod/web1-webapp-test-connection   0/1     Completed   0          2m30s

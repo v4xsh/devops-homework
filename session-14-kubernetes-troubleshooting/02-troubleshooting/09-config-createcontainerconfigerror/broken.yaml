@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-settings
+  namespace: s14
+data:
+  database_host: "postgres.s14.svc.cluster.local"
+  log_level: "info"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-app
+  namespace: s14
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "echo DB_HOST=$DB_HOST LOG_LEVEL=$LOG_LEVEL; sleep 3600"]
+      env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: app-settings
+              key: DATABASE_HOST     # BUG: the key in the ConfigMap is "database_host" (keys are case-sensitive)
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-settings
+              key: log_level

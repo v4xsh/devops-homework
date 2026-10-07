@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app-clusterip
+  namespace: s11
+  labels:
+    app: web-clusterip
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-clusterip
+  template:
+    metadata:
+      labels:
+        app: web-clusterip
+    spec:
+      containers:
+        - name: nginx-web
+          image: nginx:1.25-alpine
+          ports:
+            - name: http
+              containerPort: 80
+          # Write the pod name into index.html so we can SEE which pod served each request
+          command: ["sh", "-c", "echo \"Hello from pod $(hostname) (ClusterIP backend)\" > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"]
+          resources:
+            requests: { cpu: "20m", memory: "32Mi" }
+            limits:   { cpu: "100m", memory: "128Mi" }

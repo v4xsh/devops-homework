@@ -1,0 +1,12 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ echo "def login(): pass" > auth.py && git add auth.py && git commit -q -m "main: add auth.py login stub"
+~/practice/git-homework$ echo "def logout(): pass" >> auth.py && git commit -q -am "main: add logout to auth.py"
+~/practice/git-homework$ echo "v1.0" > VERSION && git add VERSION && git commit -q -m "main: add VERSION file"
+~/practice/git-homework$ git log --oneline
+8aa17b7 main: add VERSION file
+e175067 main: add logout to auth.py
+47b6805 main: add auth.py login stub
+670d217 commit -am also stages deletions of tracked files
+df8bc52 Add new_file.txt with explicit git add + commit -m
+183a17b commit -a: auto-stage modified tracked files
+7cfaa34 Initial commit: README and app.txt

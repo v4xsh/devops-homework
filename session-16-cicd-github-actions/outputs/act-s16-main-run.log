@@ -1,0 +1,699 @@
+time="2026-10-07T17:36:01Z" level=info msg="Using docker host 'unix:///var/run/docker.sock', and daemon socket 'unix:///var/run/docker.sock'"
+time="2026-10-07T17:36:01Z" level=info msg="Start server on http://172.17.9.114:34567"
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Main Checkout [44.884065ms]
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Main Set up Python 3.12
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ☁  git clone 'https://github.com/actions/upload-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ❓  ::group::Installed versions
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | Successfully set up CPython (3.12.15)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ❓  ::endgroup::
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Main Set up Python 3.12 [1.796538512s]
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-output:: python-version=3.12.15
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.12.15/x64/bin/python
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64/bin
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Main Install flake8
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/2.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ☁  git clone 'https://github.com/actions/upload-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | Requirement already satisfied: flake8==7.1.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (7.1.1)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | Requirement already satisfied: mccabe<0.8.0,>=0.7.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from flake8==7.1.1) (0.7.0)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | Requirement already satisfied: pycodestyle<2.13.0,>=2.12.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from flake8==7.1.1) (2.12.1)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | Requirement already satisfied: pyflakes<3.3.0,>=3.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from flake8==7.1.1) (3.2.0)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ☁  git clone 'https://github.com/actions/upload-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Main Install flake8 [1.875511577s]
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Main Run flake8
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/3.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | 0
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Main Run flake8 [385.500421ms]
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Post Set up Python 3.12
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/cache-save/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | (node:89) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Post Set up Python 3.12 [268.250883ms]
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] Cleaning up container for job Lint (flake8)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] 🧪  Matrix: map[python-version:3.11]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Main Checkout [64.101908ms]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Main Set up Python 3.11
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Lint (flake8)       ] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] 🧪  Matrix: map[python-version:3.13]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Main Checkout [64.836099ms]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Main Set up Python 3.13
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ❓  ::group::Installed versions
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (node:32) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Successfully set up CPython (3.11.17)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ❓  ::endgroup::
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Main Set up Python 3.11 [1.481981722s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.11.17/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.11.17/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.11.17/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.11.17/x64/lib
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.11.17/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-output:: python-version=3.11.17
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.11.17/x64/bin/python
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.11.17/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.11.17/x64/bin
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Main Install dependencies
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/2.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] 🧪  Matrix: map[python-version:3.12]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Main Checkout [43.702719ms]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Main Set up Python 3.12
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ❓  ::group::Installed versions
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Successfully set up CPython (3.13.16)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ❓  ::endgroup::
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Main Set up Python 3.13 [2.270649466s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.13.16/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.13.16/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.13.16/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.13.16/x64/lib
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.13.16/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-output:: python-version=3.13.16
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.13.16/x64/bin/python
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.13.16/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.13.16/x64/bin
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Main Install dependencies
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (26.2.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/2.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: Flask==3.1.2 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: gunicorn==23.0.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 2)) (23.0.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pytest==8.4.2 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements-dev.txt (line 2)) (8.4.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pytest-cov==6.0.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements-dev.txt (line 3)) (6.0.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: flake8==7.1.1 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements-dev.txt (line 4)) (7.1.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: blinker>=1.9.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (1.9.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: click>=8.1.3 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (8.5.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: itsdangerous>=2.2.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (2.2.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: jinja2>=3.1.2 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.6)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: markupsafe>=2.1.1 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.0.4)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: werkzeug>=3.1.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.9)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: packaging in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from gunicorn==23.0.0->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 2)) (26.3)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: iniconfig>=1 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.3.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (1.6.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.21.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: coverage>=7.5 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from coverage[toml]>=7.5->pytest-cov==6.0.0->-r requirements-dev.txt (line 3)) (7.16.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: mccabe<0.8.0,>=0.7.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (0.7.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pycodestyle<2.13.0,>=2.12.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (2.12.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Requirement already satisfied: pyflakes<3.3.0,>=3.2.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (3.2.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Main Install dependencies [4.117458176s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Main Run unit tests with coverage
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/3.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ❓  ::group::Installed versions
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Successfully set up CPython (3.12.15)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ❓  ::endgroup::
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Main Set up Python 3.12 [2.364398938s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-output:: python-version=3.12.15
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.12.15/x64/bin/python
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64/bin
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Main Install dependencies
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/2.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (26.2.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (26.2.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | ============================= test session starts ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | platform linux -- Python 3.11.17, pytest-8.4.2, pluggy-1.6.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | rootdir: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | configfile: pytest.ini
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | testpaths: tests
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | plugins: cov-6.0.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | collected 18 items
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | tests/test_api.py ........                                               [ 44%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | tests/test_calculator.py ..........                                      [100%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | - generated xml file: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/reports/junit.xml -
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | ---------- coverage: platform linux, python 3.11.17-final-0 ----------
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Name                Stmts   Miss  Cover   Missing
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | app/__init__.py         0      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | app/calculator.py      16      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | app/main.py            33      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | TOTAL                  49      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Coverage HTML written to dir reports/htmlcov
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Coverage XML written to file reports/coverage.xml
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Required test coverage of 90% reached. Total coverage: 100.00%
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | ============================== 18 passed in 0.52s ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Main Run unit tests with coverage [1.75231088s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Main Upload coverage + test report artifact
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker cp src=/home/vansh/.cache/act/actions-upload-artifact@v4/ dst=/var/run/act/actions/actions-upload-artifact@v4/
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: Flask==3.1.2 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from -r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: gunicorn==23.0.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from -r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 2)) (23.0.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pytest==8.4.2 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from -r requirements-dev.txt (line 2)) (8.4.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pytest-cov==6.0.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from -r requirements-dev.txt (line 3)) (6.0.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: flake8==7.1.1 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from -r requirements-dev.txt (line 4)) (7.1.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: blinker>=1.9.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (1.9.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: click>=8.1.3 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (8.5.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: itsdangerous>=2.2.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (2.2.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: jinja2>=3.1.2 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.6)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: markupsafe>=2.1.1 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.0.4)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: werkzeug>=3.1.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.9)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: packaging in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from gunicorn==23.0.0->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 2)) (26.3)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: iniconfig>=1 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.3.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (1.6.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.21.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: coverage>=7.5 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from coverage[toml]>=7.5->pytest-cov==6.0.0->-r requirements-dev.txt (line 3)) (7.16.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: mccabe<0.8.0,>=0.7.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (0.7.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pycodestyle<2.13.0,>=2.12.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (2.12.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Requirement already satisfied: pyflakes<3.3.0,>=3.2.0 in /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (3.2.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Main Install dependencies [4.107859843s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Main Run unit tests with coverage
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/3.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: Flask==3.1.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: gunicorn==23.0.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 2)) (23.0.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pytest==8.4.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 2)) (8.4.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pytest-cov==6.0.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 3)) (6.0.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: flake8==7.1.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 4)) (7.1.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: blinker>=1.9.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (1.9.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: click>=8.1.3 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (8.5.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: itsdangerous>=2.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (2.2.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: jinja2>=3.1.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.6)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: markupsafe>=2.1.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.0.4)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: werkzeug>=3.1.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Flask==3.1.2->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 1)) (3.1.9)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: packaging in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from gunicorn==23.0.0->-r /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/requirements.txt (line 2)) (26.3)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: iniconfig>=1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.3.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (1.6.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.21.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: coverage>=7.5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from coverage[toml]>=7.5->pytest-cov==6.0.0->-r requirements-dev.txt (line 3)) (7.16.2)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: mccabe<0.8.0,>=0.7.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (0.7.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pycodestyle<2.13.0,>=2.12.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (2.12.1)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Requirement already satisfied: pyflakes<3.3.0,>=3.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from flake8==7.1.1->-r requirements-dev.txt (line 4)) (3.2.0)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Main Install dependencies [3.043581683s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Main Run unit tests with coverage
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/3.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-upload-artifact@v4/dist/upload/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | ============================= test session starts ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | platform linux -- Python 3.13.16, pytest-8.4.2, pluggy-1.6.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | rootdir: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | configfile: pytest.ini
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | testpaths: tests
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | plugins: cov-6.0.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | collected 18 items
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (node:93) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | With the provided path, there will be 13 files uploaded
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Artifact name is valid!
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Root directory input is valid!
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | tests/test_api.py ........                                               [ 44%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Beginning upload of artifact content to blob storage
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (node:93) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Uploaded bytes 31618
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Finished uploading artifact content to blob storage!
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | SHA256 digest of uploaded artifact zip is 9390a2a0cd8b51ac35a11bc5c28be0565510652b2515e84a3ba919f9ac05c264
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Finalizing artifact upload
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Artifact coverage-py3.11.zip successfully finalized. Artifact ID 3655399298
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Artifact coverage-py3.11 has been successfully uploaded! Final size is 31618 bytes. Artifact ID is 3655399298
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | Artifact download URL: https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3655399298
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Main Upload coverage + test report artifact [2.649614472s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-output:: artifact-id=3655399298
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-output:: artifact-digest=9390a2a0cd8b51ac35a11bc5c28be0565510652b2515e84a3ba919f9ac05c264
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ⚙  ::set-output:: artifact-url=https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3655399298
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Post Set up Python 3.11
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | tests/test_calculator.py ..........                                      [100%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | - generated xml file: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/reports/junit.xml -
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | ---------- coverage: platform linux, python 3.13.16-final-0 ----------
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Name                Stmts   Miss  Cover   Missing
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | app/__init__.py         0      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | app/calculator.py      16      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | app/main.py            33      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | TOTAL                  49      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Coverage HTML written to dir reports/htmlcov
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Coverage XML written to file reports/coverage.xml
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Required test coverage of 90% reached. Total coverage: 100.00%
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | ============================== 18 passed in 0.83s ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/cache-save/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Main Run unit tests with coverage [2.432292887s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Main Upload coverage + test report artifact
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker cp src=/home/vansh/.cache/act/actions-upload-artifact@v4/ dst=/var/run/act/actions/actions-upload-artifact@v4/
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (node:110) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Post Set up Python 3.11 [292.704039ms]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] Cleaning up container for job Test (Python 3.11)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | ============================= test session starts ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | platform linux -- Python 3.12.15, pytest-8.4.2, pluggy-1.6.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | rootdir: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | configfile: pytest.ini
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | testpaths: tests
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | plugins: cov-6.0.0
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | collected 18 items
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | tests/test_api.py ........                                               [ 44%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | tests/test_calculator.py ..........                                      [100%]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | - generated xml file: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/reports/junit.xml -
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | ---------- coverage: platform linux, python 3.12.15-final-0 ----------
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Name                Stmts   Miss  Cover   Missing
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | app/__init__.py         0      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | app/calculator.py      16      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | app/main.py            33      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | -------------------------------------------------
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | TOTAL                  49      0   100%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Coverage HTML written to dir reports/htmlcov
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Coverage XML written to file reports/coverage.xml
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | 
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Required test coverage of 90% reached. Total coverage: 100.00%
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | ============================== 18 passed in 0.67s ==============================
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Main Run unit tests with coverage [1.658848188s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-upload-artifact@v4/dist/upload/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Main Upload coverage + test report artifact
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker cp src=/home/vansh/.cache/act/actions-upload-artifact@v4/ dst=/var/run/act/actions/actions-upload-artifact@v4/
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (node:92) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | With the provided path, there will be 13 files uploaded
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Artifact name is valid!
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Root directory input is valid!
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Beginning upload of artifact content to blob storage
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (node:92) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Uploaded bytes 31669
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Finished uploading artifact content to blob storage!
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | SHA256 digest of uploaded artifact zip is 6c59e1e10520bc5ea40497af4f16b78291abd6dc0df752ba6b1e9313596233de
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Finalizing artifact upload
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Artifact coverage-py3.13.zip successfully finalized. Artifact ID 3621844060
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Artifact coverage-py3.13 has been successfully uploaded! Final size is 31669 bytes. Artifact ID is 3621844060
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | Artifact download URL: https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3621844060
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Main Upload coverage + test report artifact [1.361192361s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Test (Python 3.11)-1] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-output:: artifact-url=https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3621844060
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-output:: artifact-id=3621844060
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ⚙  ::set-output:: artifact-digest=6c59e1e10520bc5ea40497af4f16b78291abd6dc0df752ba6b1e9313596233de
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Post Set up Python 3.13
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/cache-save/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-upload-artifact@v4/dist/upload/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (node:109) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Post Set up Python 3.13 [553.195847ms]
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] Cleaning up container for job Test (Python 3.13)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (node:92) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | With the provided path, there will be 13 files uploaded
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Artifact name is valid!
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Root directory input is valid!
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Beginning upload of artifact content to blob storage
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (node:92) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Uploaded bytes 31661
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Finished uploading artifact content to blob storage!
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | SHA256 digest of uploaded artifact zip is d2f73a8219f7de67845dd29db98d95a9fe91156d395e16ade5ff6cbbf6160c0c
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Finalizing artifact upload
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Artifact coverage-py3.12.zip successfully finalized. Artifact ID 3638621679
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Artifact coverage-py3.12 has been successfully uploaded! Final size is 31661 bytes. Artifact ID is 3638621679
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | Artifact download URL: https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3638621679
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Main Upload coverage + test report artifact [1.945269469s]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-output:: artifact-id=3638621679
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-output:: artifact-digest=d2f73a8219f7de67845dd29db98d95a9fe91156d395e16ade5ff6cbbf6160c0c
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ⚙  ::set-output:: artifact-url=https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3638621679
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Post Set up Python 3.12
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/cache-save/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (node:109) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Post Set up Python 3.12 [256.947937ms]
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] Cleaning up container for job Test (Python 3.12)
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Test (Python 3.13)-3] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Test (Python 3.12)-2] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Build Docker image  ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ☁  git clone 'https://github.com/actions/download-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ☁  git clone 'https://github.com/actions/upload-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Checkout [79.911966ms]
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Compute image tag
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/meta.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Image tag for this run: 3ce2a37
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Compute image tag [85.999813ms]
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ⚙  ::set-output:: tag=3ce2a37
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Download coverage artifact from the test job
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker cp src=/home/vansh/.cache/act/actions-download-artifact@v4/ dst=/var/run/act/actions/actions-download-artifact@v4/
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-download-artifact@v4/dist/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Downloading single artifact
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | (node:37) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Preparing to download the following artifacts:
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | - coverage-py3.12 (ID: 3638621679, Size: 4096, Expected Digest: undefined)
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Redirecting to blob download url: http://172.17.9.114:34567/twirp/github.actions.results.api.v1.ArtifactService/DownloadArtifact
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Starting download of artifact to: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/downloaded-coverage
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | (node:37) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | SHA256 digest of downloaded artifact is d2f73a8219f7de67845dd29db98d95a9fe91156d395e16ade5ff6cbbf6160c0c
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Artifact download completed successfully.
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Total of 1 artifact(s) downloaded
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Download artifact has finished successfully
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Download coverage artifact from the test job [897.309698ms]
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ⚙  ::set-output:: download-path=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions/downloaded-coverage
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Show downloaded coverage summary
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/3.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | total 12
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | -rw-r--r-- 1 root root 2825 Oct  7 17:36 coverage.xml
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | drwxr-xr-x 2 root root 4096 Oct  7 17:36 htmlcov
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | -rw-r--r-- 1 root root 1838 Oct  7 17:36 junit.xml
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | line coverage from test job artifact: 100.0%
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Show downloaded coverage summary [148.254059ms]
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Use a repository secret (masked in logs)
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/4.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | DEMO_API_KEY is configured (length 28 characters)
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Printing it on purpose to show masking: ***
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Use a repository secret (masked in logs) [60.326837ms]
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Build image
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/5.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #0 building with "default" instance using docker driver
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #1 [internal] load build definition from Dockerfile
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #1 transferring dockerfile: 681B done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #1 DONE 0.0s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #2 [internal] load metadata for docker.io/library/python:3.12-slim
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #2 DONE 0.0s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #3 [internal] load .dockerignore
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #3 transferring context: 159B done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #3 DONE 0.0s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #4 [1/6] FROM docker.io/library/python:3.12-slim@sha256:05cda9777409a9c3ffddd94a4c476b79f0769a0b4857f0c7ed9226b6800b0d6f
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #4 resolve docker.io/library/python:3.12-slim@sha256:05cda9777409a9c3ffddd94a4c476b79f0769a0b4857f0c7ed9226b6800b0d6f 0.0s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #4 DONE 0.0s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #5 [internal] load build context
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #5 transferring context: 3.03kB done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #5 DONE 0.0s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #6 [2/6] WORKDIR /app
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #6 CACHED
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #7 [3/6] COPY requirements.txt .
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #7 CACHED
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #8 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #8 CACHED
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #9 [5/6] COPY app ./app
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #9 CACHED
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #10 [6/6] RUN useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin appuser
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #10 DONE 0.7s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 exporting to image
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 exporting layers 0.1s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 exporting manifest sha256:e17b8b1d453bc3a8b5cd986640ccd270e7ce87b13b09d4e79a9ecb2d8cc7101f 0.0s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 exporting config sha256:38fce5d5398ef1934bfe5d74bd43cd0fd32c80545a36e9e68d3a2099a1ff9f22 0.0s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 exporting attestation manifest sha256:1f941bda25b76407f9781598a01ca27d954bda44fe43e59400ca028372820848 0.0s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 exporting manifest list sha256:29851da5169f67634071b665d76e6fc03d9b62b36afad2af8bb61cfeb182b182 0.0s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 naming to docker.io/library/s16-calculator-api:3ce2a37
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 naming to docker.io/library/s16-calculator-api:3ce2a37 done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 unpacking to docker.io/library/s16-calculator-api:3ce2a37 0.0s done
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | #11 DONE 0.3s
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | IMAGE                        ID             DISK USAGE   CONTENT SIZE   EXTRA
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | s16-calculator-api:1aa1e07   f161817c03d1        187MB         45.4MB        
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | s16-calculator-api:2884264   5ad0600c4b7e        187MB         45.4MB        
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | s16-calculator-api:3ce2a37   29851da5169f        187MB         45.4MB        
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | s16-calculator-api:local01   e966698f9fc9        187MB         45.4MB        
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Build image [1.889424936s]
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Smoke test the container
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/6.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 420e94f3e0b20c1e912d081469a1fff4f06c53d32286d46c1bdeb6f5d924a74c
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | {"status":"ok"}
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | {"a":2.0,"b":3.0,"operation":"add","result":5.0}
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | 
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | smoke-1
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Smoke test the container [4.159194926s]
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Save image as tarball
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/7.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | -rw-r--r-- 1 root root 43M Oct  7 17:36 image.tar.gz
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Save image as tarball [2.366293872s]
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Main Upload image artifact
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker cp src=/home/vansh/.cache/act/actions-upload-artifact@v4/ dst=/var/run/act/actions/actions-upload-artifact@v4/
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-upload-artifact@v4/dist/upload/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | (node:196) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | With the provided path, there will be 1 file uploaded
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Artifact name is valid!
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Root directory input is valid!
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Beginning upload of artifact content to blob storage
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Uploaded bytes 8388608
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Uploaded bytes 16777216
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Uploaded bytes 25165824
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Uploaded bytes 33554432
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Uploaded bytes 41943040
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Uploaded bytes 45099981
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Finished uploading artifact content to blob storage!
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | SHA256 digest of uploaded artifact zip is 46f61a00aca724ae343be05099503ddf226687e4127515b99e3681e8f1f2470a
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Finalizing artifact upload
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Artifact docker-image.zip successfully finalized. Artifact ID 3572604477
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Artifact docker-image has been successfully uploaded! Final size is 45099981 bytes. Artifact ID is 3572604477
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   | Artifact download URL: https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3572604477
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Main Upload image artifact [2.503400133s]
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ⚙  ::set-output:: artifact-id=3572604477
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ⚙  ::set-output:: artifact-digest=46f61a00aca724ae343be05099503ddf226687e4127515b99e3681e8f1f2470a
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ⚙  ::set-output:: artifact-url=https://github.com/v4xsh/devops-homework/actions/runs/1/artifacts/3572604477
+[Session 16 - CI/CD Calculator API/Build Docker image  ] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Build Docker image  ] Cleaning up container for job Build Docker image
+[Session 16 - CI/CD Calculator API/Build Docker image  ]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Build Docker image  ] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Push image to registry] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Push image to registry] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Push image to registry]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Push image to registry]   ☁  git clone 'https://github.com/actions/download-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Push image to registry]   ☁  git clone 'https://github.com/docker/login-action' # ref=v3
+[Session 16 - CI/CD Calculator API/Push image to registry] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Push image to registry]   ✅  Success - Main Checkout [80.192912ms]
+[Session 16 - CI/CD Calculator API/Push image to registry] ⭐ Run Main Download image artifact
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker cp src=/home/vansh/.cache/act/actions-download-artifact@v4/ dst=/var/run/act/actions/actions-download-artifact@v4/
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-download-artifact@v4/dist/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Downloading single artifact
+[Session 16 - CI/CD Calculator API/Push image to registry]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Push image to registry]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Preparing to download the following artifacts:
+[Session 16 - CI/CD Calculator API/Push image to registry]   | - docker-image (ID: 3572604477, Size: 4096, Expected Digest: undefined)
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Redirecting to blob download url: http://172.17.9.114:34567/twirp/github.actions.results.api.v1.ArtifactService/DownloadArtifact
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Starting download of artifact to: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Push image to registry]   | (node:31) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+[Session 16 - CI/CD Calculator API/Push image to registry]   | SHA256 digest of downloaded artifact is 46f61a00aca724ae343be05099503ddf226687e4127515b99e3681e8f1f2470a
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Artifact download completed successfully.
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Total of 1 artifact(s) downloaded
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Download artifact has finished successfully
+[Session 16 - CI/CD Calculator API/Push image to registry]   ✅  Success - Main Download image artifact [2.005343848s]
+[Session 16 - CI/CD Calculator API/Push image to registry]   ⚙  ::set-output:: download-path=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Push image to registry] ⭐ Run Main Load image
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/2.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Loaded image: s16-calculator-api:3ce2a37
+[Session 16 - CI/CD Calculator API/Push image to registry]   ✅  Success - Main Load image [1.633104716s]
+[Session 16 - CI/CD Calculator API/Push image to registry] ⭐ Run Main Tag and push
+[Session 16 - CI/CD Calculator API/Push image to registry]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/4.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Push image to registry]   | The push refers to repository [localhost:5000/v4xsh/s16-calculator-api]
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 75b6a36c64a1: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 6912e23eb445: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | ace7b9eb7e0e: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 056c2eede91b: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 44136fa355b3: Already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | ecc510c1e359: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | bbc5a1223747: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 833434599a20: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 5bf16113fdb4: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 33dd525b1daa: Pushed
+[Session 16 - CI/CD Calculator API/Push image to registry]   | b24cb9445338: Pushed
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 3ce2a37: digest: sha256:29851da5169f67634071b665d76e6fc03d9b62b36afad2af8bb61cfeb182b182 size: 856
+[Session 16 - CI/CD Calculator API/Push image to registry]   | The push refers to repository [localhost:5000/v4xsh/s16-calculator-api]
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 833434599a20: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 5bf16113fdb4: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 33dd525b1daa: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | b24cb9445338: Already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | ecc510c1e359: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | bbc5a1223747: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 056c2eede91b: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 75b6a36c64a1: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 44136fa355b3: Already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 6912e23eb445: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | ace7b9eb7e0e: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | latest: digest: sha256:29851da5169f67634071b665d76e6fc03d9b62b36afad2af8bb61cfeb182b182 size: 856
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Pushed localhost:5000/v4xsh/s16-calculator-api:3ce2a37
+[Session 16 - CI/CD Calculator API/Push image to registry]   ✅  Success - Main Tag and push [538.405127ms]
+[Session 16 - CI/CD Calculator API/Push image to registry] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Push image to registry] Cleaning up container for job Push image to registry
+[Session 16 - CI/CD Calculator API/Push image to registry]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Push image to registry] 🏁  Job succeeded
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Set up job
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=false
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="minikube"
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Set up job
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ☁  git clone 'https://github.com/azure/setup-kubectl' # ref=v4
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ☁  git clone 'https://github.com/helm/kind-action' # ref=v1.10.0
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ☁  git clone 'https://github.com/actions/download-artifact' # ref=v4
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Checkout
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker cp src=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/. dst=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Checkout [38.592341ms]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Install kubectl
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker cp src=/home/vansh/.cache/act/azure-setup-kubectl@v4/ dst=/var/run/act/actions/azure-setup-kubectl@v4/
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/azure-setup-kubectl@v4/lib/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Install kubectl [833.750478ms]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ⚙  ::set-output:: kubectl-path=/opt/hostedtoolcache/kubectl/1.31.0/x64/kubectl
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ⚙  ::add-path:: /opt/hostedtoolcache/kubectl/1.31.0/x64
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Use kubeconfig from secret (external cluster)
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/3.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Kubernetes control plane is running at https://192.168.49.2:8443
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Use kubeconfig from secret (external cluster) [362.732695ms]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Download image artifact
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker cp src=/home/vansh/.cache/act/actions-download-artifact@v4/ dst=/var/run/act/actions/actions-download-artifact@v4/
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-download-artifact@v4/dist/index.js] user= workdir=
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Downloading single artifact
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | (node:74) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Preparing to download the following artifacts:
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | - docker-image (ID: 3572604477, Size: 4096, Expected Digest: undefined)
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Redirecting to blob download url: http://172.17.9.114:34567/twirp/github.actions.results.api.v1.ArtifactService/DownloadArtifact
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Starting download of artifact to: /home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | (node:74) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | SHA256 digest of downloaded artifact is 46f61a00aca724ae343be05099503ddf226687e4127515b99e3681e8f1f2470a
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Artifact download completed successfully.
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Total of 1 artifact(s) downloaded
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Download artifact has finished successfully
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Download image artifact [1.535175575s]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ⚙  ::set-output:: download-path=/home/vansh/act-stage/session-16-cicd-github-actions/devops-homework/session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Load image into the cluster node
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/5.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Loaded image: s16-calculator-api:3ce2a37
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | import 2026 10 07@sha256:7fc6f3cdd75eeab	saved	
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | application/vnd.oci.image.index.v1+json sha256:7fc6f3cdd75eeabcab801bd3c6aa257094f3708dd9900cd19e9e9ca2901ab6dc
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Importing	elapsed: 1.9 s	total:   0.0 B	(0.0 B/s)	
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | import 2026 10 07@sha256:7fc6f3cdd75eeab	saved	
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | docker.io/library/s16 calculator api:3ce	saved	
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | application/vnd.oci.image.index.v1+json sha256:7fc6f3cdd75eeabcab801bd3c6aa257094f3708dd9900cd19e9e9ca2901ab6dc
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | application/vnd.oci.image.index.v1+json sha256:29851da5169f67634071b665d76e6fc03d9b62b36afad2af8bb61cfeb182b182
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Importing	elapsed: 1.9 s	total:   0.0 B	(0.0 B/s)	
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Load image into the cluster node [3.293601217s]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Apply manifests and roll out
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/6.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | namespace/s16 created
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | deployment.apps/calculator-api created
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | service/calculator-api created
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Waiting for deployment "calculator-api" rollout to finish: 0 of 2 updated replicas are available...
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | Waiting for deployment "calculator-api" rollout to finish: 1 of 2 updated replicas are available...
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | deployment "calculator-api" successfully rolled out
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | NAME                             READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES                       SELECTOR
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | deployment.apps/calculator-api   2/2     2            2           8s    calculator-api   s16-calculator-api:3ce2a37   app=calculator-api
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | NAME                                  READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | pod/calculator-api-7468b7bbd9-jclxp   1/1     Running   0          8s    10.244.0.24   minikube   <none>           <none>
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | pod/calculator-api-7468b7bbd9-qrbpk   1/1     Running   0          8s    10.244.0.23   minikube   <none>           <none>
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | service/calculator-api   ClusterIP   10.104.119.132   <none>        80/TCP    8s    app=calculator-api
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Apply manifests and roll out [7.588416745s]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Main Smoke test through the Service
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/7.sh] user= workdir=session-16-cicd-github-actions
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | {"status":"ok"}
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | {"app":"s16-calculator-api","git_sha":"3ce2a37","version":"1.0.0"}
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | {"a":6.0,"b":7.0,"operation":"multiply","result":42.0}
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   | 
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Main Smoke test through the Service [4.3686951s]
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] ⭐ Run Complete job
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] Cleaning up container for job Deploy to Kubernetes
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ]   ✅  Success - Complete job
+[Session 16 - CI/CD Calculator API/Deploy to Kubernetes  ] 🏁  Job succeeded

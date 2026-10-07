@@ -1,0 +1,21 @@
+~/devops-homework/session-16-cicd-github-actions/scripts$ awk '/Run Main Tag and push/{f=1} f&&/\| /{print} /Success - Main Tag and push/{exit}' $LOG | cut -c1-160 | tail -n 14
+[Session 16 - CI/CD Calculator API/Push image to registry]   | The push refers to repository [localhost:5000/v4xsh/s16-calculator-api]
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 833434599a20: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 5bf16113fdb4: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 33dd525b1daa: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | b24cb9445338: Already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | ecc510c1e359: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | bbc5a1223747: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 056c2eede91b: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 75b6a36c64a1: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 44136fa355b3: Already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | 6912e23eb445: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | ace7b9eb7e0e: Layer already exists
+[Session 16 - CI/CD Calculator API/Push image to registry]   | latest: digest: sha256:29851da5169f67634071b665d76e6fc03d9b62b36afad2af8bb61cfeb182b182 size: 856
+[Session 16 - CI/CD Calculator API/Push image to registry]   | Pushed localhost:5000/v4xsh/s16-calculator-api:3ce2a37
+~/devops-homework/session-16-cicd-github-actions/scripts$ curl -s http://localhost:5000/v2/_catalog; echo
+{"repositories":["v4xsh/s16-calculator-api"]}
+
+~/devops-homework/session-16-cicd-github-actions/scripts$ curl -s http://localhost:5000/v2/v4xsh/s16-calculator-api/tags/list; echo
+{"name":"v4xsh/s16-calculator-api","tags":["latest","1aa1e07","3ce2a37","2884264"]}
+

@@ -1,0 +1,40 @@
+~/devops-homework/session-07-docker-images$ docker image inspect s07-python-app:multi --format 'Id={{.Id}}'
+Id=sha256:8c90575248e5e8b4836d0488399afe88758df356a054f567256d8aeaab5137a8
+~/devops-homework/session-07-docker-images$ docker image inspect s07-python-app:multi --format 'Created={{.Created}} Arch={{.Architecture}} OS={{.Os}}'
+Created=2026-10-07T17:28:59.846603232Z Arch=amd64 OS=linux
+~/devops-homework/session-07-docker-images$ docker image inspect s07-python-app:multi | jq '.[0].Config | {User, Env, WorkingDir, ExposedPorts, Cmd}'
+{
+  "User": "appuser",
+  "Env": [
+    "PATH=/opt/venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "LANG=C.UTF-8",
+    "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+    "PYTHON_VERSION=3.12.15",
+    "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "PYTHONUNBUFFERED=1"
+  ],
+  "WorkingDir": "/app",
+  "ExposedPorts": {
+    "5000/tcp": {}
+  },
+  "Cmd": [
+    "gunicorn",
+    "-b",
+    "0.0.0.0:5000",
+    "--workers",
+    "2",
+    "app:app"
+  ]
+}
+~/devops-homework/session-07-docker-images$ docker image inspect s07-python-app:multi | jq '.[0].RootFS.Layers'
+[
+  "sha256:15f1c8eb1ab18eae260c7fb6296434cbe1ff0e1e30fd814ae92a80dd54005e62",
+  "sha256:e1fa2746ad6d51e7de9171dfcbb1fe93d01d51c5d8d3623e0c3b223076dc5d23",
+  "sha256:b361fa3b97940ee89a1aab8fde1027e47ab2c2e700ca2f8d5988ad2c64386e5c",
+  "sha256:dca2a125b4903477bcb42084172cfc98865299810620ffd617bf6e12dd83d89f",
+  "sha256:83d885b779899446a36c77743c3724cf258092670efa9b52fefa0d860c61aff0",
+  "sha256:49ca0f269dc67421a7a9453f25ff32dbcfce9386f9de3e19ddef920bc2550678",
+  "sha256:3b60fdb75880853004ecb8a1359051a892ba5812950b0133b54f35dff715c091",
+  "sha256:effd10852c0a4fefd437ba445d52757bc6ba915f654300e1ed24a39dc0cc930e"
+]

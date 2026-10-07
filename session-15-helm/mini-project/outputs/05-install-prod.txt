@@ -1,0 +1,36 @@
+~/devops-homework/session-15-helm/mini-project$ cd ~/devops-homework/session-15-helm/mini-project
+~/devops-homework/session-15-helm/mini-project$ helm install notes-prod notes-chart -n s15-mini -f notes-chart/values-prod.yaml --wait --timeout 120s
+NAME: notes-prod
+LAST DEPLOYED: Wed Oct  7 17:38:53 2026
+NAMESPACE: s15-mini
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+notes-chart 0.1.0 (app 1.0) installed as release "notes-prod" (revision 1) in namespace "s15-mini".
+Environment: production | replicas: 3 | image: nginx:1.25-alpine
+
+The Service is ClusterIP (internal only). Test it from inside the cluster:
+  kubectl -n s15-mini run tmp --rm -i --restart=Never --image=busybox:1.36 -- wget -qO- http://notes-prod-svc
+~/devops-homework/session-15-helm/mini-project$ kubectl run client -n s15-mini --image=busybox:1.36 --restart=Never -- sleep 3600
+pod/client created
+~/devops-homework/session-15-helm/mini-project$ kubectl wait pod/client -n s15-mini --for=condition=Ready --timeout=90s
+pod/client condition met
+~/devops-homework/session-15-helm/mini-project$ kubectl get pods,svc -n s15-mini -l app.kubernetes.io/instance=notes-prod
+NAME                                     READY   STATUS    RESTARTS   AGE
+pod/notes-prod-deploy-74d47646f4-8fd8h   1/1     Running   0          5s
+pod/notes-prod-deploy-74d47646f4-jsrm2   1/1     Running   0          5s
+pod/notes-prod-deploy-74d47646f4-pkxnh   1/1     Running   0          5s
+
+NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/notes-prod-svc   ClusterIP   10.110.199.98   <none>        80/TCP    6s
+~/devops-homework/session-15-helm/mini-project$ kubectl exec -n s15-mini client -- wget -qO- http://notes-prod-svc
+<h1>notes-app (PRODUCTION)</h1>
+<p>release=notes-prod namespace=s15-mini revision=1 chart=notes-chart-0.1.0 replicas=3</p>
+<p>owner=Vansh Dobhal (10099)</p>
+<ul>
+  <li>1. Learn helm create / install / upgrade</li>
+  <li>2. Practise helm rollback</li>
+  <li>3. Run 3 replicas in production</li>
+  <li>4. Set CPU / memory requests and limits</li>
+</ul>

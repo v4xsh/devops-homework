@@ -1,0 +1,32 @@
+# Adapted from instructor's session10 troubleshooting/broken-image.yaml
+# INTENTIONALLY BROKEN: the image tag does not exist -> ImagePullBackOff on the surge pod
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yatri-web
+  namespace: s12-troubleshoot
+  labels:
+    app: yatri-web
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: yatri-web
+  template:
+    metadata:
+      labels:
+        app: yatri-web
+        version: "broken-v3"
+    spec:
+      containers:
+        - name: backend
+          image: yatri-backend:non-existent-tag-v999
+          ports:
+            - containerPort: 80
+          resources:
+            requests: { cpu: "5m", memory: "16Mi" }

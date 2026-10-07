@@ -1,0 +1,9 @@
+~/devops-homework/session-11-kubernetes-networking-services$ pgrep -af "minikube tunnel" || echo "no minikube tunnel process running"
+no minikube tunnel process running
+~/devops-homework/session-11-kubernetes-networking-services$ pgrep -af -- "-L 8081:" || echo "no ssh port-forward for 8081 left"
+no ssh port-forward for 8081 left
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc web-service-loadbalancer -n s11
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+web-service-loadbalancer   LoadBalancer   10.104.10.192   <pending>     8081:31470/TCP   2m37s
+~/devops-homework/session-11-kubernetes-networking-services$ curl -s -m 5 http://127.0.0.1:8081 || echo "curl exit code $? -> without the tunnel nothing listens on the external IP"
+curl exit code 7 -> without the tunnel nothing listens on the external IP

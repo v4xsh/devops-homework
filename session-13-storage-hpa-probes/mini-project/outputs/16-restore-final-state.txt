@@ -1,0 +1,35 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f deployment.yaml
+deployment.apps/web-app configured
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl rollout status deployment/web-app -n s13-mini --timeout=120s
+Waiting for deployment spec update to be observed...
+Waiting for deployment spec update to be observed...
+Waiting for deployment "web-app" rollout to finish: 0 out of 2 new replicas have been updated...
+Waiting for deployment "web-app" rollout to finish: 0 out of 2 new replicas have been updated...
+Waiting for deployment "web-app" rollout to finish: 0 out of 2 new replicas have been updated...
+Waiting for deployment "web-app" rollout to finish: 0 out of 2 new replicas have been updated...
+Waiting for deployment "web-app" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "web-app" rollout to finish: 1 of 2 updated replicas are available...
+deployment "web-app" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get all,pvc -n s13-mini
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/web-app-d45775485-4qvf6   1/1     Running   0          10s
+pod/web-app-d45775485-kxrb7   1/1     Running   0          10s
+
+NAME                  TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+service/web-service   ClusterIP   10.101.6.188   <none>        80/TCP    15m
+
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/web-app   2/2     2            2           15m
+
+NAME                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/web-app-5945bfc776   0         0         0       2m21s
+replicaset.apps/web-app-85d86b65d    0         0         0       89s
+replicaset.apps/web-app-d45775485    2         2         2       15m
+
+NAME                                              REFERENCE            TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/web-app-hpa   Deployment/web-app   cpu: <unknown>/50%   2         5         2          15m
+
+NAME                             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/web-data   Bound    pvc-8e004a46-74b8-43ab-b7cf-e1f677b07326   500Mi      RWO            standard       <unset>                 15m
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ NEW_POD=$(kubectl get pods -n s13-mini -l app=web-app -o jsonpath='{.items[0].metadata.name}'); kubectl exec -n s13-mini $NEW_POD -- cat /data/student.txt
+Student: Vansh Dobhal (Roll No. 10099)

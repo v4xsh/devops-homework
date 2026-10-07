@@ -1,0 +1,20 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv -o custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,RECLAIM:.spec.persistentVolumeReclaimPolicy,STATUS:.status.phase,CLASS:.spec.storageClassName | grep -E 'NAME|s13-static-pv|dynamic-pvc'
+NAME                                       CLAIM         RECLAIM   STATUS   CLASS
+pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f   dynamic-pvc   Delete    Bound    standard
+s13-static-pv                              static-pvc    Retain    Bound    manual
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ PV=$(kubectl get pvc dynamic-pvc -n s13 -o jsonpath='{.spec.volumeName}'); echo "dynamic PV = $PV"
+dynamic PV = pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pod dynamic-pv-pod static-pv-pod -n s13
+pod "dynamic-pv-pod" deleted from s13 namespace
+pod "static-pv-pod" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pvc dynamic-pvc static-pvc -n s13
+persistentvolumeclaim "dynamic-pvc" deleted from s13 namespace
+persistentvolumeclaim "static-pvc" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ sleep 8
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv s13-static-pv
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS     CLAIM            STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+s13-static-pv   1Gi        RWO            Retain           Released   s13/static-pvc   manual         <unset>                          2m6s
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pv $PV 2>&1
+Error from server (NotFound): persistentvolumes "pvc-c0b8d6aa-8f6c-4b12-a4cb-45c5f7b7ff6f" not found
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ docker exec minikube cat /tmp/s13-static-pv/student.txt
+Vansh Dobhal 10099 - static PV data

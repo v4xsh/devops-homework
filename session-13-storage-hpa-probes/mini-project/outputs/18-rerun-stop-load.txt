@@ -1,0 +1,9 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl delete pod load-generator -n s13-mini
+pod "load-generator" deleted from s13-mini namespace
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl delete -f load-generator.yaml
+deployment.apps "extra-load" deleted from s13-mini namespace
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ date '+%H:%M:%S'
+17:44:07
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get hpa -n s13-mini
+NAME          REFERENCE            TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+web-app-hpa   Deployment/web-app   cpu: 101%/50%   2         5         4          20m

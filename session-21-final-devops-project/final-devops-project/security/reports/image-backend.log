@@ -1,0 +1,11 @@
+2026-10-07T18:36:02Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-10-07T18:36:02Z	INFO	[secret] Secret scanning is enabled
+2026-10-07T18:36:02Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-10-07T18:36:02Z	INFO	[secret] Please see https://trivy.dev/docs/v0.75/guide/scanner/secret#recommendation for faster secret detection
+2026-10-07T18:36:02Z	FATAL	Fatal error	run error: image scan error: scan error: unable to initialize a scan service: unable to initialize artifact: unable to initialize container image: unable to find the specified image "ghcr.io/v4xsh/taskboard-backend:1.0.1" in ["docker" "containerd" "podman" "remote"]: 4 errors occurred:
+	* docker error: unable to inspect the image (ghcr.io/v4xsh/taskboard-backend:1.0.1): Error response from daemon: No such image: ghcr.io/v4xsh/taskboard-backend:1.0.1
+	* containerd error: failed to list images from containerd client: connection error: desc = "transport: Error while dialing: dial unix /run/containerd/containerd.sock: connect: permission denied"
+	* podman error: unable to initialize Podman client: no podman socket found: stat /run/user/1000/podman/podman.sock: no such file or directory
+	* remote error: GET https://ghcr.io/token?scope=repository%3Av4xsh%2Ftaskboard-backend%3Apull&service=ghcr.io: DENIED: requested access to the resource is denied
+
+

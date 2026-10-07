@@ -1,0 +1,21 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ POD=$(kubectl get pods -n s13-mini -l app=web-app -o jsonpath='{.items[0].metadata.name}'); echo $POD
+web-app-d45775485-5dsfz
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl describe pod $POD -n s13-mini | grep -E 'Limits|Requests|cpu:|memory:|Liveness|Readiness|Startup|/data from|ClaimName'
+    Limits:
+      cpu:     200m
+      memory:  128Mi
+    Requests:
+      cpu:        100m
+      memory:     64Mi
+    Liveness:     http-get http://:80/ delay=5s timeout=2s period=5s successThreshold=1 failureThreshold=3
+    Readiness:    http-get http://:80/ delay=5s timeout=2s period=5s successThreshold=1 failureThreshold=2
+    Startup:      http-get http://:80/ delay=0s timeout=1s period=2s successThreshold=1 failureThreshold=30
+      /data from persistent-storage (rw)
+    ClaimName:  web-data
+  Warning  Unhealthy  9s (x2 over 11s)  kubelet            spec.containers{nginx}: Startup probe failed: Get "http://10.244.0.109:80/": dial tcp 10.244.0.109:80: connect: connection refused
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pod $POD -n s13-mini -o jsonpath='{range .status.conditions[*]}{.type}={.status}{"\n"}{end}'
+PodReadyToStartContainers=True
+Initialized=True
+Ready=True
+ContainersReady=True
+PodScheduled=True

@@ -1,0 +1,10 @@
+# FIX: use a tag that really exists
+apiVersion: v1
+kind: Pod
+metadata:
+  name: imagepull-app
+  namespace: s14
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27

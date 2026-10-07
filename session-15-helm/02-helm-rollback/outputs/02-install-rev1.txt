@@ -1,0 +1,24 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ cd ~/devops-homework/session-15-helm/02-helm-rollback
+~/devops-homework/session-15-helm/02-helm-rollback$ helm install rb-web rollback-demo -n s15-rollback --create-namespace --wait --timeout 120s
+NAME: rb-web
+LAST DEPLOYED: Wed Oct  7 17:22:07 2026
+NAMESPACE: s15-rollback
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+rb-web is now at revision 1 -> app v1 (nginx:1.25-alpine, 1 replica(s)).
+
+Check it from inside the cluster:
+  kubectl -n s15-rollback exec client -- wget -qO- http://rb-web
+
+History / rollback:
+  helm history rb-web -n s15-rollback
+  helm rollback rb-web <REVISION> -n s15-rollback
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl run client -n s15-rollback --image=busybox:1.36 --restart=Never -- sleep 3600
+pod/client created
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl wait pod/client -n s15-rollback --for=condition=Ready --timeout=90s
+pod/client condition met
+~/devops-homework/session-15-helm/02-helm-rollback$ helm history rb-web -n s15-rollback
+REVISION	UPDATED                 	STATUS  	CHART              	APP VERSION	DESCRIPTION     
+1       	Wed Oct  7 17:22:07 2026	deployed	rollback-demo-0.1.0	1.25       	Install complete

@@ -1,0 +1,12 @@
+~/devops-homework/session-15-helm/mini-project$ helm uninstall notes-dev notes-prod -n s15-mini --wait
+release "notes-dev" uninstalled
+release "notes-prod" uninstalled
+~/devops-homework/session-15-helm/mini-project$ kubectl delete pod client -n s15-mini --now
+pod "client" deleted from s15-mini namespace
+~/devops-homework/session-15-helm/mini-project$ kubectl get pods,services,configmaps -n s15-mini
+NAME                         DATA   AGE
+configmap/kube-root-ca.crt   1      91s
+~/devops-homework/session-15-helm/mini-project$ helm list -n s15-mini --all
+NAME	NAMESPACE	REVISION	UPDATED	STATUS	CHART	APP VERSION
+~/devops-homework/session-15-helm/mini-project$ kubectl delete namespace s15-mini --wait
+namespace "s15-mini" deleted

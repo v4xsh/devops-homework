@@ -1,0 +1,20 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f namespace.yaml
+namespace/s13 created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get storageclass
+NAME                 PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+standard (default)   k8s.io/minikube-hostpath   Delete          Immediate           false                  13m
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl describe storageclass standard
+Name:            standard
+IsDefaultClass:  Yes
+Annotations:     kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"storage.k8s.io/v1","kind":"StorageClass","metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"},"labels":{"addonmanager.kubernetes.io/mode":"EnsureExists"},"name":"standard"},"provisioner":"k8s.io/minikube-hostpath"}
+,storageclass.kubernetes.io/is-default-class=true
+Provisioner:           k8s.io/minikube-hostpath
+Parameters:            <none>
+AllowVolumeExpansion:  <unset>
+MountOptions:          <none>
+ReclaimPolicy:         Delete
+VolumeBindingMode:     Immediate
+Events:                <none>
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl get pods -n kube-system -l integration-test=storage-provisioner -o wide
+NAME                  READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+storage-provisioner   1/1     Running   0          13m   192.168.49.2   minikube   <none>           <none>

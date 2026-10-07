@@ -1,0 +1,23 @@
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ grep -E '^  - id:' .semgrep.yml
+  - id: flask-debug-enabled
+  - id: subprocess-shell-true
+  - id: eval-or-exec
+  - id: unsafe-yaml-load
+  - id: pickle-loads
+  - id: weak-hash-md5-sha1
+  - id: requests-verify-false
+  - id: sql-string-format
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ semgrep scan --metrics=off --disable-version-check --config .semgrep.yml app 2>&1 | grep -E 'Findings|Rules run|Targets scanned|Ran '
+ • Findings: 0 (0 blocking)
+ • Rules run: 8
+ • Targets scanned: 2
+Ran 8 rules on 2 files: 0 findings.
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ semgrep scan --metrics=off --disable-version-check --config .semgrep.yml --json sast-demo 2>/dev/null | jq -r '.results[] | "\(.extra.severity)\t\(.check_id)\t\(.path):\(.start.line)"'
+ERROR	subprocess-shell-true	sast-demo/insecure_example.py:21
+ERROR	eval-or-exec	sast-demo/insecure_example.py:26
+ERROR	unsafe-yaml-load	sast-demo/insecure_example.py:31
+ERROR	pickle-loads	sast-demo/insecure_example.py:36
+WARNING	weak-hash-md5-sha1	sast-demo/insecure_example.py:41
+ERROR	sql-string-format	sast-demo/insecure_example.py:47
+WARNING	requests-verify-false	sast-demo/insecure_example.py:53
+ERROR	flask-debug-enabled	sast-demo/insecure_example.py:58

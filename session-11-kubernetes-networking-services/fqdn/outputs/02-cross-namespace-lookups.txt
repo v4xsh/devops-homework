@@ -1,0 +1,32 @@
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl apply -f cross-namespace-client.yaml
+namespace/s12 created
+pod/dnsutils-s12 created
+pod/curl-s12 created
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl wait --for=condition=Ready pod/dnsutils-s12 pod/curl-s12 -n s12 --timeout=120s
+pod/dnsutils-s12 condition met
+pod/curl-s12 condition met
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ echo "--- from namespace s12: the short name only searches s12, so it FAILS"
+--- from namespace s12: the short name only searches s12, so it FAILS
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- nslookup web-service-clusterip
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+** server can't find web-service-clusterip: NXDOMAIN
+
+command terminated with exit code 1
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ echo "--- adding the namespace (or the full FQDN) works"
+--- adding the namespace (or the full FQDN) works
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- nslookup web-service-clusterip.s11
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- nslookup web-service-clusterip.s11.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+

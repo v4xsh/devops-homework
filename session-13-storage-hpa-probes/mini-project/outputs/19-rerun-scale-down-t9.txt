@@ -1,0 +1,10 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ sleep 60
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ date '+%H:%M:%S'
+17:53:20
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get hpa -n s13-mini
+NAME          REFERENCE            TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+web-app-hpa   Deployment/web-app   cpu: 1%/50%   2         5         2          29m
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pods -n s13-mini -l app=web-app
+NAME                      READY   STATUS    RESTARTS   AGE
+web-app-d45775485-4qvf6   1/1     Running   0          14m
+web-app-d45775485-kxrb7   1/1     Running   0          14m

@@ -1,0 +1,35 @@
+~/devops-homework/session-15-helm/mini-project$ cd ~/devops-homework/session-15-helm/mini-project
+~/devops-homework/session-15-helm/mini-project$ helm install notes-dev notes-chart -n s15-mini --create-namespace --wait --timeout 120s
+NAME: notes-dev
+LAST DEPLOYED: Wed Oct  7 17:38:39 2026
+NAMESPACE: s15-mini
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+notes-chart 0.1.0 (app 1.0) installed as release "notes-dev" (revision 1) in namespace "s15-mini".
+Environment: development | replicas: 1 | image: nginx:1.24-alpine
+
+Open the Notes app:
+  curl http://$(minikube ip):31590
+~/devops-homework/session-15-helm/mini-project$ kubectl get pods,svc,configmap -n s15-mini -l app.kubernetes.io/instance=notes-dev
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/notes-dev-deploy-588c857969-xh927   1/1     Running   0          5s
+
+NAME                    TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/notes-dev-svc   NodePort   10.111.192.182   <none>        80:31590/TCP   5s
+
+NAME                         DATA   AGE
+configmap/notes-dev-config   4      5s
+~/devops-homework/session-15-helm/mini-project$ curl -s http://$(minikube ip):31590
+<h1>notes-app (DEVELOPMENT)</h1>
+<p>release=notes-dev namespace=s15-mini revision=1 chart=notes-chart-0.1.0 replicas=1</p>
+<p>owner=Vansh Dobhal (10099)</p>
+<ul>
+  <li>1. Learn helm create / install / upgrade</li>
+  <li>2. Practise helm rollback</li>
+</ul>
+~/devops-homework/session-15-helm/mini-project$ kubectl exec -n s15-mini deploy/notes-dev-deploy -- sh -c 'env | grep -E "APP_NAME|ENVIRONMENT|LOG_LEVEL" | sort'
+APP_NAME=notes-app
+ENVIRONMENT=development
+LOG_LEVEL=debug

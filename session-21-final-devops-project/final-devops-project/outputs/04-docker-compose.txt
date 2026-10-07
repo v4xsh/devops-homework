@@ -1,0 +1,28 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker compose -f docker/docker-compose.yml up -d --wait 2>&1 | tail -n 6
+ Container taskboard-backend-1 Waiting 
+ Container taskboard-frontend-1 Waiting 
+ Container taskboard-postgres-1 Healthy 
+ Container taskboard-migrate-1 Exited 
+ Container taskboard-backend-1 Healthy 
+ Container taskboard-frontend-1 Healthy 
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker compose -f docker/docker-compose.yml ps -a --format 'table {{.Service}}\t{{.Status}}\t{{.Ports}}'
+SERVICE    STATUS                      PORTS
+backend    Up 32 seconds (healthy)     0.0.0.0:8021->8000/tcp, [::]:8021->8000/tcp
+frontend   Up 32 seconds (healthy)     0.0.0.0:3021->8080/tcp, [::]:3021->8080/tcp
+migrate    Exited (0) 33 seconds ago   
+postgres   Up 40 seconds (healthy)     5432/tcp
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker compose -f docker/docker-compose.yml logs migrate | tail -n 3
+migrate-1  | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+migrate-1  | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+migrate-1  | INFO  [alembic.runtime.migration] Running upgrade  -> 0001_create_tasks
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s localhost:8021/health; echo; curl -s localhost:8021/ready; echo
+{"status":"UP"}
+{"status":"READY"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -X POST localhost:3021/api/tasks -H 'Content-Type: application/json' -d '{"title":"Write final README","priority":"HIGH","assignee":"Vansh"}'; echo
+{"title":"Write final README","description":"","priority":"HIGH","status":"TODO","assignee":"Vansh","id":1,"created_at":"2026-10-07T18:27:19.763168Z"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -X POST localhost:3021/api/tasks -H 'Content-Type: application/json' -d '{"title":"Run Trivy scan","priority":"MEDIUM","status":"IN_PROGRESS","assignee":"Vansh"}'; echo
+{"title":"Run Trivy scan","description":"","priority":"MEDIUM","status":"IN_PROGRESS","assignee":"Vansh","id":2,"created_at":"2026-10-07T18:27:19.811552Z"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s localhost:3021/api/tasks/stats; echo
+{"total":2,"todo":1,"inProgress":1,"done":0}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'frontend GET / -> HTTP %{http_code}, %{size_download} bytes\n' localhost:3021/
+frontend GET / -> HTTP 200, 344 bytes

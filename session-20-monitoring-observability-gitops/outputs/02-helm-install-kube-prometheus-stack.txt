@@ -1,0 +1,36 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ helm repo list | grep prometheus-community
+prometheus-community	https://prometheus-community.github.io/helm-charts
+~/devops-homework/session-20-monitoring-observability-gitops$ helm upgrade --install kps prometheus-community/kube-prometheus-stack -n monitoring --create-namespace -f task1-monitoring/helm-values/kube-prometheus-stack-values.yaml --wait --timeout 10m 2>&1 | head -n 12
+Release "kps" does not exist. Installing it now.
+NAME: kps
+LAST DEPLOYED: Wed Oct  7 17:16:50 2026
+NAMESPACE: monitoring
+STATUS: deployed
+REVISION: 1
+NOTES:
+kube-prometheus-stack has been installed. Check its status by running:
+  kubectl --namespace monitoring get pods -l "release=kps"
+
+Get Grafana 'admin' user password by running:
+
+~/devops-homework/session-20-monitoring-observability-gitops$ helm list -n monitoring
+NAME	NAMESPACE 	REVISION	UPDATED                                	STATUS  	CHART                       	APP VERSION
+kps 	monitoring	1       	2026-10-07 17:16:50.173754954 +0000 UTC	deployed	kube-prometheus-stack-92.1.0	v0.94.1    
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get pods -n monitoring -o wide
+NAME                                      READY   STATUS            RESTARTS   AGE     IP             NODE       NOMINATED NODE   READINESS GATES
+alertmanager-kps-alertmanager-0           0/2     PodInitializing   0          3m23s   10.244.0.55    minikube   <none>           <none>
+kps-grafana-6b69b9bff9-m54sc              3/3     Running           0          3m54s   10.244.0.51    minikube   <none>           <none>
+kps-kube-state-metrics-5f69fb89b6-nc2tl   1/1     Running           0          3m54s   10.244.0.49    minikube   <none>           <none>
+kps-operator-586785c8f4-77knj             1/1     Running           0          3m54s   10.244.0.50    minikube   <none>           <none>
+kps-prometheus-node-exporter-8zn5n        1/1     Running           0          3m54s   192.168.49.2   minikube   <none>           <none>
+prometheus-kps-prometheus-0               2/2     Running           0          3m23s   10.244.0.56    minikube   <none>           <none>
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get svc -n monitoring
+NAME                           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+alertmanager-operated          ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP   3m23s
+kps-alertmanager               ClusterIP   10.104.246.221   <none>        9093/TCP,8080/TCP            3m55s
+kps-grafana                    ClusterIP   10.101.76.71     <none>        80/TCP                       3m55s
+kps-kube-state-metrics         ClusterIP   10.103.180.72    <none>        8080/TCP                     3m55s
+kps-operator                   ClusterIP   10.107.172.60    <none>        443/TCP                      3m55s
+kps-prometheus                 ClusterIP   10.103.105.27    <none>        9090/TCP,8080/TCP            3m55s
+kps-prometheus-node-exporter   ClusterIP   10.96.194.69     <none>        9100/TCP                     3m55s
+prometheus-operated            ClusterIP   None             <none>        9090/TCP                     3m23s

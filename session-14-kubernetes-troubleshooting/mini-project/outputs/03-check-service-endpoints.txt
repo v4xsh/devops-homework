@@ -1,0 +1,28 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get service -n s14-mini
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+troubleshooting-service   ClusterIP   10.111.64.188   <none>        80/TCP    7s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl describe service troubleshooting-service -n s14-mini
+Name:                     troubleshooting-service
+Namespace:                s14-mini
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=troubleshooting-app
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.111.64.188
+IPs:                      10.111.64.188
+Port:                     <unset>  80/TCP
+TargetPort:               80/TCP
+Endpoints:                10.244.0.71:80,10.244.0.70:80
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get endpoints troubleshooting-service -n s14-mini
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                      ENDPOINTS                       AGE
+troubleshooting-service   10.244.0.70:80,10.244.0.71:80   8s
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pods -n s14-mini -o custom-columns=POD:.metadata.name,IP:.status.podIP
+POD                                    IP
+troubleshooting-app-59d4957864-87hlc   10.244.0.70
+troubleshooting-app-59d4957864-bnth2   10.244.0.71

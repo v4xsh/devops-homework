@@ -1,0 +1,16 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ kubectl delete pod oom-app -n s14 --wait=true
+pod "oom-app" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ kubectl apply -f fixed.yaml
+pod/oom-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ kubectl wait --for=condition=Ready pod/oom-app -n s14 --timeout=90s
+pod/oom-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ sleep 60
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ kubectl get pod oom-app -n s14
+NAME      READY   STATUS    RESTARTS   AGE
+oom-app   1/1     Running   0          60s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ kubectl logs oom-app -n s14
+Loading 200MB cache into memory...
+Cache loaded, serving
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/10-oomkilled$ kubectl top pod oom-app -n s14
+NAME      CPU(cores)   MEMORY(bytes)   
+oom-app   59m          204Mi           

@@ -1,0 +1,39 @@
+~$ sudo journalctl --disk-usage
+Archived and active journals take up 120.0M in the file system.
+~$ sudo journalctl --list-boots --no-pager | tail -n 5
+IDX BOOT ID                          FIRST ENTRY                 LAST ENTRY
+ -1 92915358d05545df99e6506e0918fe3f Wed 2026-10-07 16:32:50 UTC Wed 2026-10-07 16:55:56 UTC
+  0 349759b5206b408d9bb9966a39834e28 Wed 2026-10-07 16:56:14 UTC Wed 2026-10-07 17:05:05 UTC
+~$ sudo journalctl -b --no-pager -o short-iso | head -n 12
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: Linux version 6.6.87.2-microsoft-standard-WSL2 (root@439a258ad544) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: Command line: initrd=\initrd.img WSL_ROOT_INIT=1 panic=-1 nr_cpus=12 hv_utils.timesync_implicit=1 console=hvc0 debug pty.legacy_count=0 WSL_ENABLE_CRASH_DUMP=1
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: KERNEL supported cpus:
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel:   Intel GenuineIntel
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel:   AMD AuthenticAMD
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: BIOS-provided physical RAM map:
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: BIOS-e820: [mem 0x00000000000e0000-0x00000000000e0fff] reserved
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: BIOS-e820: [mem 0x0000000000100000-0x00000000001fffff] ACPI data
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: BIOS-e820: [mem 0x0000000000200000-0x00000000f7ffffff] usable
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: BIOS-e820: [mem 0x0000000100000000-0x0000000287ffffff] usable
+2026-10-07T16:56:14+00:00 Vansh-G15 kernel: NX (Execute Disable) protection: active
+~$ sudo journalctl -p err -b --no-pager -n 10
+Oct 07 16:56:14 Vansh-G15 kernel: misc dxg: dxgk: dxgkio_query_adapter_info: Ioctl failed: -22
+Oct 07 16:56:14 Vansh-G15 kernel: misc dxg: dxgk: dxgkio_query_adapter_info: Ioctl failed: -2
+Oct 07 16:56:14 Vansh-G15 kernel: misc dxg: dxgk: dxgkio_query_adapter_info: Ioctl failed: -22
+Oct 07 16:56:14 Vansh-G15 kernel: misc dxg: dxgk: dxgkio_query_adapter_info: Ioctl failed: -22
+Oct 07 16:56:14 Vansh-G15 kernel: misc dxg: dxgk: dxgkio_query_adapter_info: Ioctl failed: -22
+Oct 07 16:56:14 Vansh-G15 kernel: misc dxg: dxgk: dxgkio_query_adapter_info: Ioctl failed: -2
+Oct 07 16:56:16 Vansh-G15 login[710]: PAM unable to dlopen(pam_lastlog.so): /usr/lib/security/pam_lastlog.so: cannot open shared object file: No such file or directory
+Oct 07 16:56:16 Vansh-G15 login[710]: PAM adding faulty module: pam_lastlog.so
+Oct 07 16:56:28 Vansh-G15 unknown: WSL (237) ERROR: CheckConnection: getaddrinfo() failed: -3
+Oct 07 16:56:46 Vansh-G15 unknown: WSL (237) ERROR: CheckConnection: getaddrinfo() failed: -3
+~$ sudo journalctl -k --no-pager -n 8
+Oct 07 17:03:18 Vansh-G15 kernel: docker0: port 1(vethb5da58a) entered blocking state
+Oct 07 17:03:18 Vansh-G15 kernel: docker0: port 1(vethb5da58a) entered forwarding state
+Oct 07 17:03:23 Vansh-G15 kernel: vethadd792c: renamed from eth0
+Oct 07 17:03:23 Vansh-G15 kernel: docker0: port 1(vethb5da58a) entered disabled state
+Oct 07 17:03:23 Vansh-G15 kernel: docker0: port 1(vethb5da58a) entered disabled state
+Oct 07 17:03:23 Vansh-G15 kernel: vethb5da58a (unregistering): left allmulticast mode
+Oct 07 17:03:23 Vansh-G15 kernel: vethb5da58a (unregistering): left promiscuous mode
+Oct 07 17:03:23 Vansh-G15 kernel: docker0: port 1(vethb5da58a) entered disabled state

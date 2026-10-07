@@ -1,0 +1,14 @@
+~/devops-homework/tools$ sudo deluser --remove-home testuser1
+info: Looking for files to backup/remove ...
+info: Removing files ...
+info: Removing crontab ...
+info: Removing user `testuser1' ...
+~/devops-homework/tools$ sudo userdel testuser2
+~/devops-homework/tools$ sudo userdel -r testuser3
+userdel: testuser3 mail spool (/var/mail/testuser3) not found
+~/devops-homework/tools$ grep -E '^testuser[123]:' /etc/passwd || echo "no testuser entries left in /etc/passwd"
+no testuser entries left in /etc/passwd
+~/devops-homework/tools$ ls -ld /home/testuser* 2>&1
+ls: cannot access '/home/testuser*': No such file or directory
+~/devops-homework/tools$ id testuser1 2>&1
+id: ‘testuser1’: no such user

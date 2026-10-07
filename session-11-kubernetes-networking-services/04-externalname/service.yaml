@@ -1,0 +1,10 @@
+# ExternalName: no selector, no endpoints, no ClusterIP.
+# CoreDNS simply answers queries for this service name with a CNAME to externalName.
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-docs-service
+  namespace: s11
+spec:
+  type: ExternalName
+  externalName: example.com

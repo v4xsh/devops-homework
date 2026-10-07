@@ -1,0 +1,33 @@
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl apply -f replicaset.yaml
+replicaset.apps/bare-rs created
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ sleep 8
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get rs,pods -n s11 -l app=bare-rs
+NAME                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/bare-rs   3         3         3       8s
+
+NAME                READY   STATUS    RESTARTS   AGE
+pod/bare-rs-kn546   1/1     Running   0          8s
+pod/bare-rs-qdsw7   1/1     Running   0          8s
+pod/bare-rs-tjpcb   1/1     Running   0          8s
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ echo "--- self-healing: delete one pod, the RS recreates it"
+--- self-healing: delete one pod, the RS recreates it
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl delete pod -n s11 $(kubectl get pods -n s11 -l app=bare-rs -o jsonpath='{.items[0].metadata.name}') --wait=true
+pod "bare-rs-kn546" deleted from s11 namespace
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ sleep 4
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pods -n s11 -l app=bare-rs
+NAME            READY   STATUS    RESTARTS   AGE
+bare-rs-cgmzg   1/1     Running   0          11s
+bare-rs-qdsw7   1/1     Running   0          20s
+bare-rs-tjpcb   1/1     Running   0          20s
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ echo "--- change the RS image: existing pods are NOT updated (a RS has no rollout logic)"
+--- change the RS image: existing pods are NOT updated (a RS has no rollout logic)
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl set image rs/bare-rs nginx=nginx:1.27-alpine -n s11
+replicaset.apps/bare-rs image updated
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ sleep 4
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get rs bare-rs -n s11 -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+nginx:1.27-alpine
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pods -n s11 -l app=bare-rs -o custom-columns='POD:.metadata.name,IMAGE:.spec.containers[0].image'
+POD             IMAGE
+bare-rs-cgmzg   nginx:1.25-alpine
+bare-rs-qdsw7   nginx:1.25-alpine
+bare-rs-tjpcb   nginx:1.25-alpine

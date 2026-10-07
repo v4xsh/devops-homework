@@ -1,0 +1,62 @@
+~$ nslookup github.com
+Server:		10.255.255.254
+Address:	10.255.255.254#53
+
+Non-authoritative answer:
+Name:	github.com
+Address: 20.207.73.82
+
+~$ nslookup -type=mx gmail.com
+Server:		10.255.255.254
+Address:	10.255.255.254#53
+
+Non-authoritative answer:
+gmail.com	mail exchanger = 40 alt4.gmail-smtp-in.l.google.com.
+gmail.com	mail exchanger = 30 alt3.gmail-smtp-in.l.google.com.
+gmail.com	mail exchanger = 10 alt1.gmail-smtp-in.l.google.com.
+gmail.com	mail exchanger = 20 alt2.gmail-smtp-in.l.google.com.
+gmail.com	mail exchanger = 5 gmail-smtp-in.l.google.com.
+
+Authoritative answers can be found from:
+gmail.com	nameserver = ns3.google.com.
+gmail.com	nameserver = ns2.google.com.
+gmail.com	nameserver = ns1.google.com.
+gmail.com	nameserver = ns4.google.com.
+ns3.google.com	internet address = 216.239.36.10
+ns2.google.com	internet address = 216.239.34.10
+ns1.google.com	internet address = 216.239.32.10
+ns4.google.com	internet address = 216.239.38.10
+
+~$ dig github.com +short
+20.207.73.82
+~$ dig gmail.com MX +short
+30 alt3.gmail-smtp-in.l.google.com.
+10 alt1.gmail-smtp-in.l.google.com.
+20 alt2.gmail-smtp-in.l.google.com.
+5 gmail-smtp-in.l.google.com.
+40 alt4.gmail-smtp-in.l.google.com.
+~$ dig github.com NS +short
+dns2.p08.nsone.net.
+ns-421.awsdns-52.com.
+dns3.p08.nsone.net.
+ns-1707.awsdns-21.co.uk.
+ns-1283.awsdns-32.org.
+dns1.p08.nsone.net.
+ns-520.awsdns-01.net.
+dns4.p08.nsone.net.
+~$ dig @8.8.8.8 example.com A +noall +answer +stats | grep -vE '^$'
+example.com.		82	IN	A	172.66.147.243
+example.com.		82	IN	A	104.20.23.154
+;; Query time: 59 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+;; WHEN: Wed Oct 07 17:12:37 UTC 2026
+;; MSG SIZE  rcvd: 212
+~$ dig -x 8.8.8.8 +short
+dns.google.
+~$ host github.com
+github.com has address 20.207.73.82
+github.com mail is handled by 0 github-com.mail.protection.outlook.com.
+~$ host -t txt google.com | head -n 3
+google.com descriptive text "onetrust-domain-verification=0d477fe608074e6f9c12bca7826035cc"
+google.com descriptive text "arcules-domain-verification=2R4t5G7nI6tRCo61lpxxbLksPYstxhGmtV75cpr8x9K"
+google.com descriptive text "apple-domain-verification=30afIBcvSuDV2PLX"

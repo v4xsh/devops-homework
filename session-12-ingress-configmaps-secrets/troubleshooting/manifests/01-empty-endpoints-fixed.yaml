@@ -1,0 +1,15 @@
+# FIX: selector now matches the pod label app: yatri-backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: broken-backend-service
+  namespace: s12-troubleshoot
+spec:
+  type: ClusterIP
+  selector:
+    app: yatri-backend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+      protocol: TCP

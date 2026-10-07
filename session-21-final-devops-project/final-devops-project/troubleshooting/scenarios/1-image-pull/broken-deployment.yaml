@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskboard-backend
+  namespace: final-ts
+  labels: {app: taskboard-backend, app.kubernetes.io/part-of: taskboard}
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxSurge: 1, maxUnavailable: 0}
+  selector:
+    matchLabels: {app: taskboard-backend}
+  template:
+    metadata:
+      labels: {app: taskboard-backend, app.kubernetes.io/part-of: taskboard}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: {type: RuntimeDefault}
+      initContainers:
+        # schema migrations run before the API container starts (safe to re-run: alembic is idempotent)
+        - name: migrate
+          image: ghcr.io/v4xsh/taskboard-backend:1.0.2
+          imagePullPolicy: IfNotPresent
+          command: ["alembic", "upgrade", "head"]
+          envFrom:
+            - configMapRef: {name: taskboard-config}
+          env:
+            - name: DB_PASSWORD
+              valueFrom: {secretKeyRef: {name: taskboard-db, key: db-password}}
+          securityContext: &csc
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+      containers:
+        - name: backend
+          image: ghcr.io/v4xsh/taskboard-backend:1.0.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - {name: http, containerPort: 8000}
+          envFrom:
+            - configMapRef: {name: taskboard-config}
+          env:
+            - name: DB_PASSWORD
+              valueFrom: {secretKeyRef: {name: taskboard-db, key: db-password}}
+          startupProbe:          # gives the app up to 60s to boot before liveness kicks in
+            httpGet: {path: /health, port: http}
+            periodSeconds: 2
+            failureThreshold: 30
+          livenessProbe:         # process is alive
+            httpGet: {path: /health, port: http}
+            periodSeconds: 15
+            timeoutSeconds: 2
+          readinessProbe:        # DB reachable -> receive traffic
+            httpGet: {path: /ready, port: http}
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext: *csc
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 256Mi}

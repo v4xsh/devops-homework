@@ -1,0 +1,36 @@
+~/devops-homework/session-17-devsecops$ kubectl get deploy,pods,svc -n s17 -o wide
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS      IMAGES                      SELECTOR
+deployment.apps/devsecops-api   2/2     2            2           77s   devsecops-api   s17-devsecops-api:f3b6064   app=devsecops-api
+
+NAME                                READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+pod/devsecops-api-c579ddf9c-dc426   1/1     Running   0          77s   10.244.0.158   minikube   <none>           <none>
+pod/devsecops-api-c579ddf9c-tdsjj   1/1     Running   0          77s   10.244.0.159   minikube   <none>           <none>
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+service/devsecops-api   ClusterIP   10.106.193.233   <none>        80/TCP    77s   app=devsecops-api
+~/devops-homework/session-17-devsecops$ kubectl get deploy devsecops-api -n s17 -o jsonpath='{.spec.template.spec.securityContext}{"\n"}{.spec.template.spec.containers[0].securityContext}{"\n"}{.spec.template.spec.containers[0].resources}{"\n"}'
+{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}
+{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"readOnlyRootFilesystem":true}
+{"limits":{"cpu":"250m","memory":"192Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}
+~/devops-homework/session-17-devsecops$ POD=$(kubectl get pod -n s17 -l app=devsecops-api -o jsonpath='{.items[0].metadata.name}')
+~/devops-homework/session-17-devsecops$ kubectl exec -n s17 $POD -- id
+uid=10001(appuser) gid=10001(appuser) groups=10001(appuser)
+~/devops-homework/session-17-devsecops$ kubectl exec -n s17 $POD -- sh -c 'touch /app/hacked 2>&1; touch /tmp/ok && echo "/tmp (emptyDir) is writable"'
+touch: cannot touch '/app/hacked': Read-only file system
+/tmp (emptyDir) is writable
+~/devops-homework/session-17-devsecops$ kubectl exec -n s17 $POD -- sh -c 'grep -E "^(CapEff|NoNewPrivs)" /proc/1/status'
+CapEff:	0000000000000000
+NoNewPrivs:	1
+~/devops-homework/session-17-devsecops$ kubectl get secret devsecops-api -n s17 -o jsonpath='{.data}' | sed -E 's/"app-secret-key":"[^"]+"/"app-secret-key":"<base64 value hidden>"/'; echo
+{"app-secret-key":"<base64 value hidden>"}
+~/devops-homework/session-17-devsecops$ (kubectl port-forward -n s17 svc/devsecops-api 8102:80 >/tmp/pf-s17.log 2>&1 &) ; sleep 3
+~/devops-homework/session-17-devsecops$ curl -s -i localhost:8102/health | grep -E 'HTTP/|X-Content|X-Frame|Content-Security|status'
+HTTP/1.1 200 OK
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'none'
+{"status":"ok"}
+~/devops-homework/session-17-devsecops$ curl -s -X POST localhost:8102/api/notes -H 'Content-Type: application/json' -d '{"title":""}'; echo
+{"error":"title is required (max 80 chars)"}
+
+~/devops-homework/session-17-devsecops$ pkill -f "port-forward -n s17" || true

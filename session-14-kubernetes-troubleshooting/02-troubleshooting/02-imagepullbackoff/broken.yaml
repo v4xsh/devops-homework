@@ -1,0 +1,10 @@
+# BUG: the tag does not exist on Docker Hub
+apiVersion: v1
+kind: Pod
+metadata:
+  name: imagepull-app
+  namespace: s14
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27-does-not-exist

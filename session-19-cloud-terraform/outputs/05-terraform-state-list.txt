@@ -1,0 +1,26 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform state list
+data.aws_ami.ubuntu
+aws_instance.web
+aws_internet_gateway.main
+aws_route_table.public
+aws_route_table_association.public
+aws_s3_bucket.artifacts
+aws_s3_bucket_public_access_block.artifacts
+aws_s3_bucket_server_side_encryption_configuration.artifacts
+aws_s3_bucket_versioning.artifacts
+aws_s3_object.user_data_artifact
+aws_security_group.web
+aws_subnet.public
+aws_vpc.main
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform state show -no-color aws_instance.web | grep -E '^ +(ami|id|instance_type|instance_state|private_ip|public_ip|subnet_id) +='
+    ami                                  = "ami-1e749f67"
+    id                                   = "i-9878221feb6427ab4"
+    instance_state                       = "running"
+    instance_type                        = "t2.micro"
+    private_ip                           = "10.19.1.4"
+    public_ip                            = "54.214.106.197"
+    subnet_id                            = "subnet-ac1f83a4d7b25ee74"
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform state show -no-color aws_vpc.main | grep -E '^ +(id|cidr_block|enable_dns_hostnames) +='
+    cidr_block                           = "10.19.0.0/16"
+    enable_dns_hostnames                 = true
+    id                                   = "vpc-163f2a080834ae667"

@@ -1,0 +1,14 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl get deploy rb-web -n s15-rollback -o jsonpath='{"image="}{.spec.template.spec.containers[0].image}{"  replicas="}{.spec.replicas}{"  ready="}{.status.readyReplicas}{"\n"}'
+image=nginx:1.25-alpine  replicas=1  ready=1
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl get pods -n s15-rollback -l app.kubernetes.io/instance=rb-web -o custom-columns=POD:.metadata.name,STATUS:.status.phase,IMAGE:.spec.containers[0].image
+POD                       STATUS    IMAGE
+rb-web-76fc59c5fc-f6qjq   Running   nginx:1.25-alpine
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl exec client -n s15-rollback -- wget -qO- http://rb-web
+release=rb-web rendered-at-revision=1 chart=rollback-demo-0.1.0
+version=v1 color=blue image=nginx:1.25-alpine replicas=1
+message=Hello from the first release - 1 replica on nginx 1.25
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl exec client -n s15-rollback -- sh -c 'wget -S -qO /dev/null http://rb-web 2>&1 | grep Server'
+  Server: nginx/1.25.5
+~/devops-homework/session-15-helm/02-helm-rollback$ helm history rb-web -n s15-rollback
+REVISION	UPDATED                 	STATUS  	CHART              	APP VERSION	DESCRIPTION     
+1       	Wed Oct  7 17:22:07 2026	deployed	rollback-demo-0.1.0	1.25       	Install complete

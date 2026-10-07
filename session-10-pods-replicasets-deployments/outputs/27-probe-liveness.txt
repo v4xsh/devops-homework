@@ -1,0 +1,29 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/08-liveness.yaml
+pod/lifecycle-liveness created
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 15; kubectl get pod lifecycle-liveness -n s10-lifecycle
+NAME                 READY   STATUS    RESTARTS   AGE
+lifecycle-liveness   1/1     Running   0          16s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl wait -n s10-lifecycle --for=jsonpath='{.status.containerStatuses[0].restartCount}'=1 pod/lifecycle-liveness --timeout=180s
+pod/lifecycle-liveness condition met
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-liveness -n s10-lifecycle
+NAME                 READY   STATUS    RESTARTS     AGE
+lifecycle-liveness   1/1     Running   1 (3s ago)   64s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl logs lifecycle-liveness -n s10-lifecycle --previous
+App started
+Health file removed
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-liveness -n s10-lifecycle | grep -E 'Liveness:|Restart Count:|Last State:|Reason:|Exit Code:'
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    137
+    Restart Count:  1
+    Liveness:       exec [sh -c test -f /tmp/healthy] delay=5s timeout=1s period=5s successThreshold=1 failureThreshold=2
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-liveness -n s10-lifecycle | sed -n '/^Events:/,$p'
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  68s                default-scheduler  Successfully assigned s10-lifecycle/lifecycle-liveness to minikube
+  Warning  Unhealthy  37s (x2 over 42s)  kubelet            spec.containers{app}: Liveness probe failed:
+  Normal   Killing    37s                kubelet            spec.containers{app}: Container app failed liveness probe, will be restarted
+  Normal   Pulled     5s (x2 over 67s)   kubelet            spec.containers{app}: Container image "busybox:1.36" already present on machine and can be accessed by the pod
+  Normal   Created    5s (x2 over 67s)   kubelet            spec.containers{app}: Container created
+  Normal   Started    5s (x2 over 66s)   kubelet            spec.containers{app}: Container started

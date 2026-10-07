@@ -1,0 +1,12 @@
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get deploy coredns -n kube-system -o wide
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                    SELECTOR
+coredns   1/1     1            1           31m   coredns      registry.k8s.io/coredns/coredns:v1.14.6   k8s-app=kube-dns
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get pods -n kube-system -l k8s-app=kube-dns -o wide
+NAME                       READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+coredns-559f6c778d-jxzsm   1/1     Running   0          31m   10.244.0.4   minikube   <none>           <none>
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get svc kube-dns -n kube-system -o wide
+NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR
+kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   32m   k8s-app=kube-dns
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get endpointslices -n kube-system -l kubernetes.io/service-name=kube-dns
+NAME             ADDRESSTYPE   PORTS        ENDPOINTS    AGE
+kube-dns-swcsb   IPv4          53,53,9153   10.244.0.4   31m

@@ -1,0 +1,27 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get --raw '/readyz?verbose' | tail -n 6
+[+]poststarthook/kube-apiserver-autoregistration ok
+[+]autoregister-completion ok
+[+]poststarthook/apiservice-openapi-controller ok
+[+]poststarthook/apiservice-openapiv3-controller ok
+[+]shutdown ok
+readyz check passed
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get --raw '/livez'; echo
+ok
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get pods -n s20-app -l app=s20-metrics-app -o custom-columns=NAME:.metadata.name,READY:.status.containerStatuses[0].ready,RESTARTS:.status.containerStatuses[0].restartCount,STATUS:.status.phase
+NAME                               READY   RESTARTS   STATUS
+s20-metrics-app-5c7f5f65df-57rn5   true    0          Running
+s20-metrics-app-5c7f5f65df-zhd8v   true    0          Running
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl describe pod -n s20-app -l app=s20-metrics-app | grep -E '^Name:|Liveness|Readiness' | head -n 6
+Name:             s20-metrics-app-5c7f5f65df-57rn5
+    Liveness:   http-get http://:http/healthz delay=5s timeout=1s period=10s successThreshold=1 failureThreshold=3
+    Readiness:  http-get http://:http/readyz delay=3s timeout=1s period=5s successThreshold=1 failureThreshold=3
+Name:             s20-metrics-app-5c7f5f65df-zhd8v
+    Liveness:   http-get http://:http/healthz delay=5s timeout=1s period=10s successThreshold=1 failureThreshold=3
+    Readiness:  http-get http://:http/readyz delay=3s timeout=1s period=5s successThreshold=1 failureThreshold=3
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get endpoints s20-metrics-app -n s20-app
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME              ENDPOINTS                           AGE
+s20-metrics-app   10.244.0.74:8080,10.244.0.75:8080   5m3s
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get nodes -o custom-columns=NAME:.metadata.name,READY:'.status.conditions[?(@.type=="Ready")].status',MEMPRESSURE:'.status.conditions[?(@.type=="MemoryPressure")].status',DISKPRESSURE:'.status.conditions[?(@.type=="DiskPressure")].status'
+NAME       READY   MEMPRESSURE   DISKPRESSURE
+minikube   True    False         False

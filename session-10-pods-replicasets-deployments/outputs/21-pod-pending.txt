@@ -1,0 +1,18 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/02-pending.yaml
+pod/lifecycle-pending created
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 5; kubectl get pod lifecycle-pending -n s10-lifecycle -o wide
+NAME                READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES
+lifecycle-pending   0/1     Pending   0          5s    <none>   <none>   <none>           <none>
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-pending -n s10-lifecycle -o jsonpath='phase={.status.phase}  PodScheduled={.status.conditions[0].status} reason={.status.conditions[0].reason}{"\n"}'
+phase=Pending  PodScheduled=False reason=Unschedulable
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-pending -n s10-lifecycle | sed -n '/^    Requests:/,/^    Environment/p;/^Events:/,$p'
+    Requests:
+      cpu:        1
+      memory:     64Gi
+    Environment:  <none>
+Events:
+  Type     Reason            Age              From               Message
+  ----     ------            ----             ----               -------
+  Warning  FailedScheduling  1s (x2 over 6s)  default-scheduler  0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get node minikube -o jsonpath='node allocatable memory = {.status.allocatable.memory}{"\n"}'
+node allocatable memory = 10183884Ki

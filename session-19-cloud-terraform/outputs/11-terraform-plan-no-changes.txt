@@ -1,0 +1,6 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform plan -no-color -detailed-exitcode | tail -n 4; echo "exit code: ${PIPESTATUS[0]} (0 = infrastructure matches the configuration)"
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+exit code: 0 (0 = infrastructure matches the configuration)

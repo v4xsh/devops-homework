@@ -1,0 +1,41 @@
+~/devops-homework/tools$ df -h / /mnt/c
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   12G  944G   2% /
+C:\             474G  416G   59G  88% /mnt/c
+~/devops-homework/tools$ du -sh ~/practice/cheatsheet; du -sh ~/practice/cheatsheet/*
+28K	/home/vansh/practice/cheatsheet
+8.0K	/home/vansh/practice/cheatsheet/backup
+4.0K	/home/vansh/practice/cheatsheet/docs
+8.0K	/home/vansh/practice/cheatsheet/logs
+4.0K	/home/vansh/practice/cheatsheet/run.sh
+~/devops-homework/tools$ lsblk | head -n 8
+NAME MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda    8:0    0 388.4M  1 disk 
+sdb    8:16   0   186M  1 disk 
+sdc    8:32   0     8G  0 disk [SWAP]
+sdd    8:48   0     1T  0 disk /var/lib/docker
+                               /mnt/wslg/distro
+                               /
+~/devops-homework/tools$ find ~/practice/cheatsheet -type f -name "*.log"
+/home/vansh/practice/cheatsheet/logs/app.log
+~/devops-homework/tools$ find /etc -maxdepth 1 -name "*.conf" -newer /etc/hostname | head -n 5
+/etc/resolv.conf
+~/devops-homework/tools$ grep -n "error" ~/practice/cheatsheet/logs/app.log
+4:error: disk full
+6:error: timeout
+~/devops-homework/tools$ grep -ric "error" ~/practice/cheatsheet
+/home/vansh/practice/cheatsheet/docs/notes.md:0
+/home/vansh/practice/cheatsheet/run.sh:0
+/home/vansh/practice/cheatsheet/backup/app.log.bak:2
+/home/vansh/practice/cheatsheet/logs/app.log:2
+~/devops-homework/tools$ grep -v "error" ~/practice/cheatsheet/logs/app.log | sort -r
+gamma
+delta
+beta
+alpha
+~/devops-homework/tools$ cat /etc/passwd | cut -d: -f1 | sort | head -n 5
+_apt
+backup
+bin
+daemon
+dhcpcd

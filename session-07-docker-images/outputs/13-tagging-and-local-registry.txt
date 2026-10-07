@@ -1,0 +1,22 @@
+~/devops-homework/session-07-docker-images$ docker tag s07-node-app:multi s07-node-app:1.0.0
+~/devops-homework/session-07-docker-images$ docker tag s07-node-app:multi s07-node-app:latest
+~/devops-homework/session-07-docker-images$ docker tag s07-node-app:multi vansh10099/s07-node-app:1.0.0
+~/devops-homework/session-07-docker-images$ docker images --filter reference='*s07-node-app*' --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
+REPOSITORY     TAG       IMAGE ID       SIZE
+s07-node-app   1.0.0     b78cff21f640   199MB
+s07-node-app   latest    b78cff21f640   199MB
+s07-node-app   multi     b78cff21f640   199MB
+s07-node-app   single    b1e6463a19a9   1.59GB
+~/devops-homework/session-07-docker-images$ docker run -d --name s07-registry -p 8020:5000 registry:2
+6c7056cd8875c91dc3aecb41b8c4bed24a179055f52bb63bbda3530798646fdf
+~/devops-homework/session-07-docker-images$ sleep 3
+~/devops-homework/session-07-docker-images$ docker tag s07-node-app:1.0.0 localhost:8020/s07-node-app:1.0.0
+~/devops-homework/session-07-docker-images$ docker push localhost:8020/s07-node-app:1.0.0 2>&1 | tail -n 4
+9a9aeb44e2b4: Pushed
+7eb1f48cc919: Pushed
+4feea04c1543: Pushed
+1.0.0: digest: sha256:b78cff21f640c5189e691f4a3d237395b412f873c0408343df3a97695d8c7084 size: 856
+~/devops-homework/session-07-docker-images$ curl -s localhost:8020/v2/_catalog
+{"repositories":["s07-node-app"]}
+~/devops-homework/session-07-docker-images$ curl -s localhost:8020/v2/s07-node-app/tags/list
+{"name":"s07-node-app","tags":["1.0.0"]}

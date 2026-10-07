@@ -1,0 +1,42 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get pods -n s11 -l app=web-headless -o custom-columns=NAME:.metadata.name,IP:.status.podIP
+NAME    IP
+web-0   10.244.0.99
+web-1   10.244.0.100
+web-2   10.244.0.101
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- nslookup web-service-headless.s11.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-headless.s11.svc.cluster.local
+Address: 10.244.0.101
+Name:	web-service-headless.s11.svc.cluster.local
+Address: 10.244.0.99
+Name:	web-service-headless.s11.svc.cluster.local
+Address: 10.244.0.100
+
+~/devops-homework/session-11-kubernetes-networking-services$ echo "--- compare: a normal ClusterIP service returns ONE virtual IP"
+--- compare: a normal ClusterIP service returns ONE virtual IP
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- nslookup web-service-clusterip.s11.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+
+~/devops-homework/session-11-kubernetes-networking-services$ echo "--- stable per-pod DNS names from the StatefulSet + headless service"
+--- stable per-pod DNS names from the StatefulSet + headless service
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- nslookup web-0.web-service-headless.s11.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-0.web-service-headless.s11.svc.cluster.local
+Address: 10.244.0.99
+
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- dig +short web-1.web-service-headless.s11.svc.cluster.local
+10.244.0.100
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 dnsutils -- dig +short web-2.web-service-headless.s11.svc.cluster.local
+10.244.0.101
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 curl-client -- curl -s http://web-0.web-service-headless.s11.svc.cluster.local
+Hello from web-0 (StatefulSet + headless)
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 curl-client -- curl -s http://web-2.web-service-headless
+Hello from web-2 (StatefulSet + headless)

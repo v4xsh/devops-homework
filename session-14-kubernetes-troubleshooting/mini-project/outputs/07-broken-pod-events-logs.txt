@@ -1,0 +1,12 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl events -n s14-mini --for pod/project-broken-pod
+LAST SEEN           TYPE      REASON      OBJECT                   MESSAGE
+41s                 Normal    Scheduled   Pod/project-broken-pod   Successfully assigned s14-mini/project-broken-pod to minikube
+25s (x2 over 41s)   Normal    Pulling     Pod/project-broken-pod   Pulling image "nginx:this-tag-does-not-exist"
+23s (x2 over 39s)   Warning   Failed      Pod/project-broken-pod   Failed to pull image "nginx:this-tag-does-not-exist": failed to pull and unpack image "docker.io/library/nginx:this-tag-does-not-exist": failed to resolve reference "docker.io/library/nginx:this-tag-does-not-exist": unexpected status from HEAD request to https://registry-1.docker.io/v2/library/nginx/manifests/this-tag-does-not-exist: 429 Too Many Requests
+23s (x2 over 39s)   Warning   Failed      Pod/project-broken-pod   Error: ErrImagePull
+9s (x2 over 38s)    Normal    BackOff     Pod/project-broken-pod   Back-off pulling image "nginx:this-tag-does-not-exist"
+9s (x2 over 38s)    Warning   Failed      Pod/project-broken-pod   Error: ImagePullBackOff
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl logs project-broken-pod -n s14-mini
+Error from server (BadRequest): container "app" in pod "project-broken-pod" is waiting to start: image can't be pulled
+~/devops-homework/session-14-kubernetes-troubleshooting/mini-project$ kubectl get pod project-broken-pod -n s14-mini -o jsonpath='{.status.containerStatuses[0].state.waiting.reason}: {.status.containerStatuses[0].state.waiting.message}{"\n"}'
+ErrImagePull: failed to pull and unpack image "docker.io/library/nginx:this-tag-does-not-exist": failed to resolve reference "docker.io/library/nginx:this-tag-does-not-exist": unexpected status from HEAD request to https://registry-1.docker.io/v2/library/nginx/manifests/this-tag-does-not-exist: 429 Too Many Requests

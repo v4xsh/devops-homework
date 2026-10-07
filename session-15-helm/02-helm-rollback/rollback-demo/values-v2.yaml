@@ -1,0 +1,8 @@
+# Revision 2 - first upgrade: new nginx minor, 2 replicas, new page
+replicaCount: 2
+image:
+  tag: "1.26-alpine"
+app:
+  version: v2
+  color: green
+  message: "Upgrade #1 - scaled to 2 replicas on nginx 1.26"

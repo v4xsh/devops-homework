@@ -1,0 +1,34 @@
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl set image deployment/demo-deploy nginx=nginx:1.27-alpine -n s11
+deployment.apps/demo-deploy image updated
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl annotate deployment/demo-deploy kubernetes.io/change-cause="upgrade nginx 1.25 -> 1.27" -n s11 --overwrite
+deployment.apps/demo-deploy annotated
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl rollout status deployment/demo-deploy -n s11 --timeout=180s
+Waiting for deployment "demo-deploy" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "demo-deploy" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "demo-deploy" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "demo-deploy" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "demo-deploy" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "demo-deploy" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "demo-deploy" rollout to finish: 1 old replicas are pending termination...
+deployment "demo-deploy" successfully rolled out
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get rs -n s11 -l app=demo-deploy -o wide
+NAME                     DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES              SELECTOR
+demo-deploy-5fd8d985d5   0         0         0       8s    nginx        nginx:1.25-alpine   app=demo-deploy,pod-template-hash=5fd8d985d5
+demo-deploy-8b45dbc9     3         3         3       3s    nginx        nginx:1.27-alpine   app=demo-deploy,pod-template-hash=8b45dbc9
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl rollout history deployment/demo-deploy -n s11
+deployment.apps/demo-deploy 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         upgrade nginx 1.25 -> 1.27
+
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl describe deployment demo-deploy -n s11 | sed -n '/Events:/,$p'
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  9s    deployment-controller  Scaled up replica set demo-deploy-5fd8d985d5 from 0 to 3
+  Normal  ScalingReplicaSet  4s    deployment-controller  Scaled up replica set demo-deploy-8b45dbc9 from 0 to 1
+  Normal  ScalingReplicaSet  3s    deployment-controller  Scaled down replica set demo-deploy-5fd8d985d5 from 3 to 2
+  Normal  ScalingReplicaSet  3s    deployment-controller  Scaled up replica set demo-deploy-8b45dbc9 from 1 to 2
+  Normal  ScalingReplicaSet  3s    deployment-controller  Scaled down replica set demo-deploy-5fd8d985d5 from 2 to 1
+  Normal  ScalingReplicaSet  3s    deployment-controller  Scaled up replica set demo-deploy-8b45dbc9 from 2 to 3
+  Normal  ScalingReplicaSet  2s    deployment-controller  Scaled down replica set demo-deploy-5fd8d985d5 from 1 to 0

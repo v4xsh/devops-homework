@@ -1,0 +1,34 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ bandit --version | head -n 1
+bandit 1.9.4
+~/devops-homework/session-21-final-devops-project/final-devops-project$ bandit -c security/bandit.yaml -r application/backend/app -f json -o security/reports/bandit.json -q; jq -r '.metrics._totals | "files=\(.loc) LOC, high=\(."SEVERITY.HIGH") medium=\(."SEVERITY.MEDIUM") low=\(."SEVERITY.LOW")"' security/reports/bandit.json
+files=195 LOC, high=0 medium=0 low=0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ bandit -c security/bandit.yaml -r application/backend/app -ll -ii; echo "bandit exit code (gate: medium+/medium+): $?"
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	using config: security/bandit.yaml
+[main]	INFO	running on Python 3.12.3
+Run started:2026-10-07 18:30:21.760807+00:00
+
+Test results:
+	No issues identified.
+
+Code scanned:
+	Total lines of code: 195
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+Files skipped (0):
+bandit exit code (gate: medium+/medium+): 0

@@ -1,0 +1,31 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube version
+minikube version: v1.39.0
+commit: 7a9f6a841470a207de8cf4bafcccee0969d8ba10
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube profile list
+┌──────────┬────────┬────────────┬──────────────┬─────────┬────────┬───────┬────────────────┬────────────────────┐
+│ PROFILE  │ DRIVER │  RUNTIME   │      IP      │ VERSION │ STATUS │ NODES │ ACTIVE PROFILE │ ACTIVE KUBECONTEXT │
+├──────────┼────────┼────────────┼──────────────┼─────────┼────────┼───────┼────────────────┼────────────────────┤
+│ [32mminikube[0m │ [32mdocker[0m │ [32mcontainerd[0m │ [32m192.168.49.2[0m │ [32mv1.37.0[0m │ [32mOK[0m     │ [32m1[0m     │ [32m*[0m              │ [32m*[0m                  │
+└──────────┴────────┴────────────┴──────────────┴─────────┴────────┴───────┴────────────────┴────────────────────┘
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl version
+Client Version: v1.37.1
+Kustomize Version: v5.8.1
+Server Version: v1.37.0
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl config current-context
+minikube
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:32771
+CoreDNS is running at https://127.0.0.1:32771/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get nodes -o wide
+NAME       STATUS   ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION                             CONTAINER-RUNTIME
+minikube   Ready    control-plane   14m   v1.37.0   192.168.49.2   <none>        Debian GNU/Linux 12 (bookworm)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4

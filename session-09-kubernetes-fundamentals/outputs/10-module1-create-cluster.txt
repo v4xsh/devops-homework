@@ -1,0 +1,21 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:32771
+CoreDNS is running at https://127.0.0.1:32771/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   26m   v1.37.0
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl create namespace s09
+namespace/s09 created
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get ns s09
+NAME   STATUS   AGE
+s09    Active   3s

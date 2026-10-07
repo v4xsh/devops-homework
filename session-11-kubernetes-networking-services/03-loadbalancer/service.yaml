@@ -1,0 +1,19 @@
+# LoadBalancer: NodePort + ClusterIP + an external load balancer provisioned by the
+# cloud controller. On minikube there is no cloud, so `minikube tunnel` plays that role
+# and assigns the EXTERNAL-IP.
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service-loadbalancer
+  namespace: s11
+  labels:
+    app: web-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: web-loadbalancer
+  ports:
+    - name: http
+      port: 8081             # external port on the LB IP
+      targetPort: 80
+      protocol: TCP

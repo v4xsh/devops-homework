@@ -1,0 +1,15 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm repo add bitnami https://charts.bitnami.com/bitnami
+"bitnami" has been added to your repositories
+~/devops-homework/session-15-helm/01-helm-commands$ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+"prometheus-community" already exists with the same configuration, skipping
+~/devops-homework/session-15-helm/01-helm-commands$ helm repo list
+NAME                	URL                                               
+prometheus-community	https://prometheus-community.github.io/helm-charts
+argo                	https://argoproj.github.io/argo-helm              
+bitnami             	https://charts.bitnami.com/bitnami                
+~/devops-homework/session-15-helm/01-helm-commands$ helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "argo" chart repository
+...Successfully got an update from the "bitnami" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+Update Complete. ⎈Happy Helming!⎈

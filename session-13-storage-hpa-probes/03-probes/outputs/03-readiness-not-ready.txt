@@ -1,0 +1,20 @@
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl apply -f 03-readiness.yaml
+pod/readiness-demo created
+service/readiness-demo created
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 20
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod readiness-demo -n s13
+NAME             READY   STATUS    RESTARTS   AGE
+readiness-demo   0/1     Running   0          21s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get endpoints readiness-demo -n s13
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME             ENDPOINTS   AGE
+readiness-demo               21s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl describe pod readiness-demo -n s13 | grep -E 'Readiness|Ready:|ContainersReady'
+    Ready:          False
+    Readiness:      http-get http://:80/ready.html delay=5s timeout=1s period=5s successThreshold=1 failureThreshold=1
+  ContainersReady             False 
+  Warning  Unhealthy  3s (x3 over 13s)  kubelet            spec.containers{nginx}: Readiness probe failed: HTTP probe failed with statuscode: 404
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl events -n s13 --for pod/readiness-demo | tail -n 3
+20s                Normal    Created     Pod/readiness-demo   Container created
+19s                Normal    Started     Pod/readiness-demo   Container started
+3s (x3 over 13s)   Warning   Unhealthy   Pod/readiness-demo   Readiness probe failed: HTTP probe failed with statuscode: 404

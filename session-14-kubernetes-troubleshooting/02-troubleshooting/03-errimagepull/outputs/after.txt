@@ -1,0 +1,21 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl delete pod errimagepull-app -n s14 --wait=true
+pod "errimagepull-app" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl apply -f fixed.yaml
+pod/errimagepull-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl wait --for=condition=Ready pod/errimagepull-app -n s14 --timeout=90s
+pod/errimagepull-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl get pod errimagepull-app -n s14
+NAME               READY   STATUS    RESTARTS   AGE
+errimagepull-app   1/1     Running   0          1s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/03-errimagepull$ kubectl events -n s14 --for pod/errimagepull-app
+LAST SEEN           TYPE      REASON      OBJECT                 MESSAGE
+40s                 Normal    Scheduled   Pod/errimagepull-app   Successfully assigned s14/errimagepull-app to minikube
+26s (x2 over 37s)   Normal    Pulling     Pod/errimagepull-app   Pulling image "dockerr.io/library/nginx:1.27"
+26s (x2 over 37s)   Warning   Failed      Pod/errimagepull-app   Failed to pull image "dockerr.io/library/nginx:1.27": failed to pull and unpack image "dockerr.io/library/nginx:1.27": failed to resolve reference "dockerr.io/library/nginx:1.27": failed to do request: Head "https://dockerr.io/v2/library/nginx/manifests/1.27": dial tcp: lookup dockerr.io on 192.168.49.1:53: no such host
+26s (x2 over 37s)   Warning   Failed      Pod/errimagepull-app   Error: ErrImagePull
+13s (x2 over 37s)   Normal    BackOff     Pod/errimagepull-app   Back-off pulling image "dockerr.io/library/nginx:1.27"
+13s (x2 over 37s)   Warning   Failed      Pod/errimagepull-app   Error: ImagePullBackOff
+1s                  Normal    Scheduled   Pod/errimagepull-app   Successfully assigned s14/errimagepull-app to minikube
+0s                  Normal    Pulled      Pod/errimagepull-app   Container image "docker.io/library/nginx:1.27" already present on machine and can be accessed by the pod
+0s                  Normal    Created     Pod/errimagepull-app   Container created
+0s                  Normal    Started     Pod/errimagepull-app   Container started

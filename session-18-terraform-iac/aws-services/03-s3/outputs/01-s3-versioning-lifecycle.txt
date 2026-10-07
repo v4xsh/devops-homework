@@ -1,0 +1,72 @@
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3 mb s3://vansh-dobhal-10099-s3-notes
+make_bucket: vansh-dobhal-10099-s3-notes
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3api put-bucket-versioning --bucket vansh-dobhal-10099-s3-notes --versioning-configuration Status=Enabled
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3api get-bucket-versioning --bucket vansh-dobhal-10099-s3-notes
+{
+    "Status": "Enabled"
+}
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ echo "v1" | awsl s3 cp - s3://vansh-dobhal-10099-s3-notes/logs/app.log
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ echo "v2" | awsl s3 cp - s3://vansh-dobhal-10099-s3-notes/logs/app.log
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3 rm s3://vansh-dobhal-10099-s3-notes/logs/app.log
+delete: s3://vansh-dobhal-10099-s3-notes/logs/app.log
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3 ls s3://vansh-dobhal-10099-s3-notes/logs/ || echo "(no current object - hidden by a delete marker)"
+(no current object - hidden by a delete marker)
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3api list-object-versions --bucket vansh-dobhal-10099-s3-notes --query '{Versions:Versions[].[Key,VersionId,IsLatest,Size],DeleteMarkers:DeleteMarkers[].[Key,VersionId,IsLatest]}' --output json
+{
+    "Versions": [
+        [
+            "logs/app.log",
+            "AaEXWUUpih3rn.5xkDsPP63cteGGXNud",
+            false,
+            3
+        ],
+        [
+            "logs/app.log",
+            "AaEXWUUosJvomOdrzGozFvrx_2Eqd3Ns",
+            false,
+            3
+        ]
+    ],
+    "DeleteMarkers": [
+        [
+            "logs/app.log",
+            "AaEXWUUqlYHwgJuILMGhVUs6OiPuOb7s",
+            true
+        ]
+    ]
+}
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3api put-bucket-lifecycle-configuration --bucket vansh-dobhal-10099-s3-notes --lifecycle-configuration file://config/lifecycle.json && echo "lifecycle rule saved"
+{
+    "TransitionDefaultMinimumObjectSize": "all_storage_classes_128K"
+}
+lifecycle rule saved
+~/devops-homework/session-18-terraform-iac/aws-services/03-s3$ awsl s3api get-bucket-lifecycle-configuration --bucket vansh-dobhal-10099-s3-notes
+{
+    "TransitionDefaultMinimumObjectSize": "all_storage_classes_128K",
+    "Rules": [
+        {
+            "Expiration": {
+                "Days": 365
+            },
+            "ID": "logs-tiering-and-expiry",
+            "Filter": {
+                "Prefix": "logs/"
+            },
+            "Status": "Enabled",
+            "Transitions": [
+                {
+                    "Days": 30,
+                    "StorageClass": "STANDARD_IA"
+                },
+                {
+                    "Days": 90,
+                    "StorageClass": "GLACIER"
+                }
+            ],
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 30
+            }
+        }
+    ]
+}

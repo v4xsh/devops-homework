@@ -1,0 +1,50 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ bash scripts/watch-pods.sh s10-rolling outputs/01-rolling-watch.log & sleep 1
+~/devops-homework/session-10-pods-replicasets-deployments$ bash scripts/curl-loop.sh s10-rolling http://app-rolling-service 70 0.5 'VERSION: v[12]' > outputs/01-rolling-curl-during-update.log 2>&1 & sleep 1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-rolling -f task1-deployment-strategies/01-rolling-update/deployment-v2.yaml
+deployment.apps/app-rolling configured
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 5; echo "--- mid-rollout ---"; kubectl get pods -n s10-rolling -l app=app-rolling -L version
+--- mid-rollout ---
+NAME                           READY   STATUS    RESTARTS   AGE   VERSION
+app-rolling-56bff6d88c-gw5sj   0/1     Running   0          5s    v2
+app-rolling-86d7d44d5b-5kqb8   1/1     Running   0          20s   v1
+app-rolling-86d7d44d5b-5z2xd   1/1     Running   0          20s   v1
+app-rolling-86d7d44d5b-cndgm   1/1     Running   0          20s   v1
+app-rolling-86d7d44d5b-l2r25   1/1     Running   0          20s   v1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get rs -n s10-rolling -L version
+NAME                     DESIRED   CURRENT   READY   AGE   VERSION
+app-rolling-56bff6d88c   1         1         0       6s    v2
+app-rolling-86d7d44d5b   4         4         4       20s   v1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout status deployment/app-rolling -n s10-rolling --timeout=180s
+Waiting for deployment "app-rolling" rollout to finish: 1 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 2 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 3 out of 4 new replicas have been updated...
+Waiting for deployment "app-rolling" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "app-rolling" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "app-rolling" rollout to finish: 1 old replicas are pending termination...
+deployment "app-rolling" successfully rolled out
+~/devops-homework/session-10-pods-replicasets-deployments$ echo "--- after rollout ---"; kubectl get pods -n s10-rolling -l app=app-rolling -L version
+--- after rollout ---
+NAME                           READY   STATUS        RESTARTS   AGE   VERSION
+app-rolling-56bff6d88c-5gb2v   1/1     Running       0          9s    v2
+app-rolling-56bff6d88c-gw5sj   1/1     Running       0          34s   v2
+app-rolling-56bff6d88c-k2m29   1/1     Running       0          25s   v2
+app-rolling-56bff6d88c-pchfs   1/1     Running       0          16s   v2
+app-rolling-86d7d44d5b-5kqb8   1/1     Terminating   0          49s   v1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get rs -n s10-rolling
+NAME                     DESIRED   CURRENT   READY   AGE
+app-rolling-56bff6d88c   4         4         4       35s
+app-rolling-86d7d44d5b   0         0         0       49s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout history deployment/app-rolling -n s10-rolling
+deployment.apps/app-rolling 
+REVISION  CHANGE-CAUSE
+1         v1 - nginx:1.24-alpine
+2         v2 - nginx:1.25-alpine
+

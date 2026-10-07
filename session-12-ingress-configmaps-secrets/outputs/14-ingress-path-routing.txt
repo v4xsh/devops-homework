@@ -1,0 +1,14 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ IP=$(minikube ip); echo "minikube ip = $IP"
+minikube ip = 192.168.49.2
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -H "Host: app.local" http://$IP/app1
+Hello from APP1 (pod app1-78d86657b5-ftbdt)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -H "Host: app.local" http://$IP/app2
+Hello from APP2 (pod app2-77d95b6975-6f27f)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -H "Host: app.local" http://$IP/app1/anything/below
+Hello from APP1 (pod app1-78d86657b5-ftbdt)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -H "Host: app.local" http://$IP/app2
+Hello from APP2 (pod app2-77d95b6975-6f27f)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ echo "--- an unknown path on app.local has no rule -> controller's default backend (404)"
+--- an unknown path on app.local has no rule -> controller's default backend (404)
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ curl -s -o /dev/null -w "GET app.local/other -> HTTP %{http_code}\n" -H "Host: app.local" http://$IP/other
+GET app.local/other -> HTTP 404

@@ -1,0 +1,23 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl apply -f app1.yaml -f app2.yaml
+deployment.apps/app1 created
+service/app1-service created
+deployment.apps/app2 created
+service/app2-service created
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl rollout status deployment/app1 -n s12 --timeout=120s
+Waiting for deployment "app1" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "app1" rollout to finish: 1 of 2 updated replicas are available...
+deployment "app1" successfully rolled out
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl rollout status deployment/app2 -n s12 --timeout=120s
+deployment "app2" successfully rolled out
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl get deploy,svc -n s12 -l 'app in (app1,app2)'
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/app1   2/2     2            2           3s
+deployment.apps/app2   2/2     2            2           3s
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl get svc app1-service app2-service -n s12
+NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+app1-service   ClusterIP   10.96.38.7      <none>        80/TCP    4s
+app2-service   ClusterIP   10.98.204.128   <none>        80/TCP    4s
+~/devops-homework/session-12-ingress-configmaps-secrets/03-ingress$ kubectl get endpointslices -n s12
+NAME                 ADDRESSTYPE   PORTS   ENDPOINTS                 AGE
+app1-service-ngrs5   IPv4          5678    10.244.0.60,10.244.0.61   4s
+app2-service-78nn4   IPv4          5678    10.244.0.62,10.244.0.63   4s

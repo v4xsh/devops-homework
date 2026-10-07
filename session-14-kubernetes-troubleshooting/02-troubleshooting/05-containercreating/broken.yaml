@@ -1,0 +1,17 @@
+# BUG: mounts ConfigMap "web-content" which was never created -> stuck in ContainerCreating
+apiVersion: v1
+kind: Pod
+metadata:
+  name: containercreating-app
+  namespace: s14
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27
+      volumeMounts:
+        - name: content
+          mountPath: /usr/share/nginx/html
+  volumes:
+    - name: content
+      configMap:
+        name: web-content

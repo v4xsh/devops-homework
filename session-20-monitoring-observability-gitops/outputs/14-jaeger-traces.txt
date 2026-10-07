@@ -1,0 +1,15 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get deploy s20-metrics-app -n s20-app -o jsonpath='{range .spec.template.spec.containers[0].env[*]}{.name}={.value}{"\n"}{end}'
+APP_VERSION=1.1.0
+OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger.s20-app.svc:4318
+OTEL_SERVICE_NAME=s20-metrics-app
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:16686/api/services | jq -c .
+{"data":["s20-metrics-app","jaeger"],"total":2,"limit":0,"offset":0,"errors":null}
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:16686/api/services/s20-metrics-app/operations | jq -c .data
+["GET /","GET /work","GET /error","downstream-call","compute"]
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s 'localhost:16686/api/traces?service=s20-metrics-app&operation=GET%20%2Fwork&limit=1&lookback=5m' | jq -r '.data[0] | "traceID=\(.traceID)  spans=\(.spans|length)", (.spans[] | "  span=\(.operationName)  duration=\(.duration)us  parent=\(.references[0].spanID // "root")")'
+traceID=3ff2740bc42c5415bf7c6ddbd386e964  spans=3
+  span=compute  duration=900us  parent=2e35a16c62f2fe91
+  span=downstream-call  duration=48652us  parent=2e35a16c62f2fe91
+  span=GET /work  duration=50625us  parent=root
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s 'localhost:16686/api/traces?service=s20-metrics-app&operation=GET%20%2Ferror&limit=1&lookback=5m' | jq -r '.data[0].spans[0] | "\(.operationName): " + ([.tags[] | select(.key=="http.response.status_code" or .key=="http.status_code" or .key=="error" or .key=="otel.status_code") | "\(.key)=\(.value)"] | join(" "))'
+GET /error: error=true http.status_code=500 otel.status_code=ERROR

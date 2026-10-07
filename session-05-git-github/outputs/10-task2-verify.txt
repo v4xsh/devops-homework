@@ -1,0 +1,34 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ git show HEAD
+commit bae6c9272d666f97cd4e85bb898481070db22261
+Author: Vansh Dobhal <vanshdobhal11@gmail.com>
+Date:   Wed Oct 7 17:22:47 2026 +0000
+
+    feature: critical input-validation fix
+
+diff --git a/hotfix.txt b/hotfix.txt
+new file mode 100644
+index 0000000..40ab4c9
+--- /dev/null
++++ b/hotfix.txt
+@@ -0,0 +1 @@
++BUGFIX: validate user input before login
+~/practice/git-homework$ git log --oneline --graph --all
+* bae6c92 feature: critical input-validation fix
+| * 5c4f6e3 feature: add refund to payment.py
+| * d39a6c4 feature: critical input-validation fix
+| * baa1614 feature: add payment.py
+|/  
+* 8aa17b7 main: add VERSION file
+* e175067 main: add logout to auth.py
+* 47b6805 main: add auth.py login stub
+* 670d217 commit -am also stages deletions of tracked files
+* df8bc52 Add new_file.txt with explicit git add + commit -m
+* 183a17b commit -a: auto-stage modified tracked files
+* 7cfaa34 Initial commit: README and app.txt
+~/practice/git-homework$ for c in $(git log --format=%h --grep "critical" --all); do echo "commit $c  patch-id $(git show $c | git patch-id --stable | cut -c1-12)"; done
+commit bae6c92  patch-id c355119154c4
+commit d39a6c4  patch-id c355119154c4
+~/practice/git-homework$ git branch -v
+  feature 5c4f6e3 feature: add refund to payment.py
+* main    bae6c92 feature: critical input-validation fix

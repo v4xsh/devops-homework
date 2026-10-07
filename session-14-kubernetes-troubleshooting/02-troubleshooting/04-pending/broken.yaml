@@ -1,0 +1,14 @@
+# BUG: requests 500 CPU cores / 1000Gi memory - no node can ever satisfy it
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-app
+  namespace: s14
+spec:
+  containers:
+    - name: hungry-app
+      image: nginx:alpine
+      resources:
+        requests:
+          cpu: "500"
+          memory: 1000Gi

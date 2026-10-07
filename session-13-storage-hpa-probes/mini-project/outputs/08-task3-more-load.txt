@@ -1,0 +1,27 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl apply -f load-generator.yaml
+deployment.apps/extra-load created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl rollout status deployment/extra-load -n s13-mini --timeout=90s
+Waiting for deployment "extra-load" rollout to finish: 0 out of 4 new replicas have been updated...
+Waiting for deployment "extra-load" rollout to finish: 0 of 4 updated replicas are available...
+Waiting for deployment "extra-load" rollout to finish: 1 of 4 updated replicas are available...
+Waiting for deployment "extra-load" rollout to finish: 2 of 4 updated replicas are available...
+Waiting for deployment "extra-load" rollout to finish: 3 of 4 updated replicas are available...
+deployment "extra-load" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ sleep 45
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get hpa -n s13-mini
+NAME          REFERENCE            TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+web-app-hpa   Deployment/web-app   cpu: 71%/50%   2         5         2          3m9s
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl top pods -n s13-mini
+NAME                          CPU(cores)   MEMORY(bytes)   
+extra-load-674bc894dd-829st   577m         2Mi             
+extra-load-674bc894dd-9btcj   583m         2Mi             
+extra-load-674bc894dd-b9jd2   566m         2Mi             
+extra-load-674bc894dd-h2gx8   567m         2Mi             
+load-generator                676m         5Mi             
+web-app-d45775485-7hp2b       69m          16Mi            
+web-app-d45775485-hdxv5       73m          13Mi            
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pods -n s13-mini -l app=web-app
+NAME                      READY   STATUS    RESTARTS   AGE
+web-app-d45775485-7hp2b   1/1     Running   0          2m6s
+web-app-d45775485-hdxv5   1/1     Running   0          3m25s
+web-app-d45775485-hvptr   0/1     Running   0          9s

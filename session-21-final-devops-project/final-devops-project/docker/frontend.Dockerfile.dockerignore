@@ -1,0 +1,7 @@
+**
+!application/frontend/package.json
+!application/frontend/package-lock.json
+!application/frontend/index.html
+!application/frontend/vite.config.js
+!application/frontend/src/**
+!docker/nginx/default.conf.template

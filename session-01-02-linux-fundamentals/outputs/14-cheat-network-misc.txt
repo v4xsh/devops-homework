@@ -1,0 +1,48 @@
+~/devops-homework/tools$ hostname; hostname -I
+Vansh-G15
+172.17.9.114 172.18.0.1 192.168.49.1 
+~/devops-homework/tools$ uname -a
+Linux Vansh-G15 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+~/devops-homework/tools$ cat /etc/os-release | head -n 4
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.5 LTS (Noble Numbat)"
+~/devops-homework/tools$ ip -br a
+lo               UNKNOWN        127.0.0.1/8 10.255.255.254/32 ::1/128 
+eth0             UP             172.17.9.114/20 fe80::215:5dff:fe47:5d17/64 
+docker0          DOWN           172.18.0.1/16 fe80::4451:c8ff:fe76:8136/64 
+br-c8ff5e58a655  UP             192.168.49.1/24 fe80::9452:8bff:fe7d:3ae5/64 
+veth4e9c59b@if2  UP             fe80::dc48:46ff:fe97:2e70/64 
+~/devops-homework/tools$ ping -c 2 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=23.5 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=19.6 ms
+
+--- 8.8.8.8 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 19.624/21.575/23.526/1.951 ms
+~/devops-homework/tools$ curl -sI https://github.com | head -n 3
+HTTP/2 200 
+date: Wed, 07 Oct 2026 17:04:36 GMT
+content-type: text/html; charset=utf-8
+~/devops-homework/tools$ ss -tln | head -n 6
+State  Recv-Q Send-Q  Local Address:Port  Peer Address:PortProcess
+LISTEN 0      1000   10.255.255.254:53         0.0.0.0:*          
+LISTEN 0      4096        127.0.0.1:32769      0.0.0.0:*          
+LISTEN 0      4096        127.0.0.1:32768      0.0.0.0:*          
+LISTEN 0      4096        127.0.0.1:32771      0.0.0.0:*          
+LISTEN 0      4096        127.0.0.1:32770      0.0.0.0:*          
+~/devops-homework/tools$ history_demo="echo works"; $history_demo
+works
+~/devops-homework/tools$ which ls grep tar; type cd
+/usr/bin/ls
+/usr/bin/grep
+/usr/bin/tar
+cd is a shell builtin
+~/devops-homework/tools$ man -f ls tar grep
+ls (1)               - list directory contents
+tar (1)              - an archiving utility
+grep (1)             - print lines that match patterns
+~/devops-homework/tools$ rm -rf ~/practice/restore ~/practice/cheatsheet.tar.gz ~/practice/cheatsheet && echo "practice files cleaned"
+practice files cleaned

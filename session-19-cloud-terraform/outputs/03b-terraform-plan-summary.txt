@@ -1,0 +1,16 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform plan -no-color -out=tfplan > /dev/null && terraform show -no-color tfplan | grep -E '^  # |^Plan:'
+  # aws_instance.web will be created
+  # aws_internet_gateway.main will be created
+  # aws_route_table.public will be created
+  # aws_route_table_association.public will be created
+  # aws_s3_bucket.artifacts will be created
+  # aws_s3_bucket_public_access_block.artifacts will be created
+  # aws_s3_bucket_server_side_encryption_configuration.artifacts will be created
+  # aws_s3_bucket_versioning.artifacts will be created
+  # aws_s3_object.user_data_artifact will be created
+  # aws_security_group.web will be created
+  # aws_subnet.public will be created
+  # aws_vpc.main will be created
+Plan: 12 to add, 0 to change, 0 to destroy.
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform show -json tfplan | jq -r '.configuration.root_module.resources[] | select(.address=="aws_instance.web") | "aws_instance.web depends_on = \(.depends_on)"'
+aws_instance.web depends_on = ["aws_route_table_association.public"]

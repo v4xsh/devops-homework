@@ -1,0 +1,16 @@
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 05-static-pod.yaml
+pod/static-pv-pod created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl wait --for=condition=Ready pod/static-pv-pod -n s13 --timeout=120s
+pod/static-pv-pod condition met
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec static-pv-pod -n s13 -- sh -c 'echo "Vansh Dobhal 10099 - static PV data" > /data/student.txt; cat /data/student.txt'
+Vansh Dobhal 10099 - static PV data
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl delete pod static-pv-pod -n s13
+pod "static-pv-pod" deleted from s13 namespace
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl apply -f 05-static-pod.yaml
+pod/static-pv-pod created
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl wait --for=condition=Ready pod/static-pv-pod -n s13 --timeout=120s
+pod/static-pv-pod condition met
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ kubectl exec static-pv-pod -n s13 -- cat /data/student.txt
+Vansh Dobhal 10099 - static PV data
+~/devops-homework/session-13-storage-hpa-probes/01-kubernetes-volumes$ docker exec minikube cat /tmp/s13-static-pv/student.txt
+Vansh Dobhal 10099 - static PV data

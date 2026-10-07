@@ -1,0 +1,15 @@
+~$ git --version
+git version 2.43.0
+~$ mkdir -p ~/practice/git-homework && cd ~/practice/git-homework
+~/practice/git-homework$ git init -b main
+Initialized empty Git repository in /home/vansh/practice/git-homework/.git/
+~/practice/git-homework$ git config user.name "Vansh Dobhal"
+~/practice/git-homework$ git config user.email "vanshdobhal11@gmail.com"
+~/practice/git-homework$ git config --local --list | grep user
+user.name=Vansh Dobhal
+user.email=vanshdobhal11@gmail.com
+~/practice/git-homework$ echo "# Git Homework - Vansh Dobhal (10099)" > README.md
+~/practice/git-homework$ echo "line 1" > app.txt
+~/practice/git-homework$ git add README.md app.txt && git commit -q -m "Initial commit: README and app.txt"
+~/practice/git-homework$ git log --oneline
+7cfaa34 Initial commit: README and app.txt

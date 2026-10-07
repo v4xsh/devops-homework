@@ -1,0 +1,12 @@
+apiVersion: v2
+name: notes-chart
+description: A simple Notes application Helm chart (nginx serving a notes page rendered from values)
+type: application
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+  - notes
+  - nginx
+  - session-15
+maintainers:
+  - name: Vansh Dobhal

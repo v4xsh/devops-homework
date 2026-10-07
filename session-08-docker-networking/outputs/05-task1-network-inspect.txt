@@ -1,0 +1,37 @@
+~/devops-homework/session-08-docker-networking$ docker network inspect s08-frontend-net --format '{{.Name}}  driver={{.Driver}}  subnet={{range .IPAM.Config}}{{.Subnet}}{{end}}  gateway={{range .IPAM.Config}}{{.Gateway}}{{end}}'
+s08-frontend-net  driver=bridge  subnet=172.19.0.0/16  gateway=172.19.0.1
+~/devops-homework/session-08-docker-networking$ docker network inspect s08-frontend-net | jq '.[0].Containers | map({Name, IPv4Address})'
+[
+  {
+    "Name": "s08-frontend",
+    "IPv4Address": "172.19.0.2/16"
+  },
+  {
+    "Name": "s08-backend",
+    "IPv4Address": "172.19.0.3/16"
+  }
+]
+~/devops-homework/session-08-docker-networking$ docker network inspect s08-db-net --format '{{.Name}}  driver={{.Driver}}  subnet={{range .IPAM.Config}}{{.Subnet}}{{end}}'
+s08-db-net  driver=bridge  subnet=172.21.0.0/16
+~/devops-homework/session-08-docker-networking$ docker network inspect s08-db-net | jq '.[0].Containers | map({Name, IPv4Address})'
+[
+  {
+    "Name": "s08-backend",
+    "IPv4Address": "172.21.0.2/16"
+  },
+  {
+    "Name": "s08-database",
+    "IPv4Address": "172.21.0.3/16"
+  }
+]
+~/devops-homework/session-08-docker-networking$ docker network inspect s08-backend-net | jq '.[0] | {Name, Driver, Containers}'
+{
+  "Name": "s08-backend-net",
+  "Driver": "bridge",
+  "Containers": {}
+}
+~/devops-homework/session-08-docker-networking$ docker inspect s08-backend | jq '.[0].NetworkSettings.Networks | keys'
+[
+  "s08-db-net",
+  "s08-frontend-net"
+]

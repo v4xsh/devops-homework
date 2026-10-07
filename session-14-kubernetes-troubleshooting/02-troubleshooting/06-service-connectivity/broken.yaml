@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-web
+  namespace: s14
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shop-web
+  template:
+    metadata:
+      labels:
+        app: shop-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-web
+  namespace: s14
+spec:
+  selector:
+    app: shopweb        # BUG 1: label typo, pods are labelled app=shop-web
+  ports:
+    - port: 80
+      targetPort: 8080  # BUG 2: nginx listens on 80, not 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: svc-client
+  namespace: s14
+spec:
+  containers:
+    - name: client
+      image: curlimages/curl:8.6.0
+      command: ["sleep", "3600"]

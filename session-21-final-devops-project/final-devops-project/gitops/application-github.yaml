@@ -1,0 +1,30 @@
+# Apply AFTER pushing the submission repo to GitHub:
+#   kubectl create namespace final-gitops
+#   kubectl -n final-gitops create secret generic taskboard-db-gitops --from-literal=db-password="$(openssl rand -hex 16)"
+#   kubectl apply -f session-21-final-devops-project/final-devops-project/gitops/application-github.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: taskboard
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/v4xsh/devops-homework.git
+    targetRevision: main
+    path: session-21-final-devops-project/final-devops-project/helm/taskboard
+    helm:
+      releaseName: taskboard
+      valueFiles:
+        - values-gitops.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: final-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

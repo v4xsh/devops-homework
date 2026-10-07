@@ -1,0 +1,6 @@
+# Bandit (SAST for Python) configuration - used as: bandit -r app --ini .bandit
+[bandit]
+# test code uses assert on purpose; sast-demo is the deliberately insecure training file
+exclude = ./tests,./sast-demo
+# B101 (assert) is only relevant for tests, which are excluded anyway; nothing else is skipped
+skips = B101

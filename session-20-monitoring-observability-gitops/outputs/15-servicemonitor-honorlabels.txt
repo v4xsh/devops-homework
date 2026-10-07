@@ -1,0 +1,12 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'count by (endpoint, exported_endpoint) (app_requests_total{namespace="s20-app"})'
+{endpoint="http", exported_endpoint="/readyz"}  =>  2
+{endpoint="http", exported_endpoint="/work"}  =>  2
+{endpoint="http", exported_endpoint="/error"}  =>  2
+{endpoint="http", exported_endpoint="/"}  =>  2
+{endpoint="http", exported_endpoint="/healthz"}  =>  2
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task1-monitoring/k8s/servicemonitor.yaml
+servicemonitor.monitoring.coreos.com/s20-metrics-app configured
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 45
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum by (endpoint, status) (rate(app_requests_total{namespace="s20-app"}[1m]))'
+{endpoint="http", status="200"}  =>  5.770322222222222
+{endpoint="http", status="500"}  =>  0.46809444444444437

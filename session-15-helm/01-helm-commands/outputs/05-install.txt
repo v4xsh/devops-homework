@@ -1,0 +1,32 @@
+~/devops-homework/session-15-helm/01-helm-commands$ cd ~/devops-homework/session-15-helm/01-helm-commands
+~/devops-homework/session-15-helm/01-helm-commands$ helm install web1 webapp -n s15 --create-namespace
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:12:56 2026
+NAMESPACE: s15
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace s15 -l "app.kubernetes.io/name=webapp,app.kubernetes.io/instance=web1" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace s15 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace s15 port-forward $POD_NAME 8080:$CONTAINER_PORT
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl rollout status deployment/web1-webapp -n s15 --timeout=120s
+Waiting for deployment "web1-webapp" rollout to finish: 0 of 1 updated replicas are available...
+deployment "web1-webapp" successfully rolled out
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get all -n s15
+NAME                               READY   STATUS      RESTARTS   AGE
+pod/web1-webapp-69db6f5dc6-sdspx   1/1     Running     0          2s
+pod/web1-webapp-test-connection    0/1     Completed   0          2m36s
+
+NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/web1-webapp   ClusterIP   10.104.182.13   <none>        80/TCP    2s
+
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/web1-webapp   1/1     1            1           2s
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/web1-webapp-69db6f5dc6   1         1         1       2s
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get secrets -n s15 -l owner=helm
+NAME                         TYPE                 DATA   AGE
+sh.helm.release.v1.web1.v1   helm.sh/release.v1   1      3s

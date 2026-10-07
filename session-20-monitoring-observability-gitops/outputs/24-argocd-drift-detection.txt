@@ -1,0 +1,35 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl patch application s20-gitops-instructor -n argocd --type merge -p '{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":false}}}}'
+application.argoproj.io/s20-gitops-instructor patched
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl set image deploy/session20-gitops-app -n s20-app app=nginx:1.26-alpine
+deployment.apps/session20-gitops-app image updated
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl scale deploy/session20-gitops-app -n s20-app --replicas=2
+deployment.apps/session20-gitops-app scaled
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 20
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get application s20-gitops-instructor -n argocd -o jsonpath='sync={.status.sync.status} health={.status.health.status}{"\n"}'
+sync=OutOfSync health=Healthy
+~/devops-homework/session-20-monitoring-observability-gitops$ argocd app diff s20-gitops-instructor --grpc-web
+
+===== apps/Deployment s20-app/session20-gitops-app ======
+123c123
+<   replicas: 2
+---
+>   replicas: 5
+139c139
+<       - image: nginx:1.26-alpine
+---
+>       - image: nginx:1.27-alpine
+~/devops-homework/session-20-monitoring-observability-gitops$ argocd app sync s20-gitops-instructor --grpc-web --timeout 120 | tail -n 6
+Duration:           0s
+Message:            successfully synced (all tasks run)
+
+GROUP  KIND        NAMESPACE  NAME                  STATUS  HEALTH       HOOK  MESSAGE
+       Service     s20-app    session20-gitops-app  Synced  Healthy            service/session20-gitops-app unchanged
+apps   Deployment  s20-app    session20-gitops-app  Synced  Progressing        deployment.apps/session20-gitops-app configured
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl patch application s20-gitops-instructor -n argocd --type merge -p '{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'
+application.argoproj.io/s20-gitops-instructor patched
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl rollout status deploy/session20-gitops-app -n s20-app --timeout=120s
+deployment "session20-gitops-app" successfully rolled out
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get application s20-gitops-instructor -n argocd -o jsonpath='sync={.status.sync.status} health={.status.health.status}{"\n"}'
+sync=Synced health=Healthy
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get deploy session20-gitops-app -n s20-app -o jsonpath='replicas={.spec.replicas} image={.spec.template.spec.containers[0].image}{"\n"}'
+replicas=5 image=nginx:1.27-alpine

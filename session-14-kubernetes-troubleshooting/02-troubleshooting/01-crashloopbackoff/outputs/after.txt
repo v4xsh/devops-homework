@@ -1,0 +1,17 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl delete pod crashloop-app -n s14 --wait=true
+pod "crashloop-app" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl apply -f fixed.yaml
+configmap/crashloop-app-config created
+pod/crashloop-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl wait --for=condition=Ready pod/crashloop-app -n s14 --timeout=90s
+pod/crashloop-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ sleep 12
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl get pod crashloop-app -n s14
+NAME            READY   STATUS    RESTARTS   AGE
+crashloop-app   1/1     Running   0          14s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl logs crashloop-app -n s14
+order-service v1.4 starting, reading configuration...
+Application started successfully, using postgres://app@postgres.s14.svc.cluster.local:5432/orders
+healthy
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/01-crashloopbackoff$ kubectl exec crashloop-app -n s14 -- printenv DATABASE_URL
+postgres://app@postgres.s14.svc.cluster.local:5432/orders

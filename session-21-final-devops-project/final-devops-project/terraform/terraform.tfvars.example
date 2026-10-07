@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars and adjust. Never put AWS keys here - use `aws configure sso` / env vars.
+project             = "taskboard"
+environment         = "dev"
+aws_region          = "ap-south-1"
+azs                 = ["ap-south-1a", "ap-south-1b"]
+cluster_version     = "1.33"
+node_instance_types = ["t3.medium"]
+node_desired_size   = 2
+# EKS API is private by default; to expose it, enable it and allow only your own public IP:
+cluster_endpoint_public_access = false
+cluster_public_access_cidrs    = []
+artifacts_bucket_name       = "vansh-10099-taskboard-artifacts"

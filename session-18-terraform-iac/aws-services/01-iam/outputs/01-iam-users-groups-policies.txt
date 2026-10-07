@@ -1,0 +1,29 @@
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam create-group --group-name s18-readers --query 'Group.Arn' --output text
+arn:aws:iam::000000000000:group/s18-readers
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam create-user --user-name vansh-dev --tags 'Key=Owner,Value=Vansh Dobhal' --query 'User.Arn' --output text
+arn:aws:iam::000000000000:user/vansh-dev
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam add-user-to-group --user-name vansh-dev --group-name s18-readers && echo "vansh-dev added to s18-readers"
+vansh-dev added to s18-readers
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam create-policy --policy-name S3ReadOnlyReportsBucket --policy-document file://policies/s3-read-only-one-bucket.json --query 'Policy.Arn' --output text
+arn:aws:iam::000000000000:policy/S3ReadOnlyReportsBucket
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam attach-group-policy --group-name s18-readers --policy-arn arn:aws:iam::000000000000:policy/S3ReadOnlyReportsBucket && echo "policy attached to group"
+policy attached to group
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam list-attached-group-policies --group-name s18-readers --output table
+------------------------------------------------------------------------------
+|                          ListAttachedGroupPolicies                         |
++----------------------------------------------------------------------------+
+||                             AttachedPolicies                             ||
+|+------------+-------------------------------------------------------------+|
+||  PolicyArn |  arn:aws:iam::000000000000:policy/S3ReadOnlyReportsBucket   ||
+||  PolicyName|  S3ReadOnlyReportsBucket                                    ||
+|+------------+-------------------------------------------------------------+|
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam get-group --group-name s18-readers --query 'Users[].UserName' --output text
+vansh-dev
+~/devops-homework/session-18-terraform-iac/aws-services/01-iam$ awsl iam get-policy-version --policy-arn arn:aws:iam::000000000000:policy/S3ReadOnlyReportsBucket --version-id v1 --query 'PolicyVersion.Document.Statement[].[Sid,Action,Resource]' --output table
+-------------------------------------------------------------------------------------------
+|                                    GetPolicyVersion                                     |
++--------------------------+----------------+---------------------------------------------+
+|  ListOnlyThisBucket      |  s3:ListBucket |  arn:aws:s3:::vansh-dobhal-10099-reports    |
+|  ReadObjectsInThisBucket |  s3:GetObject  |  arn:aws:s3:::vansh-dobhal-10099-reports/*  |
++--------------------------+----------------+---------------------------------------------+

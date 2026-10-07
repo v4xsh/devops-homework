@@ -1,0 +1,27 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+namespace/argocd created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml 2>&1 | tail -n 6
+networkpolicy.networking.k8s.io/argocd-applicationset-controller-network-policy serverside-applied
+networkpolicy.networking.k8s.io/argocd-dex-server-network-policy serverside-applied
+networkpolicy.networking.k8s.io/argocd-notifications-controller-network-policy serverside-applied
+networkpolicy.networking.k8s.io/argocd-redis-network-policy serverside-applied
+networkpolicy.networking.k8s.io/argocd-repo-server-network-policy serverside-applied
+networkpolicy.networking.k8s.io/argocd-server-network-policy serverside-applied
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl scale deploy -n argocd argocd-dex-server argocd-notifications-controller --replicas=0
+deployment.apps/argocd-dex-server scaled
+deployment.apps/argocd-notifications-controller scaled
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl wait -n argocd --for=condition=Available deploy/argocd-server deploy/argocd-repo-server deploy/argocd-redis --timeout=600s
+deployment.apps/argocd-server condition met
+deployment.apps/argocd-repo-server condition met
+deployment.apps/argocd-redis condition met
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl rollout status -n argocd statefulset/argocd-application-controller --timeout=300s
+partitioned roll out complete: 1 new pods have been updated...
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get pods -n argocd
+NAME                                                READY   STATUS    RESTARTS   AGE
+argocd-application-controller-0                     1/1     Running   0          83s
+argocd-applicationset-controller-76fd8cdd4f-lrcqs   1/1     Running   0          83s
+argocd-redis-bdbdffcb4-nb8h8                        1/1     Running   0          83s
+argocd-repo-server-d89c7967d-wx922                  1/1     Running   0          83s
+argocd-server-776b7cdd4d-g9jgd                      1/1     Running   0          83s
+~/devops-homework/session-20-monitoring-observability-gitops$ argocd version --client --short
+argocd: v3.5.4+d6d5b24

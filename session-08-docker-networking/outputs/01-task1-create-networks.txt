@@ -1,0 +1,11 @@
+~/devops-homework/session-08-docker-networking$ docker network create --driver bridge s08-frontend-net
+93169a26c6214d29c7cae110d792be22ec49f5a25276bccfdc0873f18f241942
+~/devops-homework/session-08-docker-networking$ docker network create --driver bridge s08-backend-net
+6c816c5dde5e6dfc244178be054f7cc5cfc9eb791046f6fc0c5304d5636fa3e4
+~/devops-homework/session-08-docker-networking$ docker network create --driver bridge s08-db-net
+97e49dc9780debc034cd6e0975fd58a48fc98b2e1c41c72b6cb71016c9344e30
+~/devops-homework/session-08-docker-networking$ docker network ls --filter name=s08-
+NETWORK ID     NAME               DRIVER    SCOPE
+6c816c5dde5e   s08-backend-net    bridge    local
+97e49dc9780d   s08-db-net         bridge    local
+93169a26c621   s08-frontend-net   bridge    local

@@ -1,0 +1,26 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe deployment kubernetes-bootcamp -n s09 | grep -E '^(Labels|Selector)'
+Labels:                 app=kubernetes-bootcamp
+Selector:               app=kubernetes-bootcamp
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -l app=kubernetes-bootcamp
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Running   0          26s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get services -n s09 -l app=kubernetes-bootcamp
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes-bootcamp   NodePort   10.106.20.140   <none>        8080:31698/TCP   5s
+~/devops-homework/session-09-kubernetes-fundamentals$ export POD_NAME=$(kubectl get pods -n s09 -l app=kubernetes-bootcamp -o jsonpath='{.items[0].metadata.name}')
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl label pods $POD_NAME version=v1 -n s09
+pod/kubernetes-bootcamp-5cc66bcc9b-pmkff labeled
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 --show-labels
+NAME                                   READY   STATUS    RESTARTS   AGE   LABELS
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Running   0          28s   app=kubernetes-bootcamp,pod-template-hash=5cc66bcc9b,version=v1
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n s09 -l version=v1
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-5cc66bcc9b-pmkff   1/1     Running   0          28s
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl delete service -l app=kubernetes-bootcamp -n s09
+service "kubernetes-bootcamp" deleted from s09 namespace
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get services -n s09
+No resources found in s09 namespace.
+~/devops-homework/session-09-kubernetes-fundamentals$ export NODE_PORT=$(kubectl get services/kubernetes-bootcamp -n s09 -o go-template='{{(index .spec.ports 0).nodePort}}' 2>/dev/null); curl -s -m 3 http://$(minikube ip):${NODE_PORT:-30000} || echo "curl failed -> service removed, app no longer reachable from outside"
+curl failed -> service removed, app no longer reachable from outside
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl exec -n s09 $POD_NAME -- curl -s http://localhost:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-5cc66bcc9b-pmkff | v=1

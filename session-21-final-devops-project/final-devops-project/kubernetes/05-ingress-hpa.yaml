@@ -1,0 +1,39 @@
+# Ingress: /api -> backend, / -> frontend (ingress-nginx addon on minikube)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: taskboard
+  namespace: final-k8s
+  labels: {app.kubernetes.io/part-of: taskboard}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: taskboard-k8s.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend: {service: {name: taskboard-backend, port: {name: http}}}
+          - path: /
+            pathType: Prefix
+            backend: {service: {name: taskboard-frontend, port: {name: http}}}
+---
+# HPA scales the backend on CPU and memory utilisation relative to the container *requests*.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: taskboard-backend
+  namespace: final-k8s
+  labels: {app.kubernetes.io/part-of: taskboard}
+spec:
+  scaleTargetRef: {apiVersion: apps/v1, kind: Deployment, name: taskboard-backend}
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource: {name: cpu, target: {type: Utilization, averageUtilization: 60}}
+    - type: Resource
+      resource: {name: memory, target: {type: Utilization, averageUtilization: 80}}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60

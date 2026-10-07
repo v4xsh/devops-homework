@@ -1,0 +1,16 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl delete pod pending-app -n s14 --wait=true
+pod "pending-app" deleted from s14 namespace
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl apply -f fixed.yaml
+pod/pending-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl wait --for=condition=Ready pod/pending-app -n s14 --timeout=90s
+pod/pending-app condition met
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl get pod pending-app -n s14 -o wide
+NAME          READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+pending-app   1/1     Running   0          1s    10.244.0.123   minikube   <none>           <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl events -n s14 --for pod/pending-app
+LAST SEEN          TYPE      REASON             OBJECT            MESSAGE
+4s (x4 over 11s)   Warning   FailedScheduling   Pod/pending-app   0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+1s                 Normal    Scheduled          Pod/pending-app   Successfully assigned s14/pending-app to minikube
+0s                 Normal    Pulled             Pod/pending-app   Container image "nginx:alpine" already present on machine and can be accessed by the pod
+0s                 Normal    Created            Pod/pending-app   Container created
+0s                 Normal    Started            Pod/pending-app   Container started

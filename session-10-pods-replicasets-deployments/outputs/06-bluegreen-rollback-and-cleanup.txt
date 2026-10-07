@@ -1,0 +1,14 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-bluegreen -f task1-deployment-strategies/02-blue-green/service-blue.yaml
+service/myapp-service configured
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 2; kubectl exec -n s10-bluegreen curl-client -- sh -c 'for i in $(seq 1 5); do curl -s http://myapp-service | grep -oE "(BLUE|GREEN) ENVIRONMENT"; done' | sort | uniq -c
+      5 BLUE ENVIRONMENT
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-bluegreen -f task1-deployment-strategies/02-blue-green/service-green.yaml
+service/myapp-service configured
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 2; kubectl exec -n s10-bluegreen curl-client -- sh -c 'for i in $(seq 1 5); do curl -s http://myapp-service | grep -oE "(BLUE|GREEN) ENVIRONMENT"; done' | sort | uniq -c
+      5 GREEN ENVIRONMENT
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl scale deployment app-blue -n s10-bluegreen --replicas=0
+deployment.apps/app-blue scaled
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get deploy -n s10-bluegreen
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+app-blue    0/0     0            0           30s
+app-green   3/3     3            3           30s

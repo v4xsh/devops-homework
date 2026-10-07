@@ -1,0 +1,32 @@
+# ---------- Production overrides (used with -f values-prod.yaml) ----------
+replicaCount: 3
+
+image:
+  repository: nginx
+  tag: "1.25-alpine"
+
+service:
+  type: ClusterIP        # prod is internal-only (would sit behind an Ingress), so no NodePort
+  port: 80
+  nodePort: null         # null removes the dev default nodePort key
+
+app:
+  name: notes-app
+  environment: production
+  notes:
+    - "Learn helm create / install / upgrade"
+    - "Practise helm rollback"
+    - "Run 3 replicas in production"
+    - "Set CPU / memory requests and limits"
+
+extraEnv:
+  LOG_LEVEL: warn
+  FEATURE_SHARING: "true"
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

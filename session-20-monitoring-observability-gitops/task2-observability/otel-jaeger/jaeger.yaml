@@ -1,0 +1,42 @@
+# Jaeger v2 (built on the OpenTelemetry Collector) with in-memory storage.
+# Receives OTLP traces on 4318 (HTTP) / 4317 (gRPC) and serves the UI + query API on 16686.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+  namespace: s20-app
+  labels:
+    app: jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: jaegertracing/jaeger:2.10.0
+          ports:
+            - {name: otlp-http, containerPort: 4318}
+            - {name: otlp-grpc, containerPort: 4317}
+            - {name: ui, containerPort: 16686}
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {memory: 256Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+  namespace: s20-app
+spec:
+  selector:
+    app: jaeger
+  ports:
+    - {name: otlp-http, port: 4318, targetPort: 4318}
+    - {name: otlp-grpc, port: 4317, targetPort: 4317}
+    - {name: ui, port: 16686, targetPort: 16686}

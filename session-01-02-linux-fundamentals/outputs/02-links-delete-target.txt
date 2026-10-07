@@ -1,0 +1,19 @@
+~/devops-homework/tools$ cd ~/practice/links
+~/practice/links$ echo "line appended through the hard link" >> hard_link.txt
+~/practice/links$ cat original.txt
+Hello from the original file - Vansh Dobhal 10099
+line appended through the hard link
+~/practice/links$ rm original.txt
+~/practice/links$ ls -li
+total 4
+169970 -rw-r--r-- 1 vansh vansh 86 Oct  7 17:04 hard_link.txt
+169994 lrwxrwxrwx 1 vansh vansh 12 Oct  7 17:04 soft_link.txt -> original.txt
+~/practice/links$ cat soft_link.txt
+cat: soft_link.txt: No such file or directory
+~/practice/links$ cat hard_link.txt
+Hello from the original file - Vansh Dobhal 10099
+line appended through the hard link
+~/practice/links$ stat -c '%n  inode=%i  links=%h' hard_link.txt
+hard_link.txt  inode=169970  links=1
+~/practice/links$ test -e soft_link.txt || echo "soft_link.txt is a dangling (broken) link -> target $(readlink soft_link.txt) is gone"
+soft_link.txt is a dangling (broken) link -> target original.txt is gone

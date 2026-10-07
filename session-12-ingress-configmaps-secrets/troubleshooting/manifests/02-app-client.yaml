@@ -1,0 +1,21 @@
+# The "application": a psql client that takes its DB credentials from app-db-secret
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-client
+  namespace: s12-troubleshoot
+spec:
+  containers:
+    - name: app
+      image: postgres:16-alpine
+      command: ["sh", "-c", "sleep 36000"]
+      env:
+        - name: PGHOST
+          value: postgres
+        - name: PGDATABASE
+          value: yatri
+      envFrom:
+        - secretRef:
+            name: app-db-secret
+      resources:
+        requests: { cpu: "10m", memory: "16Mi" }

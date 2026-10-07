@@ -1,0 +1,42 @@
+~/devops-homework/session-15-helm/mini-project$ helm list -n s15-mini
+NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART            	APP VERSION
+notes-dev 	s15-mini 	1       	2026-10-07 17:38:39.260680619 +0000 UTC	deployed	notes-chart-0.1.0	1.0        
+notes-prod	s15-mini 	1       	2026-10-07 17:38:53.817057797 +0000 UTC	deployed	notes-chart-0.1.0	1.0        
+~/devops-homework/session-15-helm/mini-project$ kubectl get deploy -n s15-mini -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas,IMAGE:.spec.template.spec.containers[0].image,ENV:.metadata.labels.environment,LIMITS:.spec.template.spec.containers[0].resources.limits
+NAME                READY   IMAGE               ENV           LIMITS
+notes-dev-deploy    1       nginx:1.24-alpine   development   <none>
+notes-prod-deploy   3       nginx:1.25-alpine   production    map[cpu:200m memory:128Mi]
+~/devops-homework/session-15-helm/mini-project$ kubectl get svc -n s15-mini
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+notes-dev-svc    NodePort    10.111.192.182   <none>        80:31590/TCP   26s
+notes-prod-svc   ClusterIP   10.110.199.98    <none>        80/TCP         11s
+~/devops-homework/session-15-helm/mini-project$ helm get values notes-prod -n s15-mini
+USER-SUPPLIED VALUES:
+app:
+  environment: production
+  name: notes-app
+  notes:
+  - Learn helm create / install / upgrade
+  - Practise helm rollback
+  - Run 3 replicas in production
+  - Set CPU / memory requests and limits
+extraEnv:
+  FEATURE_SHARING: "true"
+  LOG_LEVEL: warn
+image:
+  repository: nginx
+  tag: 1.25-alpine
+replicaCount: 3
+resources:
+  limits:
+    cpu: 200m
+    memory: 128Mi
+  requests:
+    cpu: 25m
+    memory: 32Mi
+service:
+  nodePort: null
+  port: 80
+  type: ClusterIP
+~/devops-homework/session-15-helm/mini-project$ kubectl get cm notes-prod-config -n s15-mini -o jsonpath='{.data}' ; echo
+{"APP_NAME":"notes-app","ENVIRONMENT":"production","FEATURE_SHARING":"true","LOG_LEVEL":"warn","index.html":"\u003ch1\u003enotes-app (PRODUCTION)\u003c/h1\u003e\n\u003cp\u003erelease=notes-prod namespace=s15-mini revision=1 chart=notes-chart-0.1.0 replicas=3\u003c/p\u003e\n\u003cp\u003eowner=Vansh Dobhal (10099)\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e1. Learn helm create / install / upgrade\u003c/li\u003e\n  \u003cli\u003e2. Practise helm rollback\u003c/li\u003e\n  \u003cli\u003e3. Run 3 replicas in production\u003c/li\u003e\n  \u003cli\u003e4. Set CPU / memory requests and limits\u003c/li\u003e\n\u003c/ul\u003e\n"}

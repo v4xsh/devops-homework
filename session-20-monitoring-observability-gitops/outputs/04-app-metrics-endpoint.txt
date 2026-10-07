@@ -1,0 +1,37 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get pods -n s20-app -l 'app in (s20-metrics-app,loadgen)'
+NAME                               READY   STATUS    RESTARTS   AGE
+loadgen-5fbf9d6677-cm5tg           1/1     Running   0          2m2s
+s20-metrics-app-5c7f5f65df-57rn5   1/1     Running   0          4m34s
+s20-metrics-app-5c7f5f65df-zhd8v   1/1     Running   0          4m34s
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl port-forward -n s20-app svc/s20-metrics-app 18081:80 > /tmp/pf-app.log 2>&1 &
+~/devops-homework/session-20-monitoring-observability-gitops$ sleep 3
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:18081/ ; echo
+{"app":"s20-metrics-app","endpoints":["/work","/error","/healthz","/readyz","/metrics"],"version":"1.0.0"}
+
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -w '  HTTP %{http_code}\n' localhost:18081/healthz
+{"status":"UP"}
+  HTTP 200
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s -w '  HTTP %{http_code}\n' localhost:18081/readyz
+{"status":"READY"}
+  HTTP 200
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:18081/metrics | grep -E '^app_' | grep -v '_bucket' | head -n 20
+app_requests_total{endpoint="/readyz",method="GET",status="200"} 56.0
+app_requests_total{endpoint="/healthz",method="GET",status="200"} 28.0
+app_requests_total{endpoint="/work",method="GET",status="200"} 415.0
+app_requests_total{endpoint="/",method="GET",status="200"} 41.0
+app_requests_total{endpoint="/error",method="GET",status="500"} 46.0
+app_requests_created{endpoint="/readyz",method="GET",status="200"} 1.7913936697028139e+09
+app_requests_created{endpoint="/healthz",method="GET",status="200"} 1.791393673645848e+09
+app_requests_created{endpoint="/work",method="GET",status="200"} 1.7913938176741767e+09
+app_requests_created{endpoint="/",method="GET",status="200"} 1.791393819346729e+09
+app_requests_created{endpoint="/error",method="GET",status="500"} 1.7913938343498404e+09
+app_request_duration_seconds_count{endpoint="/readyz"} 56.0
+app_request_duration_seconds_sum{endpoint="/readyz"} 0.005279627000845721
+app_request_duration_seconds_count{endpoint="/healthz"} 28.0
+app_request_duration_seconds_sum{endpoint="/healthz"} 0.002732692000336101
+app_request_duration_seconds_count{endpoint="/work"} 415.0
+app_request_duration_seconds_sum{endpoint="/work"} 13.179844574000299
+app_request_duration_seconds_count{endpoint="/"} 41.0
+app_request_duration_seconds_sum{endpoint="/"} 0.0043119220006246906
+app_request_duration_seconds_count{endpoint="/error"} 46.0
+app_request_duration_seconds_sum{endpoint="/error"} 0.010370083999532653

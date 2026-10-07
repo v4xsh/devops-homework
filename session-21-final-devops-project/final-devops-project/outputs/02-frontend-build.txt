@@ -1,0 +1,15 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/build/s21-frontend && cp ~/devops-homework/session-21-final-devops-project/final-devops-project/application/frontend/package-lock.json . && node --version && npm --version
+v20.20.2
+10.8.2
+~/build/s21-frontend$ npm ci --no-audit --no-fund 2>&1 | tail -n 3
+
+added 65 packages in 1s
+~/build/s21-frontend$ npm run build 2>&1 | tail -n 8
+transforming...
+✓ 28 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.34 kB │ gzip:  0.25 kB
+dist/assets/index-CcorwgzN.css    6.41 kB │ gzip:  2.05 kB
+dist/assets/index-BbTp36Xy.js   201.31 kB │ gzip: 62.86 kB
+✓ built in 1.81s

@@ -1,0 +1,33 @@
+~$ grep -o 'https://github.com/Nency-Ravaliya/[A-Za-z-]*' /mnt/c/Users/Vansh/OneDrive/Desktop/dev-ops/devops-heros/session4-networking/resources.md
+https://github.com/Nency-Ravaliya/Network-Troubleshooting
+https://github.com/Nency-Ravaliya/OSI-Network-devices
+https://github.com/Nency-Ravaliya/Networking
+https://github.com/Nency-Ravaliya/Subnetting
+https://github.com/Nency-Ravaliya/IP-quest
+https://github.com/Nency-Ravaliya/IPFIX-NETFLOW-NTP
+https://github.com/Nency-Ravaliya/How-DHCP-Works
+~$ mkdir -p /tmp/devops-hero-net && cd /tmp/devops-hero-net
+/tmp/devops-hero-net$ for r in Network-Troubleshooting Subnetting Networking OSI-Network-devices IP-quest; do git clone -q --depth 1 https://github.com/Nency-Ravaliya/$r && echo "cloned $r"; done
+cloned Network-Troubleshooting
+cloned Subnetting
+cloned Networking
+cloned OSI-Network-devices
+cloned IP-quest
+/tmp/devops-hero-net$ ls -l
+total 20
+drwxr-xr-x 3 vansh vansh 4096 Oct  7 17:07 IP-quest
+drwxr-xr-x 3 vansh vansh 4096 Oct  7 17:07 Network-Troubleshooting
+drwxr-xr-x 3 vansh vansh 4096 Oct  7 17:07 Networking
+drwxr-xr-x 3 vansh vansh 4096 Oct  7 17:07 OSI-Network-devices
+drwxr-xr-x 3 vansh vansh 4096 Oct  7 17:07 Subnetting
+/tmp/devops-hero-net$ grep -E '^## [0-9]+\.' Network-Troubleshooting/README.md
+## 1. `ping`
+## 2. `traceroute`
+## 3. `netstat`
+## 4. `telnet`
+## 5. `tcpdump`
+## 6. `nslookup`
+## 7. `dig`
+## 8. `curl`
+## 9. `arp`
+## 10. `systemctl`

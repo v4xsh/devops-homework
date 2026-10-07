@@ -1,0 +1,38 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task1-monitoring/k8s/app.yaml
+namespace/s20-app created
+deployment.apps/s20-metrics-app created
+service/s20-metrics-app created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task2-observability/otel-jaeger/jaeger.yaml
+deployment.apps/jaeger created
+service/jaeger created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task1-monitoring/k8s/servicemonitor.yaml -f task1-monitoring/k8s/prometheusrule.yaml
+servicemonitor.monitoring.coreos.com/s20-metrics-app created
+prometheusrule.monitoring.coreos.com/s20-metrics-app-alerts created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task1-monitoring/grafana/dashboard-configmap.yaml
+configmap/s20-metrics-app-dashboard created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl rollout status deploy/s20-metrics-app -n s20-app --timeout=180s
+Waiting for deployment "s20-metrics-app" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "s20-metrics-app" rollout to finish: 1 of 2 updated replicas are available...
+deployment "s20-metrics-app" successfully rolled out
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl rollout status deploy/jaeger -n s20-app --timeout=180s
+Waiting for deployment "jaeger" rollout to finish: 0 of 1 updated replicas are available...
+deployment "jaeger" successfully rolled out
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get deploy,pods,svc,servicemonitor,prometheusrule -n s20-app
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/jaeger            1/1     1            1           43s
+deployment.apps/s20-metrics-app   2/2     2            2           43s
+
+NAME                                   READY   STATUS    RESTARTS   AGE
+pod/jaeger-f9958d67b-rt9df             1/1     Running   0          43s
+pod/s20-metrics-app-5c7f5f65df-57rn5   1/1     Running   0          43s
+pod/s20-metrics-app-5c7f5f65df-zhd8v   1/1     Running   0          43s
+
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                       AGE
+service/jaeger            ClusterIP   10.109.51.147   <none>        4318/TCP,4317/TCP,16686/TCP   43s
+service/s20-metrics-app   ClusterIP   10.97.128.127   <none>        80/TCP                        43s
+
+NAME                                                   AGE
+servicemonitor.monitoring.coreos.com/s20-metrics-app   42s
+
+NAME                                                          AGE
+prometheusrule.monitoring.coreos.com/s20-metrics-app-alerts   42s

@@ -1,0 +1,16 @@
+# Copied from instructor's session-11 troubleshooting/empty-endpoints.yaml (namespace added)
+# INTENTIONALLY BROKEN: the selector 'app: wrong-backend-name' does not match the backend pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: broken-backend-service
+  namespace: s12-troubleshoot
+spec:
+  type: ClusterIP
+  selector:
+    app: wrong-backend-name     # BUG: running pods have label app: yatri-backend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+      protocol: TCP

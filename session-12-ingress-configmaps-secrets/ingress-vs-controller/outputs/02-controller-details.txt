@@ -1,0 +1,30 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl get deploy ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+registry.k8s.io/ingress-nginx/controller:v1.15.1@sha256:594ceea76b01c592858f803f9ff4d2cb40542cae2060410b2c95f75907d659e1
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl get deploy ingress-nginx-controller -n ingress-nginx -o jsonpath='{range .spec.template.spec.containers[0].args[*]}{@}{"\n"}{end}'
+/nginx-ingress-controller
+--election-id=ingress-nginx-leader
+--controller-class=k8s.io/ingress-nginx
+--watch-ingress-without-class=true
+--configmap=$(POD_NAMESPACE)/ingress-nginx-controller
+--tcp-services-configmap=$(POD_NAMESPACE)/tcp-services
+--udp-services-configmap=$(POD_NAMESPACE)/udp-services
+--validating-webhook=:8443
+--validating-webhook-certificate=/usr/local/certificates/cert
+--validating-webhook-key=/usr/local/certificates/key
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl get deploy ingress-nginx-controller -n ingress-nginx -o jsonpath='{range .spec.template.spec.containers[0].ports[*]}{.name} containerPort={.containerPort} hostPort={.hostPort}{"\n"}{end}'
+http containerPort=80 hostPort=80
+https containerPort=443 hostPort=443
+webhook containerPort=8443 hostPort=
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ echo "--- the controller turned our Ingress objects into nginx server blocks:"
+--- the controller turned our Ingress objects into nginx server blocks:
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl exec -n ingress-nginx deploy/ingress-nginx-controller -- grep -n -E "## start server|server_name \"app" /etc/nginx/nginx.conf
+195:	## start server _
+335:	## start server app.local
+337:		server_name "app.local" ;
+647:	## start server app1.local
+649:		server_name "app1.local" ;
+762:	## start server app2.local
+764:		server_name "app2.local" ;
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl exec -n ingress-nginx deploy/ingress-nginx-controller -- sh -c "grep -E 'location ~\* \"\^/app[12]' /etc/nginx/nginx.conf"
+		location ~* "^/app2(/|$)(.*)" {
+		location ~* "^/app1(/|$)(.*)" {

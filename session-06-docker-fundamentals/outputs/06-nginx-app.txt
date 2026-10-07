@@ -1,0 +1,43 @@
+~/devops-homework/session-06-docker-fundamentals$ cd ~/devops-homework/session-06-docker-fundamentals/nginx-app
+~/devops-homework/session-06-docker-fundamentals/nginx-app$ ls -A
+Dockerfile
+index.html
+~/devops-homework/session-06-docker-fundamentals/nginx-app$ docker build --progress=plain -t s06-nginx-app:1.0 . 2>&1 | tail -n 20
+
+#4 [1/2] FROM docker.io/library/nginx:alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2
+#4 CACHED
+
+#6 [2/2] COPY index.html /usr/share/nginx/html/index.html
+#6 DONE 0.3s
+
+#7 exporting to image
+#7 exporting layers 0.1s done
+#7 exporting manifest sha256:7b94228507c3dee4f4244f215b58f89667df835adcc1388797d6fbbc3d429b50 0.0s done
+#7 exporting config sha256:90f84d8281e39a8c2d712e60bbcdd5f8538fe2eced29c4b11ec2726b05b2b931 0.0s done
+#7 exporting attestation manifest sha256:0a34a3c77f5f44b631598687dab9edf24a1ef13f417dfaf70830993ce5f417d7 0.0s done
+#7 exporting manifest list sha256:89c241b642e31d2a15842eda348e51c4193e5259363438380a34233df1178e74
+#7 exporting manifest list sha256:89c241b642e31d2a15842eda348e51c4193e5259363438380a34233df1178e74 0.0s done
+#7 naming to docker.io/library/s06-nginx-app:1.0 done
+#7 unpacking to docker.io/library/s06-nginx-app:1.0 0.1s done
+#7 DONE 0.3s
+WARNING: current commit information was not captured by the build: failed to get git root dir: git stderr:
+<3>WSL (52057 - ) ERROR: UtilAcceptVsock:271: accept4 failed 110
+: exit status 1
+~/devops-homework/session-06-docker-fundamentals/nginx-app$ docker run -d --name s06-nginx-app -p 8006:80 s06-nginx-app:1.0
+b6b1dea4f755195bf9c48e61d9d512fad9dcdbe38175b05971786136e828fb06
+~/devops-homework/session-06-docker-fundamentals/nginx-app$ sleep 4
+~/devops-homework/session-06-docker-fundamentals/nginx-app$ docker ps --filter name=s06-nginx-app --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES           IMAGE               STATUS         PORTS
+s06-nginx-app   s06-nginx-app:1.0   Up 4 seconds   0.0.0.0:8006->80/tcp, [::]:8006->80/tcp
+~/devops-homework/session-06-docker-fundamentals/nginx-app$ curl -s localhost:8006
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nginx Hello World</title>
+</head>
+<body>
+  <h1>Hello World from Nginx in Docker - Vansh Dobhal (Roll No. 10099)</h1>
+  <p>Served by the official nginx:alpine image.</p>
+</body>
+</html>

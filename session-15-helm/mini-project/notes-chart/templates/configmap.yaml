@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  labels:
+    {{- include "notes-chart.labels" . | nindent 4 }}
+data:
+  APP_NAME: {{ .Values.app.name | quote }}
+  ENVIRONMENT: {{ .Values.app.environment | quote }}
+  {{- range $key, $value := .Values.extraEnv }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  index.html: |
+    <h1>{{ .Values.app.name }} ({{ .Values.app.environment | upper }})</h1>
+    <p>release={{ .Release.Name }} namespace={{ .Release.Namespace }} revision={{ .Release.Revision }} chart={{ include "notes-chart.chart" . }} replicas={{ .Values.replicaCount }}</p>
+    <p>owner={{ .Values.app.owner | default "unknown" }}</p>
+    <ul>
+    {{- range $i, $note := .Values.app.notes }}
+      <li>{{ add $i 1 }}. {{ $note }}</li>
+    {{- end }}
+    </ul>

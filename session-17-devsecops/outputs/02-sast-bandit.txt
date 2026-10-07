@@ -1,0 +1,40 @@
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ cat .bandit
+# Bandit (SAST for Python) configuration - used as: bandit -r app --ini .bandit
+[bandit]
+# test code uses assert on purpose; sast-demo is the deliberately insecure training file
+exclude = ./tests,./sast-demo
+# B101 (assert) is only relevant for tests, which are excluded anyway; nothing else is skipped
+skips = B101
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ bandit -r app --ini .bandit 2>/dev/null | sed -n '/Test results/,$p'
+Test results:
+	No issues identified.
+
+Code scanned:
+	Total lines of code: 71
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+Files skipped (0):
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ bandit -r sast-demo -q -f custom --msg-template '{severity:6} {confidence:6} {test_id} {relpath}:{line}  {msg}' 2>/dev/null | cut -c1-140
+LOW    HIGH   B403 sast-demo/insecure_example.py:8  Consider possible security implications associated with pickle module.
+LOW    HIGH   B404 sast-demo/insecure_example.py:10  Consider possible security implications associated with the subprocess module.
+HIGH   HIGH   B602 sast-demo/insecure_example.py:21  subprocess call with shell=True identified, security issue.
+MEDIUM HIGH   B307 sast-demo/insecure_example.py:26  Use of possibly insecure function - consider using safer ast.literal_eval.
+MEDIUM HIGH   B506 sast-demo/insecure_example.py:31  Use of unsafe yaml load. Allows instantiation of arbitrary objects. Consider yaml.safe_
+MEDIUM HIGH   B301 sast-demo/insecure_example.py:36  Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, 
+HIGH   HIGH   B324 sast-demo/insecure_example.py:41  Use of weak MD5 hash for security. Consider usedforsecurity=False
+MEDIUM MEDIUM B608 sast-demo/insecure_example.py:47  Possible SQL injection vector through string-based query construction.
+HIGH   HIGH   B501 sast-demo/insecure_example.py:53  Call to requests with verify=False disabling SSL certificate checks, security issue.
+HIGH   MEDIUM B201 sast-demo/insecure_example.py:58  A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and 
+MEDIUM MEDIUM B104 sast-demo/insecure_example.py:58  Possible binding to all interfaces.

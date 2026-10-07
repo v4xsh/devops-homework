@@ -1,0 +1,29 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl apply -f broken.yaml
+pod/pending-app created
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ sleep 8
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl get pod pending-app -n s14 -o wide
+NAME          READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES
+pending-app   0/1     Pending   0          8s    <none>   <none>   <none>           <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl describe pod pending-app -n s14 | sed -n '/Requests:/,/Environment/p'
+    Requests:
+      cpu:        500
+      memory:     1000Gi
+    Environment:  <none>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl describe pod pending-app -n s14 | sed -n '/Events:/,$p'
+Events:
+  Type     Reason            Age              From               Message
+  ----     ------            ----             ----               -------
+  Warning  FailedScheduling  1s (x4 over 8s)  default-scheduler  0/1 nodes are available: 1 Insufficient cpu, 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl get node minikube -o jsonpath='allocatable cpu={.status.allocatable.cpu} memory={.status.allocatable.memory}{"\n"}'
+allocatable cpu=12 memory=10183884Ki
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/04-pending$ kubectl describe node minikube | sed -n '/Allocated resources/,/Events/p'
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                2920m (24%)   5150m (42%)
+  memory             2318Mi (23%)  5436Mi (54%)
+  ephemeral-storage  0 (0%)        0 (0%)
+  hugepages-1Gi      0 (0%)        0 (0%)
+  hugepages-2Mi      0 (0%)        0 (0%)
+Events:

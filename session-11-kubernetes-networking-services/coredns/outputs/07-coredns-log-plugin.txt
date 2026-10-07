@@ -1,0 +1,19 @@
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "--- minikube's Corefile already contains the 'log' plugin, so every query is logged"
+--- minikube's Corefile already contains the 'log' plugin, so every query is logged
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl get configmap coredns -n kube-system -o jsonpath='{.data.Corefile}' | head -3
+.:53 {
+    log
+    errors
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- nslookup web-service-headless.s11.svc.cluster.local > /dev/null
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- nslookup does-not-exist.s11.svc.cluster.local > /dev/null 2>&1
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl exec -n s11 dnsutils -- dig +short example.com > /dev/null
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ sleep 2
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ echo "dnsutils pod IP: $(kubectl get pod dnsutils -n s11 -o jsonpath='{.status.podIP}')"
+dnsutils pod IP: 10.244.0.17
+~/devops-homework/session-11-kubernetes-networking-services/coredns$ kubectl logs -n kube-system -l k8s-app=kube-dns --since=30s --tail=-1 | grep "$(kubectl get pod dnsutils -n s11 -o jsonpath='{.status.podIP}'):" | grep -E "web-service-headless|does-not-exist|example.com" | tail -6
+[INFO] 10.244.0.17:35288 - 57861 "A IN web-service-headless.s11.svc.cluster.local. udp 60 false 512" NOERROR qr,aa,rd 234 0.000200931s
+[INFO] 10.244.0.17:59988 - 51900 "A IN does-not-exist.s11.svc.cluster.local.s11.svc.cluster.local. udp 76 false 512" NXDOMAIN qr,aa,rd 169 0.000168932s
+[INFO] 10.244.0.17:55305 - 20302 "A IN does-not-exist.s11.svc.cluster.local.svc.cluster.local. udp 72 false 512" NXDOMAIN qr,aa,rd 165 0.000215526s
+[INFO] 10.244.0.17:40905 - 41553 "A IN does-not-exist.s11.svc.cluster.local.cluster.local. udp 68 false 512" NXDOMAIN qr,aa,rd 161 0.000157066s
+[INFO] 10.244.0.17:47850 - 45956 "A IN does-not-exist.s11.svc.cluster.local. udp 54 false 512" NXDOMAIN qr,aa,rd 147 0.000209324s
+[INFO] 10.244.0.17:56443 - 24915 "A IN example.com. udp 40 false 4096" NOERROR qr,rd,ra 417 0.16508837s

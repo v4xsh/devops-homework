@@ -1,0 +1,28 @@
+~/devops-homework/session-15-helm/mini-project$ cd ~/devops-homework/session-15-helm/mini-project
+~/devops-homework/session-15-helm/mini-project$ helm package notes-chart -d dist
+Successfully packaged chart and saved it to: dist/notes-chart-0.1.0.tgz
+~/devops-homework/session-15-helm/mini-project$ tar -tzf dist/notes-chart-0.1.0.tgz
+notes-chart/Chart.yaml
+notes-chart/values.yaml
+notes-chart/templates/NOTES.txt
+notes-chart/templates/_helpers.tpl
+notes-chart/templates/configmap.yaml
+notes-chart/templates/deployment.yaml
+notes-chart/templates/service.yaml
+notes-chart/.helmignore
+notes-chart/values-prod.yaml
+~/devops-homework/session-15-helm/mini-project$ helm show chart dist/notes-chart-0.1.0.tgz
+apiVersion: v2
+appVersion: "1.0"
+description: A simple Notes application Helm chart (nginx serving a notes page rendered
+  from values)
+keywords:
+- notes
+- nginx
+- session-15
+maintainers:
+- name: Vansh Dobhal
+name: notes-chart
+type: application
+version: 0.1.0
+

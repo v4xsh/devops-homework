@@ -1,0 +1,10 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/status/config | jq -r .data.yaml | grep -A2 'job_name: serviceMonitor/s20-app/s20-metrics-app/0'
+- job_name: serviceMonitor/s20-app/s20-metrics-app/0
+  honor_labels: true
+  honor_timestamps: true
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum by (endpoint, status) (rate(app_requests_total{namespace="s20-app"}[1m]))'
+{endpoint="/readyz", status="200"}  =>  0.40000444454321205
+{endpoint="/work", status="200"}  =>  6.955632594304564
+{endpoint="/error", status="500"}  =>  0.6888967902990437
+{endpoint="/", status="200"}  =>  0.6888967902990437
+{endpoint="/healthz", status="200"}  =>  0.2000019753525387

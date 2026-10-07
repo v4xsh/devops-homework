@@ -1,0 +1,19 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ helm rollback rb-web 2 -n s15-rollback --wait --timeout 120s
+Rollback was a success! Happy Helming!
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl rollout status deploy/rb-web -n s15-rollback --timeout=120s
+deployment "rb-web" successfully rolled out
+~/devops-homework/session-15-helm/02-helm-rollback$ helm history rb-web -n s15-rollback
+REVISION	UPDATED                 	STATUS    	CHART              	APP VERSION	DESCRIPTION     
+1       	Wed Oct  7 17:22:07 2026	superseded	rollback-demo-0.1.0	1.25       	Install complete
+2       	Wed Oct  7 17:22:28 2026	superseded	rollback-demo-0.1.0	1.25       	Upgrade complete
+3       	Wed Oct  7 17:22:52 2026	superseded	rollback-demo-0.1.0	1.25       	Upgrade complete
+4       	Wed Oct  7 17:23:29 2026	deployed  	rollback-demo-0.1.0	1.25       	Rollback to 2   
+~/devops-homework/session-15-helm/02-helm-rollback$ helm get values rb-web -n s15-rollback
+USER-SUPPLIED VALUES:
+app:
+  color: green
+  message: 'Upgrade #1 - scaled to 2 replicas on nginx 1.26'
+  version: v2
+image:
+  tag: 1.26-alpine
+replicaCount: 2

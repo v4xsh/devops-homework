@@ -1,0 +1,15 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc -n s11 -o wide
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+db-headless                ClusterIP      None            <none>        80/TCP           25m   app=db
+external-docs-service      ExternalName   <none>          example.com   <none>           28m   <none>
+web-service-clusterip      ClusterIP      10.102.6.189    <none>        8080/TCP         39m   app=web-clusterip
+web-service-headless       ClusterIP      None            <none>        80/TCP           28m   app=web-headless
+web-service-loadbalancer   LoadBalancer   10.104.10.192   <pending>     8081:31470/TCP   29m   app=web-loadbalancer
+web-service-nodeport       NodePort       10.99.14.109    <none>        80:31111/TCP     39m   app=web-nodeport
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpointslices -n s11
+NAME                             ADDRESSTYPE   PORTS   ENDPOINTS                               AGE
+db-headless-h6fh6                IPv4          80      10.244.0.165,10.244.0.179               25m
+web-service-clusterip-kz8vt      IPv4          80      10.244.0.19,10.244.0.18,10.244.0.20     39m
+web-service-headless-mw798       IPv4          80      10.244.0.99,10.244.0.100,10.244.0.101   28m
+web-service-loadbalancer-2slrg   IPv4          80      10.244.0.91,10.244.0.90,10.244.0.88     29m
+web-service-nodeport-v5xv7       IPv4          80      10.244.0.22,10.244.0.21                 39m

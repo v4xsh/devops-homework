@@ -1,0 +1,49 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-canary -f task1-deployment-strategies/03-canary/
+deployment.apps/app-canary created
+deployment.apps/app-stable created
+service/myapp-canary-service created
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout status deployment/app-stable -n s10-canary --timeout=180s && kubectl rollout status deployment/app-canary -n s10-canary --timeout=120s
+Waiting for deployment "app-stable" rollout to finish: 0 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 1 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 2 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 3 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 4 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 5 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 6 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 7 of 9 updated replicas are available...
+Waiting for deployment "app-stable" rollout to finish: 8 of 9 updated replicas are available...
+deployment "app-stable" successfully rolled out
+deployment "app-canary" successfully rolled out
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get deploy,svc -n s10-canary
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/app-canary   1/1     1            1           20s
+deployment.apps/app-stable   9/9     9            9           20s
+
+NAME                           TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+service/myapp-canary-service   NodePort   10.97.27.158   <none>        80:30253/TCP   21s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pods -n s10-canary -l app=myapp-canary -L track,version
+NAME                          READY   STATUS    RESTARTS   AGE   TRACK    VERSION
+app-canary-5849994497-cnbsc   1/1     Running   0          22s   canary   v2
+app-stable-6ffb777f9d-676t8   1/1     Running   0          21s   stable   v1
+app-stable-6ffb777f9d-dq68l   1/1     Running   0          20s   stable   v1
+app-stable-6ffb777f9d-h2sds   1/1     Running   0          22s   stable   v1
+app-stable-6ffb777f9d-nfzbw   1/1     Running   0          19s   stable   v1
+app-stable-6ffb777f9d-nnzz2   1/1     Running   0          19s   stable   v1
+app-stable-6ffb777f9d-s5g7g   1/1     Running   0          20s   stable   v1
+app-stable-6ffb777f9d-tc4xl   1/1     Running   0          20s   stable   v1
+app-stable-6ffb777f9d-vvz9m   1/1     Running   0          21s   stable   v1
+app-stable-6ffb777f9d-xnxw6   1/1     Running   0          20s   stable   v1
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe svc myapp-canary-service -n s10-canary | grep -E 'Selector|Endpoints'
+Selector:                 app=myapp-canary
+Endpoints:                10.244.0.199:80,10.244.0.195:80,10.244.0.196:80 + 7 more...
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get endpointslices -n s10-canary -l kubernetes.io/service-name=myapp-canary-service -o jsonpath='{range .items[*].endpoints[*]}{.addresses[0]}{" "}{.targetRef.name}{"\n"}{end}' | sort -k2
+10.244.0.194 app-canary-5849994497-cnbsc
+10.244.0.195 app-stable-6ffb777f9d-676t8
+10.244.0.199 app-stable-6ffb777f9d-dq68l
+10.244.0.198 app-stable-6ffb777f9d-h2sds
+10.244.0.201 app-stable-6ffb777f9d-nfzbw
+10.244.0.203 app-stable-6ffb777f9d-nnzz2
+10.244.0.202 app-stable-6ffb777f9d-s5g7g
+10.244.0.200 app-stable-6ffb777f9d-tc4xl
+10.244.0.196 app-stable-6ffb777f9d-vvz9m
+10.244.0.197 app-stable-6ffb777f9d-xnxw6

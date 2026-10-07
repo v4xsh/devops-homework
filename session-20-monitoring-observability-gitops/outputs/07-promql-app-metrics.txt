@@ -1,0 +1,28 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'up{namespace="s20-app", service="s20-metrics-app"}'
+{container="app", endpoint="http", instance="10.244.0.104:8080", job="s20-metrics-app", namespace="s20-app", pod="s20-metrics-app-69b7cfb67-ccn9j", service="s20-metrics-app"}  =>  1
+{container="app", endpoint="http", instance="10.244.0.105:8080", job="s20-metrics-app", namespace="s20-app", pod="s20-metrics-app-69b7cfb67-xlnf8", service="s20-metrics-app"}  =>  1
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum by (endpoint, status) (rate(app_requests_total{namespace="s20-app"}[2m]))'
+{endpoint="/readyz", status="200"}  =>  0.3984819734345351
+{endpoint="/work", status="200"}  =>  6.8880455407969645
+{endpoint="/error", status="500"}  =>  0.6736242884250474
+{endpoint="/", status="200"}  =>  0.683111954459203
+{endpoint="/healthz", status="200"}  =>  0.1992409867172676
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum by (endpoint, status) (app_requests_total{namespace="s20-app"})'
+{endpoint="/readyz", status="200"}  =>  275
+{endpoint="/work", status="200"}  =>  4469
+{endpoint="/error", status="500"}  =>  447
+{endpoint="/", status="200"}  =>  445
+{endpoint="/healthz", status="200"}  =>  137
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'histogram_quantile(0.95, sum by (le, endpoint) (rate(app_request_duration_seconds_bucket{namespace="s20-app"}[2m])))'
+{endpoint="/error"}  =>  0.00475
+{endpoint="/"}  =>  0.00475
+{endpoint="/healthz"}  =>  0.00475
+{endpoint="/readyz"}  =>  0.00475
+{endpoint="/work"}  =>  0.0490658747300216
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum(rate(app_requests_total{namespace="s20-app",status=~"5.."}[2m])) / sum(rate(app_requests_total{namespace="s20-app"}[2m]))'
+{}  =>  0.0761802575107296
+~/devops-homework/session-20-monitoring-observability-gitops$ scripts/promq.sh 'sum by (deployment) (kube_deployment_status_replicas_available{namespace="s20-app"})'
+{deployment="jaeger"}  =>  1
+{deployment="s20-metrics-app"}  =>  2
+{deployment="loadgen"}  =>  1
+{deployment="session20-gitops-app"}  =>  5

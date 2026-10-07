@@ -1,0 +1,39 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd application/backend
+~/devops-homework/session-21-final-devops-project/final-devops-project/application/backend$ ~/build/s21-venv/bin/pip install -q -r requirements-dev.txt && ~/build/s21-venv/bin/python --version
+Python 3.12.3
+~/devops-homework/session-21-final-devops-project/final-devops-project/application/backend$ ~/build/s21-venv/bin/ruff check . && echo "ruff: lint OK"
+All checks passed!
+ruff: lint OK
+~/devops-homework/session-21-final-devops-project/final-devops-project/application/backend$ ~/build/s21-venv/bin/python -m pytest -v -p no:cacheprovider --cov=app --cov-report=term-missing 2>&1 | grep -vE '^\s*$'
+================================================================ test session starts =================================================================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.6.0 -- /home/vansh/build/s21-venv/bin/python
+rootdir: /mnt/c/Users/Vansh/OneDrive/Desktop/dev-ops/devops-homework/session-21-final-devops-project/final-devops-project/application/backend
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1, cov-7.0.0
+collecting ... collected 12 items
+tests/test_health.py::test_health_is_up PASSED                                                                                                 [  8%]
+tests/test_health.py::test_ready_checks_database PASSED                                                                                        [ 16%]
+tests/test_health.py::test_root_and_info PASSED                                                                                                [ 25%]
+tests/test_health.py::test_metrics_endpoint_exposes_prometheus_format PASSED                                                                   [ 33%]
+tests/test_health.py::test_ready_returns_503_when_database_down PASSED                                                                         [ 41%]
+tests/test_tasks.py::test_create_and_get_task PASSED                                                                                           [ 50%]
+tests/test_tasks.py::test_list_tasks_newest_first PASSED                                                                                       [ 58%]
+tests/test_tasks.py::test_update_task_status PASSED                                                                                            [ 66%]
+tests/test_tasks.py::test_delete_task PASSED                                                                                                   [ 75%]
+tests/test_tasks.py::test_stats_counts_by_status PASSED                                                                                        [ 83%]
+tests/test_tasks.py::test_missing_task_returns_404 PASSED                                                                                      [ 91%]
+tests/test_tasks.py::test_validation_rejects_bad_payload PASSED                                                                                [100%]
+=================================================================== tests coverage ===================================================================
+__________________________________________________ coverage: platform linux, python 3.12.3-final-0 ___________________________________________________
+Name              Stmts   Miss  Cover   Missing
+-----------------------------------------------
+app/__init__.py       0      0   100%
+app/config.py        20      1    95%   30
+app/db.py            13      0   100%
+app/main.py         105      2    98%   55-56
+app/models.py        13      0   100%
+app/schemas.py       26      0   100%
+-----------------------------------------------
+TOTAL               177      3    98%
+================================================================= 12 passed in 2.20s =================================================================

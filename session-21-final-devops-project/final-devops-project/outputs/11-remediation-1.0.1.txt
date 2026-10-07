@@ -1,0 +1,20 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ grep -E "^(fastapi|starlette|prometheus-fastapi-instrumentator)==" application/backend/requirements.txt
+fastapi==0.142.2
+starlette==1.7.0
+prometheus-fastapi-instrumentator==8.1.0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ grep -E '"(vite|@vitejs/plugin-react)"' application/frontend/package.json
+    "dev": "vite",
+    "@vitejs/plugin-react": "5.2.0",
+    "vite": "7.3.7"
+~/devops-homework/session-21-final-devops-project/final-devops-project$ grep -n 'pip uninstall' docker/backend.Dockerfile
+13: && /opt/venv/bin/pip uninstall -y pip
+22: && pip uninstall -y pip setuptools wheel || true \
+~/devops-homework/session-21-final-devops-project/final-devops-project$ ~/build/s21-venv/bin/pip install -q -r application/backend/requirements-dev.txt && cd application/backend && ~/build/s21-venv/bin/python -m pytest -q -p no:cacheprovider 2>&1 | tail -n 1; cd "$OLDPWD"
+12 passed, 1 warning in 1.78s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ pip-audit -r application/backend/requirements.txt --strict; echo "pip-audit exit code: $?"
+No known vulnerabilities found
+pip-audit exit code: 0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd application/frontend && npm audit --audit-level=high --package-lock-only; echo "npm audit exit code: $?"; cd "$OLDPWD"
+found 0 vulnerabilities
+npm audit exit code: 0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker build -q -f docker/backend.Dockerfile -t taskboard-backend:1.0.1 -t ghcr.io/v4xsh/taskboard-backend:1.0.1 .

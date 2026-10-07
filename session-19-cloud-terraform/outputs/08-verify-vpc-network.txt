@@ -1,0 +1,39 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-vpcs --filters Name=tag:Project,Values=s19-vansh --query 'Vpcs[].{VpcId:VpcId,Cidr:CidrBlock,Name:Tags[?Key==`Name`]|[0].Value,Owner:Tags[?Key==`Owner`]|[0].Value}' --output table
+----------------------------------------------------------------------------
+|                               DescribeVpcs                               |
++--------------+----------------+---------------+--------------------------+
+|     Cidr     |     Name       |     Owner     |          VpcId           |
++--------------+----------------+---------------+--------------------------+
+|  10.19.0.0/16|  s19-vansh-vpc |  Vansh Dobhal |  vpc-163f2a080834ae667   |
++--------------+----------------+---------------+--------------------------+
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-subnets --filters Name=vpc-id,Values=$(terraform output -raw vpc_id) --query 'Subnets[].{Subnet:SubnetId,Cidr:CidrBlock,AZ:AvailabilityZone,PublicIP:MapPublicIpOnLaunch}' --output table
+-------------------------------------------------------------------------
+|                            DescribeSubnets                            |
++-------------+---------------+-----------+-----------------------------+
+|     AZ      |     Cidr      | PublicIP  |           Subnet            |
++-------------+---------------+-----------+-----------------------------+
+|  ap-south-1a|  10.19.1.0/24 |  True     |  subnet-ac1f83a4d7b25ee74   |
++-------------+---------------+-----------+-----------------------------+
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-route-tables --filters Name=vpc-id,Values=$(terraform output -raw vpc_id) Name=tag:Name,Values=s19-vansh-public-rt --query 'RouteTables[].Routes[].[DestinationCidrBlock,GatewayId,State]' --output table
+-----------------------------------------------------
+|                DescribeRouteTables                |
++---------------+-------------------------+---------+
+|  10.19.0.0/16 |  local                  |  active |
+|  0.0.0.0/0    |  igw-613f6a9edd214c755  |  active |
++---------------+-------------------------+---------+
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-internet-gateways --internet-gateway-ids $(terraform output -raw internet_gateway_id) --query 'InternetGateways[].Attachments[]' --output table
+----------------------------------------
+|       DescribeInternetGateways       |
++------------+-------------------------+
+|    State   |          VpcId          |
++------------+-------------------------+
+|  available |  vpc-163f2a080834ae667  |
++------------+-------------------------+
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-security-groups --group-ids $(terraform output -raw security_group_id) --query 'SecurityGroups[].IpPermissions[].[IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp,IpRanges[0].Description]' --output table
+--------------------------------------------------------------
+|                   DescribeSecurityGroups                   |
++-----+-----+-----+-------------------+----------------------+
+|  tcp|  80 |  80 |  0.0.0.0/0        |  HTTP from anywhere  |
+|  tcp|  22 |  22 |  203.0.113.10/32  |  SSH from my IP      |
++-----+-----+-----+-------------------+----------------------+

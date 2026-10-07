@@ -1,0 +1,16 @@
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ docker ps --filter name=s18-localstack --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+NAMES            IMAGE                       STATUS                    PORTS
+s18-localstack   localstack/localstack:4.9   Up 16 minutes (healthy)   4510-4559/tcp, 5678/tcp, 0.0.0.0:4566->4566/tcp, [::]:4566->4566/tcp
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ curl -s http://localhost:4566/_localstack/health | jq '{edition, version, s3: .services.s3, iam: .services.iam, sts: .services.sts}'
+{
+  "edition": "community",
+  "version": "4.9.2",
+  "s3": "running",
+  "iam": "available",
+  "sts": "available"
+}
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ terraform version
+Terraform v1.16.5
+on linux_amd64
+~/devops-homework/session-18-terraform-iac/terraform-s3-demo$ aws --version
+aws-cli/1.46.1 Python/3.12.3 Linux/6.6.87.2-microsoft-standard-WSL2 botocore/1.43.62

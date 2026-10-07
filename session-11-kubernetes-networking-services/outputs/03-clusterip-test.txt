@@ -1,0 +1,17 @@
+~/devops-homework/session-11-kubernetes-networking-services$ CIP=$(kubectl get svc web-service-clusterip -n s11 -o jsonpath='{.spec.clusterIP}'); echo "ClusterIP = $CIP"
+ClusterIP = 10.102.6.189
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 curl-client -- curl -s http://web-service-clusterip:8080
+Hello from pod web-app-clusterip-6d7dc5546c-4k7hd (ClusterIP backend)
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl exec -n s11 curl-client -- curl -s http://web-service-clusterip.s11.svc.cluster.local:8080
+Hello from pod web-app-clusterip-6d7dc5546c-2248t (ClusterIP backend)
+~/devops-homework/session-11-kubernetes-networking-services$ for i in 1 2 3 4 5 6; do kubectl exec -n s11 curl-client -- curl -s http://$CIP:8080; done
+Hello from pod web-app-clusterip-6d7dc5546c-2248t (ClusterIP backend)
+Hello from pod web-app-clusterip-6d7dc5546c-2248t (ClusterIP backend)
+Hello from pod web-app-clusterip-6d7dc5546c-4k7hd (ClusterIP backend)
+Hello from pod web-app-clusterip-6d7dc5546c-vst2v (ClusterIP backend)
+Hello from pod web-app-clusterip-6d7dc5546c-vst2v (ClusterIP backend)
+Hello from pod web-app-clusterip-6d7dc5546c-4k7hd (ClusterIP backend)
+~/devops-homework/session-11-kubernetes-networking-services$ echo "--- From OUTSIDE the cluster (WSL host) the ClusterIP is not routable:"
+--- From OUTSIDE the cluster (WSL host) the ClusterIP is not routable:
+~/devops-homework/session-11-kubernetes-networking-services$ curl -s -m 5 http://$CIP:8080 || echo "curl exit code $? -> ClusterIP is internal-only"
+curl exit code 28 -> ClusterIP is internal-only

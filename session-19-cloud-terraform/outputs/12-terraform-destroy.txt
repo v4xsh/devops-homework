@@ -1,0 +1,482 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform destroy -no-color -auto-approve | grep -vE 'Refreshing state|Still destroying'
+data.aws_ami.ubuntu: Reading...
+data.aws_ami.ubuntu: Read complete after 0s [id=ami-1e749f67]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_instance.web will be destroyed
+  - resource "aws_instance" "web" {
+      - ami                                  = "ami-1e749f67" -> null
+      - arn                                  = "arn:aws:ec2:ap-south-1::instance/i-9878221feb6427ab4" -> null
+      - associate_public_ip_address          = true -> null
+      - availability_zone                    = "ap-south-1a" -> null
+      - disable_api_stop                     = false -> null
+      - disable_api_termination              = false -> null
+      - ebs_optimized                        = false -> null
+      - force_destroy                        = false -> null
+      - get_password_data                    = false -> null
+      - hibernation                          = false -> null
+      - id                                   = "i-9878221feb6427ab4" -> null
+      - instance_initiated_shutdown_behavior = "stop" -> null
+      - instance_state                       = "running" -> null
+      - instance_type                        = "t2.micro" -> null
+      - ipv6_address_count                   = 0 -> null
+      - ipv6_addresses                       = [] -> null
+      - monitoring                           = false -> null
+      - placement_partition_number           = 0 -> null
+      - primary_network_interface_id         = "eni-edf15022f99488198" -> null
+      - private_dns                          = "ip-10-19-1-4.ap-south-1.compute.internal" -> null
+      - private_ip                           = "10.19.1.4" -> null
+      - public_dns                           = "ec2-54-214-106-197.ap-south-1.compute.amazonaws.com" -> null
+      - public_ip                            = "54.214.106.197" -> null
+      - region                               = "ap-south-1" -> null
+      - secondary_private_ips                = [] -> null
+      - security_groups                      = [] -> null
+      - source_dest_check                    = true -> null
+      - subnet_id                            = "subnet-ac1f83a4d7b25ee74" -> null
+      - tags                                 = {
+          - "Name" = "s19-vansh-web"
+        } -> null
+      - tags_all                             = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "s19-vansh-web"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+      - tenancy                              = "default" -> null
+      - user_data                            = <<-EOT
+            #!/bin/bash
+            # Bootstrap script rendered by Terraform (templatefile) and run by cloud-init
+            # on the first boot of the EC2 instance.
+            set -euxo pipefail
+            apt-get update -y
+            apt-get install -y nginx
+            cat > /var/www/html/index.html <<HTML
+            <!DOCTYPE html>
+            <html>
+              <head><title>s19-vansh</title></head>
+              <body style="font-family: sans-serif; text-align: center; margin-top: 15%;">
+                <h1>Deployed by Vansh Dobhal - 10099</h1>
+                <p>Provisioned with Terraform (session-19-cloud-terraform)</p>
+              </body>
+            </html>
+            HTML
+            systemctl enable --now nginx
+        EOT -> null
+      - user_data_replace_on_change          = false -> null
+      - vpc_security_group_ids               = [
+          - "sg-2befe72ec5e567990",
+        ] -> null
+        # (9 unchanged attributes hidden)
+
+      - metadata_options {
+          - http_endpoint               = "enabled" -> null
+          - http_protocol_ipv6          = "disabled" -> null
+          - http_put_response_hop_limit = 1 -> null
+          - http_tokens                 = "optional" -> null
+          - instance_metadata_tags      = "disabled" -> null
+        }
+
+      - primary_network_interface {
+          - delete_on_termination = true -> null
+          - network_interface_id  = "eni-edf15022f99488198" -> null
+        }
+
+      - root_block_device {
+          - delete_on_termination = true -> null
+          - device_name           = "/dev/sda1" -> null
+          - encrypted             = false -> null
+          - iops                  = 3000 -> null
+          - tags                  = {} -> null
+          - tags_all              = {
+              - "ManagedBy" = "Terraform"
+              - "Owner"     = "Vansh Dobhal"
+              - "Project"   = "s19-vansh"
+              - "RollNo"    = "10099"
+            } -> null
+          - throughput            = 0 -> null
+          - volume_id             = "vol-ed0bc9859960e7f91" -> null
+          - volume_size           = 8 -> null
+          - volume_type           = "gp3" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # aws_internet_gateway.main will be destroyed
+  - resource "aws_internet_gateway" "main" {
+      - arn      = "arn:aws:ec2:ap-south-1:000000000000:internet-gateway/igw-613f6a9edd214c755" -> null
+      - id       = "igw-613f6a9edd214c755" -> null
+      - owner_id = "000000000000" -> null
+      - region   = "ap-south-1" -> null
+      - tags     = {
+          - "Name" = "s19-vansh-igw"
+        } -> null
+      - tags_all = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "s19-vansh-igw"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+      - vpc_id   = "vpc-163f2a080834ae667" -> null
+    }
+
+  # aws_route_table.public will be destroyed
+  - resource "aws_route_table" "public" {
+      - arn              = "arn:aws:ec2:ap-south-1:000000000000:route-table/rtb-b76dcc28b082dbcab" -> null
+      - id               = "rtb-b76dcc28b082dbcab" -> null
+      - owner_id         = "000000000000" -> null
+      - propagating_vgws = [] -> null
+      - region           = "ap-south-1" -> null
+      - route            = [
+          - {
+              - cidr_block                 = "0.0.0.0/0"
+              - gateway_id                 = "igw-613f6a9edd214c755"
+                # (11 unchanged attributes hidden)
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "s19-vansh-public-rt"
+        } -> null
+      - tags_all         = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "s19-vansh-public-rt"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+      - vpc_id           = "vpc-163f2a080834ae667" -> null
+    }
+
+  # aws_route_table_association.public will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-1d909c6b12de9a2df" -> null
+      - region         = "ap-south-1" -> null
+      - route_table_id = "rtb-b76dcc28b082dbcab" -> null
+      - subnet_id      = "subnet-ac1f83a4d7b25ee74" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_s3_bucket.artifacts will be destroyed
+  - resource "aws_s3_bucket" "artifacts" {
+      - arn                         = "arn:aws:s3:::vansh-dobhal-10099-s19-artifacts" -> null
+      - bucket                      = "vansh-dobhal-10099-s19-artifacts" -> null
+      - bucket_domain_name          = "vansh-dobhal-10099-s19-artifacts.s3.amazonaws.com" -> null
+      - bucket_region               = "ap-south-1" -> null
+      - bucket_regional_domain_name = "vansh-dobhal-10099-s19-artifacts.s3.ap-south-1.amazonaws.com" -> null
+      - force_destroy               = true -> null
+      - hosted_zone_id              = "Z11RGJOFQNVJUP" -> null
+      - id                          = "vansh-dobhal-10099-s19-artifacts" -> null
+      - object_lock_enabled         = false -> null
+      - region                      = "ap-south-1" -> null
+      - request_payer               = "BucketOwner" -> null
+      - tags                        = {
+          - "Name"    = "vansh-dobhal-10099-s19-artifacts"
+          - "Purpose" = "logs-and-artifacts"
+        } -> null
+      - tags_all                    = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "vansh-dobhal-10099-s19-artifacts"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "Purpose"   = "logs-and-artifacts"
+          - "RollNo"    = "10099"
+        } -> null
+        # (3 unchanged attributes hidden)
+
+      - grant {
+          - id          = "75aa57f09aa0c8caeab4f8c24e99d10f8e7faeebf76c078efc7c6caea54ba06a" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = false -> null
+
+              - apply_server_side_encryption_by_default {
+                  - sse_algorithm     = "AES256" -> null
+                    # (1 unchanged attribute hidden)
+                }
+            }
+        }
+
+      - versioning {
+          - enabled    = true -> null
+          - mfa_delete = false -> null
+        }
+    }
+
+  # aws_s3_bucket_public_access_block.artifacts will be destroyed
+  - resource "aws_s3_bucket_public_access_block" "artifacts" {
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - bucket                  = "vansh-dobhal-10099-s19-artifacts" -> null
+      - id                      = "vansh-dobhal-10099-s19-artifacts" -> null
+      - ignore_public_acls      = true -> null
+      - region                  = "ap-south-1" -> null
+      - restrict_public_buckets = true -> null
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.artifacts will be destroyed
+  - resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
+      - bucket                = "vansh-dobhal-10099-s19-artifacts" -> null
+      - id                    = "vansh-dobhal-10099-s19-artifacts" -> null
+      - region                = "ap-south-1" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - blocked_encryption_types = [] -> null
+          - bucket_key_enabled       = false -> null
+
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm     = "AES256" -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # aws_s3_bucket_versioning.artifacts will be destroyed
+  - resource "aws_s3_bucket_versioning" "artifacts" {
+      - bucket                = "vansh-dobhal-10099-s19-artifacts" -> null
+      - id                    = "vansh-dobhal-10099-s19-artifacts" -> null
+      - region                = "ap-south-1" -> null
+        # (1 unchanged attribute hidden)
+
+      - versioning_configuration {
+          - status     = "Enabled" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # aws_s3_object.user_data_artifact will be destroyed
+  - resource "aws_s3_object" "user_data_artifact" {
+      - arn                           = "arn:aws:s3:::vansh-dobhal-10099-s19-artifacts/artifacts/i-9878221feb6427ab4/user_data.sh" -> null
+      - bucket                        = "vansh-dobhal-10099-s19-artifacts" -> null
+      - bucket_key_enabled            = false -> null
+      - content                       = <<-EOT
+            #!/bin/bash
+            # Bootstrap script rendered by Terraform (templatefile) and run by cloud-init
+            # on the first boot of the EC2 instance.
+            set -euxo pipefail
+            apt-get update -y
+            apt-get install -y nginx
+            cat > /var/www/html/index.html <<HTML
+            <!DOCTYPE html>
+            <html>
+              <head><title>s19-vansh</title></head>
+              <body style="font-family: sans-serif; text-align: center; margin-top: 15%;">
+                <h1>Deployed by Vansh Dobhal - 10099</h1>
+                <p>Provisioned with Terraform (session-19-cloud-terraform)</p>
+              </body>
+            </html>
+            HTML
+            systemctl enable --now nginx
+        EOT -> null
+      - content_type                  = "text/x-shellscript" -> null
+      - etag                          = "6ac99be86b96905c7a9f5daafe917739" -> null
+      - force_destroy                 = false -> null
+      - id                            = "vansh-dobhal-10099-s19-artifacts/artifacts/i-9878221feb6427ab4/user_data.sh" -> null
+      - key                           = "artifacts/i-9878221feb6427ab4/user_data.sh" -> null
+      - metadata                      = {} -> null
+      - region                        = "ap-south-1" -> null
+      - server_side_encryption        = "AES256" -> null
+      - storage_class                 = "STANDARD" -> null
+      - tags                          = {} -> null
+      - tags_all                      = {
+          - "ManagedBy" = "Terraform"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+      - version_id                    = "AaEXWUUtHflN6F18wp6XcjhbN1hj4NSL" -> null
+        # (13 unchanged attributes hidden)
+    }
+
+  # aws_security_group.web will be destroyed
+  - resource "aws_security_group" "web" {
+      - arn                    = "arn:aws:ec2:ap-south-1:000000000000:security-group/sg-2befe72ec5e567990" -> null
+      - description            = "SSH from my IP only, HTTP from anywhere" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "All outbound (apt-get needs it)"
+              - from_port        = 0
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "-1"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 0
+            },
+        ] -> null
+      - id                     = "sg-2befe72ec5e567990" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "HTTP from anywhere"
+              - from_port        = 80
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 80
+            },
+          - {
+              - cidr_blocks      = [
+                  - "203.0.113.10/32",
+                ]
+              - description      = "SSH from my IP"
+              - from_port        = 22
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 22
+            },
+        ] -> null
+      - name                   = "s19-vansh-web-sg" -> null
+      - owner_id               = "000000000000" -> null
+      - region                 = "ap-south-1" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "s19-vansh-web-sg"
+        } -> null
+      - tags_all               = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "s19-vansh-web-sg"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+      - vpc_id                 = "vpc-163f2a080834ae667" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_subnet.public will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:000000000000:subnet/subnet-ac1f83a4d7b25ee74" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1a" -> null
+      - availability_zone_id                           = "aps1-az1" -> null
+      - cidr_block                                     = "10.19.1.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-ac1f83a4d7b25ee74" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "000000000000" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name" = "s19-vansh-public-subnet"
+        } -> null
+      - tags_all                                       = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "s19-vansh-public-subnet"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+      - vpc_id                                         = "vpc-163f2a080834ae667" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_vpc.main will be destroyed
+  - resource "aws_vpc" "main" {
+      - arn                                  = "arn:aws:ec2:ap-south-1:000000000000:vpc/vpc-163f2a080834ae667" -> null
+      - assign_generated_ipv6_cidr_block     = false -> null
+      - cidr_block                           = "10.19.0.0/16" -> null
+      - default_network_acl_id               = "acl-da38c40092828431f" -> null
+      - default_route_table_id               = "rtb-97ca75c7f4ccb6c10" -> null
+      - default_security_group_id            = "sg-0f89b748a642367f9" -> null
+      - dhcp_options_id                      = "default" -> null
+      - enable_dns_hostnames                 = true -> null
+      - enable_dns_support                   = true -> null
+      - enable_network_address_usage_metrics = false -> null
+      - id                                   = "vpc-163f2a080834ae667" -> null
+      - instance_tenancy                     = "default" -> null
+      - ipv6_netmask_length                  = 0 -> null
+      - main_route_table_id                  = "rtb-97ca75c7f4ccb6c10" -> null
+      - owner_id                             = "000000000000" -> null
+      - region                               = "ap-south-1" -> null
+      - tags                                 = {
+          - "Name" = "s19-vansh-vpc"
+        } -> null
+      - tags_all                             = {
+          - "ManagedBy" = "Terraform"
+          - "Name"      = "s19-vansh-vpc"
+          - "Owner"     = "Vansh Dobhal"
+          - "Project"   = "s19-vansh"
+          - "RollNo"    = "10099"
+        } -> null
+        # (4 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 0 to change, 12 to destroy.
+
+Changes to Outputs:
+  - ami_id                 = "ami-1e749f67" -> null
+  - artifact_bucket        = "vansh-dobhal-10099-s19-artifacts" -> null
+  - instance_id            = "i-9878221feb6427ab4" -> null
+  - instance_public_ip     = "54.214.106.197" -> null
+  - internet_gateway_id    = "igw-613f6a9edd214c755" -> null
+  - public_subnet_id       = "subnet-ac1f83a4d7b25ee74" -> null
+  - security_group_id      = "sg-2befe72ec5e567990" -> null
+  - user_data_artifact_key = "artifacts/i-9878221feb6427ab4/user_data.sh" -> null
+  - vpc_id                 = "vpc-163f2a080834ae667" -> null
+  - website_url            = "http://54.214.106.197" -> null
+aws_s3_bucket_public_access_block.artifacts: Destroying... [id=vansh-dobhal-10099-s19-artifacts]
+aws_s3_bucket_server_side_encryption_configuration.artifacts: Destroying... [id=vansh-dobhal-10099-s19-artifacts]
+aws_s3_bucket_versioning.artifacts: Destroying... [id=vansh-dobhal-10099-s19-artifacts]
+aws_s3_object.user_data_artifact: Destroying... [id=vansh-dobhal-10099-s19-artifacts/artifacts/i-9878221feb6427ab4/user_data.sh]
+aws_s3_bucket_versioning.artifacts: Destruction complete after 0s
+aws_s3_bucket_server_side_encryption_configuration.artifacts: Destruction complete after 0s
+aws_s3_bucket_public_access_block.artifacts: Destruction complete after 0s
+aws_s3_object.user_data_artifact: Destruction complete after 0s
+aws_s3_bucket.artifacts: Destroying... [id=vansh-dobhal-10099-s19-artifacts]
+aws_instance.web: Destroying... [id=i-9878221feb6427ab4]
+aws_s3_bucket.artifacts: Destruction complete after 0s
+aws_instance.web: Destruction complete after 10s
+aws_route_table_association.public: Destroying... [id=rtbassoc-1d909c6b12de9a2df]
+aws_security_group.web: Destroying... [id=sg-2befe72ec5e567990]
+aws_route_table_association.public: Destruction complete after 0s
+aws_route_table.public: Destroying... [id=rtb-b76dcc28b082dbcab]
+aws_subnet.public: Destroying... [id=subnet-ac1f83a4d7b25ee74]
+aws_security_group.web: Destruction complete after 0s
+aws_subnet.public: Destruction complete after 0s
+aws_route_table.public: Destruction complete after 0s
+aws_internet_gateway.main: Destroying... [id=igw-613f6a9edd214c755]
+aws_internet_gateway.main: Destruction complete after 0s
+aws_vpc.main: Destroying... [id=vpc-163f2a080834ae667]
+aws_vpc.main: Destruction complete after 0s
+
+Destroy complete! Resources: 12 destroyed.
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform state list | wc -l
+0
+~/devops-homework/session-19-cloud-terraform/terraform$ aws --endpoint-url=http://localhost:4566 ec2 describe-instances --filters Name=tag:Project,Values=s19-vansh --query 'Reservations[].Instances[].[InstanceId,State.Name]' --output text
+i-89558674817a8af2e	terminated
+i-1a1ad0656219ece04	terminated
+i-9878221feb6427ab4	terminated
+~/devops-homework/session-19-cloud-terraform/terraform$ aws --endpoint-url=http://localhost:4566 ec2 describe-vpcs --filters Name=tag:Project,Values=s19-vansh --query 'length(Vpcs)'
+0
+~/devops-homework/session-19-cloud-terraform/terraform$ aws --endpoint-url=http://localhost:4566 s3 ls | grep -c s19-artifacts || echo "bucket is gone"
+0
+bucket is gone

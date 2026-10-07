@@ -1,0 +1,66 @@
+~/act-stage/session-17-devsecops/devops-homework$ cd $STAGE && git log --oneline -2 && git show HEAD --format= | grep -E '^[-+][A-Za-z]'
+901b54d chore: pin older Flask/gunicorn and python:3.9.7-slim-buster base (vulnerable on purpose)
+e9a46c0 session-17-devsecops: local act run
+-ARG BASE_IMAGE=python:3.12-slim
++ARG BASE_IMAGE=public.ecr.aws/docker/library/python:3.9.7-slim-buster
+-Flask==3.1.3
+-gunicorn==23.0.0
++Flask==3.1.2
++gunicorn==20.1.0
+~/act-stage/session-17-devsecops/devops-homework$ bash $S/scripts/act-run.sh push 2>&1 | sed -r 's/\x1b\[[0-9;]*m//g' > $LOG2; echo "act exit code: ${PIPESTATUS[0]}"
+act exit code: 1
+~/act-stage/session-17-devsecops/devops-homework$ grep -E 'Job (succeeded|failed)|Failure - Main' $LOG2
+[Session 17 - DevSecOps Pipeline/1. Build] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/2. Unit Test] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/3. SAST (Bandit + Semgrep)] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/4. SCA (pip-audit + Trivy fs)] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/5. Secret Scan (Gitleaks)    ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/6. Docker Build              ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/7. Image Scan (Trivy)        ] 🏁  Job succeeded
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   ❌  Failure - Main Evaluate policy (block on HIGH/CRITICAL) [136.61541ms]
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ] 🏁  Job failed
+~/act-stage/session-17-devsecops/devops-homework$ awk '/Run Main Evaluate policy/{f=1} f&&/\| /{print} /Failure - Main Evaluate policy/{exit}' $LOG2 | cut -c1-168 | grep -v '|\s*$'
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | bandit.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | coverage.xml
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | gitleaks-history.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | gitleaks.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | pip-audit.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | semgrep.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | trivy-fs.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | trivy-image.json
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | Security gate - blocking severities: CRITICAL, HIGH
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | STAGE    CHECK                          BLOCKING  RESULT
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | SAST     Bandit (HIGH)                         0  PASS
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | SAST     Semgrep (ERROR)                       0  PASS
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | SCA      pip-audit (fixable)                   6  FAIL
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | SCA      Trivy fs (HIGH/CRITICAL)              2  FAIL
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | Secrets  Gitleaks                              0  PASS
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | Image    Trivy image (HIGH/CRITICAL)          83  FAIL
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | Blocking findings:
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [pip-audit (fixable)] flask==3.1.2 PYSEC-2026-2151 (fixed in 3.1.3)
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [pip-audit (fixable)] flask==3.1.2 PYSEC-2026-2151 (fixed in 3.1.3)
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [pip-audit (fixable)] gunicorn==20.1.0 PYSEC-2026-1434 (fixed in 22.0.0)
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [pip-audit (fixable)] gunicorn==20.1.0 PYSEC-2026-1433 (fixed in 22.0.0)
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [pip-audit (fixable)] gunicorn==20.1.0 PYSEC-2026-1434 (fixed in 22.0.0)
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [pip-audit (fixable)] gunicorn==20.1.0 PYSEC-2026-1433 (fixed in 22.0.0)
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy fs (HIGH/CRITICAL)] HIGH     CVE-2024-1135        gunicorn 20.1.0 -> 22.0.0
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy fs (HIGH/CRITICAL)] HIGH     CVE-2024-6827        gunicorn 20.1.0 -> 22.0.0
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2022-1664        dpkg 1.19.7 -> 1.19.8
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2022-1271        gzip 1.9-3 -> 1.9-3+deb10u1
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2021-33574       libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2021-35942       libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2022-23218       libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2022-23219       libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2020-1752        libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2020-6096        libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2021-3326        libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2021-3999        libc-bin 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2024-2961        libc-bin 2.28-10 -> 2.28-10+deb10u3
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] HIGH     CVE-2024-33599       libc-bin 2.28-10 -> 2.28-10+deb10u4
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2021-33574       libc6 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2021-35942       libc6 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] CRITICAL CVE-2022-23218       libc6 2.28-10 -> 2.28-10+deb10u2
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   |   [Trivy image (HIGH/CRITICAL)] ... and 68 more
+[Session 17 - DevSecOps Pipeline/8. Security Gate             ]   | SECURITY GATE: BLOCKED - fix the findings above before this image can be pushed/deployed
+~/act-stage/session-17-devsecops/devops-homework$ grep -cE '/(9\. Push Image|10\. Deploy)' $LOG2
+0

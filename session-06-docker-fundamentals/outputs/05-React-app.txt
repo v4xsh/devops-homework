@@ -1,0 +1,50 @@
+~/devops-homework/session-06-docker-fundamentals$ cd ~/devops-homework/session-06-docker-fundamentals/React-app
+~/devops-homework/session-06-docker-fundamentals/React-app$ ls -A
+.dockerignore
+Dockerfile
+index.html
+nginx.conf
+package.json
+src
+vite.config.js
+~/devops-homework/session-06-docker-fundamentals/React-app$ docker build --progress=plain -t s06-react-app:1.0 . 2>&1 | tail -n 20
+#13 10.08 rendering chunks...
+#13 10.09 computing gzip size...
+#13 10.11 dist/index.html                  0.44 kB │ gzip:  0.29 kB
+#13 10.11 dist/assets/index-vw8PGiz3.js  142.90 kB │ gzip: 45.96 kB
+#13 10.11 ✓ built in 9.25s
+#13 DONE 10.3s
+
+#14 [stage-1 3/3] COPY --from=build /app/dist /usr/share/nginx/html
+#14 DONE 0.1s
+
+#15 exporting to image
+#15 exporting layers 0.1s done
+#15 exporting manifest sha256:2dd56d2881ffcb79e02299a3b50576370bbd49363e93c5e621a9494afc10c598 0.0s done
+#15 exporting config sha256:ea1ae846bcdaf8a23d66b4a700cdd17e60218ae3903086225031fa92250d61ac 0.0s done
+#15 exporting attestation manifest sha256:1c4e07b2a6d873f359b0f78aa06521d00e789ba009a1b5cbc637eb1bd6e7c125 done
+#15 exporting manifest list sha256:8902e0f6481960e77ac766b45b767a25585c3f2d610903707ac57f595dc7ce47 0.0s done
+#15 naming to docker.io/library/s06-react-app:1.0 done
+#15 unpacking to docker.io/library/s06-react-app:1.0
+#15 unpacking to docker.io/library/s06-react-app:1.0 0.0s done
+#15 DONE 0.3s
+~/devops-homework/session-06-docker-fundamentals/React-app$ docker run -d --name s06-react-app -p 8005:80 s06-react-app:1.0
+89d9786ca7887489f9721c9a042f496679a7ae4c3f9bd3d4c9096ebeba6740c5
+~/devops-homework/session-06-docker-fundamentals/React-app$ sleep 4
+~/devops-homework/session-06-docker-fundamentals/React-app$ docker ps --filter name=s06-react-app --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES           IMAGE               STATUS         PORTS
+s06-react-app   s06-react-app:1.0   Up 4 seconds   0.0.0.0:8005->80/tcp, [::]:8005->80/tcp
+~/devops-homework/session-06-docker-fundamentals/React-app$ curl -s localhost:8005
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World from React - Vansh Dobhal</title>
+    <script type="module" crossorigin src="/assets/index-vw8PGiz3.js"></script>
+  </head>
+  <body>
+    <noscript>Hello World from React in Docker - Vansh Dobhal (Roll No. 10099)</noscript>
+    <div id="root"></div>
+  </body>
+</html>

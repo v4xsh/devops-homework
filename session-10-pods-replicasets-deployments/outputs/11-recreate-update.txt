@@ -1,0 +1,20 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ bash scripts/watch-pods.sh s10-recreate outputs/04-recreate-watch.log & sleep 1
+~/devops-homework/session-10-pods-replicasets-deployments$ bash scripts/curl-loop.sh s10-recreate http://app-recreate-service 30 0.5 'VERSION: v[12]' > outputs/04-recreate-curl-during-update.log 2>&1 & sleep 2
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-recreate -f task1-deployment-strategies/04-recreate/deployment-v2.yaml
+deployment.apps/app-recreate configured
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 1; kubectl get pods -n s10-recreate -l app=app-recreate -L version
+NAME                            READY   STATUS              RESTARTS   AGE   VERSION
+app-recreate-7bd8d89b8b-7wclv   0/1     ContainerCreating   0          0s    v2
+app-recreate-7bd8d89b8b-lzdps   0/1     ContainerCreating   0          0s    v2
+app-recreate-7bd8d89b8b-w9jlt   0/1     ContainerCreating   0          0s    v2
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get rs -n s10-recreate -L version
+NAME                      DESIRED   CURRENT   READY   AGE   VERSION
+app-recreate-6c78cb55bb   0         0         0       13s   v1
+app-recreate-7bd8d89b8b   3         3         0       1s    v2
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl rollout status deployment/app-recreate -n s10-recreate --timeout=120s
+deployment "app-recreate" successfully rolled out
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pods -n s10-recreate -l app=app-recreate -L version
+NAME                            READY   STATUS    RESTARTS   AGE   VERSION
+app-recreate-7bd8d89b8b-7wclv   1/1     Running   0          2s    v2
+app-recreate-7bd8d89b8b-lzdps   1/1     Running   0          2s    v2
+app-recreate-7bd8d89b8b-w9jlt   1/1     Running   0          2s    v2

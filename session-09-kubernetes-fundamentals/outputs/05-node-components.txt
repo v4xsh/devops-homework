@@ -1,0 +1,48 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube ssh -- sudo systemctl is-active kubelet containerd
+active
+active
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube ssh -- "sudo systemctl status kubelet --no-pager | head -n 8"
+● kubelet.service - kubelet: The Kubernetes Node Agent
+     Loaded: loaded (/lib/systemd/system/kubelet.service; disabled; preset: enabled)
+    Drop-In: /etc/systemd/system/kubelet.service.d
+             └─10-kubeadm.conf
+     Active: active (running) since Wed 2026-10-07 16:57:14 UTC; 15min ago
+       Docs: http://kubernetes.io/docs/
+   Main PID: 1811 (kubelet)
+      Tasks: 20 (limit: 1788)
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube ssh -- "sudo crictl ps | grep -E 'NAME|kube-|etcd|coredns'"
+CONTAINER           IMAGE               CREATED              STATE               NAME                      ATTEMPT             POD ID              POD                                        NAMESPACE
+3738c86499412       d7b01abacd67f       14 minutes ago       Running             metrics-server            0                   0e8995071e6f0       metrics-server-768f9f6999-r9cgx            kube-system
+9cd60fc6ab558       520212b8b0fcd       14 minutes ago       Running             coredns                   0                   74e07fc5c01b1       coredns-559f6c778d-jxzsm                   kube-system
+6fb24641826ab       6e38f40d628db       14 minutes ago       Running             storage-provisioner       0                   fe0444ec9ae45       storage-provisioner                        kube-system
+d2c20928bda54       4626fe10df5b9       14 minutes ago       Running             kindnet-cni               0                   ff878d596293e       kindnet-f2x6d                              kube-system
+1515d38145384       d6a28daf3e6b0       15 minutes ago       Running             kube-proxy                0                   6b6f0c0129cd6       kube-proxy-p8685                           kube-system
+35afb3f00ddbd       1fabf80a1273a       15 minutes ago       Running             kube-scheduler            0                   0f1400b676f53       kube-scheduler-minikube                    kube-system
+adc3a1e81ff4d       364b3c3d9ec19       15 minutes ago       Running             kube-controller-manager   0                   95503ed75a0db       kube-controller-manager-minikube           kube-system
+7b6551a3800f7       270fbeb697171       15 minutes ago       Running             etcd                      0                   2498755d8f269       etcd-minikube                              kube-system
+6c68ddc454264       bec5f0e1e2eeb       15 minutes ago       Running             kube-apiserver            0                   e03da2aafb1ac       kube-apiserver-minikube                    kube-system
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n kube-system -l k8s-app=kube-proxy -o wide
+NAME               READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+kube-proxy-p8685   1/1     Running   0          15m   192.168.49.2   minikube   <none>           <none>
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl logs -n kube-system -l k8s-app=kube-proxy --tail=5
+I1007 16:57:21.421710       1 shared_informer.go:503] "Waiting for caches to sync" controller="node config"
+I1007 16:57:21.421713       1 shared_informer.go:510] "Caches are synced" controller="node config"
+I1007 16:57:21.522533       1 shared_informer.go:510] "Caches are synced" controller="service config"
+I1007 16:57:21.522545       1 shared_informer.go:510] "Caches are synced" controller="serviceCIDR config"
+I1007 16:57:21.522572       1 shared_informer.go:510] "Caches are synced" controller="endpoint slice config"
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl describe node minikube | sed -n '/Capacity:/,/System Info:/p'
+Capacity:
+  cpu:                12
+  ephemeral-storage:  1081101176832
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             10183884Ki
+  pods:               110
+Allocatable:
+  cpu:                12
+  ephemeral-storage:  1081101176832
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             10183884Ki
+  pods:               110
+System Info:

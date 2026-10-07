@@ -1,0 +1,44 @@
+~/devops-homework/session-15-helm/01-helm-commands$ cd ~/devops-homework/session-15-helm/01-helm-commands
+~/devops-homework/session-15-helm/01-helm-commands$ helm upgrade web1 webapp -n s15 --set replicaCount=3
+Release "web1" has been upgraded. Happy Helming!
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:13:31 2026
+NAMESPACE: s15
+STATUS: deployed
+REVISION: 2
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace s15 -l "app.kubernetes.io/name=webapp,app.kubernetes.io/instance=web1" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace s15 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace s15 port-forward $POD_NAME 8080:$CONTAINER_PORT
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl rollout status deployment/web1-webapp -n s15 --timeout=120s
+Waiting for deployment "web1-webapp" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "web1-webapp" rollout to finish: 2 of 3 updated replicas are available...
+deployment "web1-webapp" successfully rolled out
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get deploy web1-webapp -n s15
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+web1-webapp   3/3     3            3           38s
+~/devops-homework/session-15-helm/01-helm-commands$ helm upgrade --install web1 webapp -n s15 --reuse-values --set service.type=NodePort
+Release "web1" has been upgraded. Happy Helming!
+NAME: web1
+LAST DEPLOYED: Wed Oct  7 17:13:36 2026
+NAMESPACE: s15
+STATUS: deployed
+REVISION: 3
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace s15 -o jsonpath="{.spec.ports[0].nodePort}" services web1-webapp)
+  export NODE_IP=$(kubectl get nodes --namespace s15 -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+~/devops-homework/session-15-helm/01-helm-commands$ helm get values web1 -n s15
+USER-SUPPLIED VALUES:
+replicaCount: 3
+service:
+  type: NodePort
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get svc,deploy -n s15
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/web1-webapp   NodePort   10.104.182.13   <none>        80:30120/TCP   42s
+
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/web1-webapp   3/3     3            3           42s

@@ -1,0 +1,21 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl apply -f ../00-namespace/namespaces.yaml
+namespace/s12 configured
+namespace/s12-troubleshoot created
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ echo "--- method 1: from literals"
+--- method 1: from literals
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl create configmap app-literal-config -n s12 --from-literal=APP_COLOR=blue --from-literal=APP_MODE=demo --from-literal=FEATURE_FLAGS=search,booking
+configmap/app-literal-config created
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ echo "--- method 2: from files (key = file name, value = file content)"
+--- method 2: from files (key = file name, value = file content)
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl create configmap app-file-config -n s12 --from-file=app.properties --from-file=nginx-extra.conf
+configmap/app-file-config created
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ echo "--- method 3: declarative YAML"
+--- method 3: declarative YAML
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl apply -f app-config.yaml
+configmap/yatri-app-config created
+~/devops-homework/session-12-ingress-configmaps-secrets/01-configmap$ kubectl get configmaps -n s12
+NAME                 DATA   AGE
+app-file-config      2      0s
+app-literal-config   3      1s
+kube-root-ca.crt     1      9m31s
+yatri-app-config     6      0s

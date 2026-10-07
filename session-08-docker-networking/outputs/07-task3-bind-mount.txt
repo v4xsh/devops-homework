@@ -1,0 +1,23 @@
+~/devops-homework/session-08-docker-networking$ cd ~/devops-homework/session-08-docker-networking/03-bind-mount
+~/devops-homework/session-08-docker-networking/03-bind-mount$ cat site/index.html
+<h1>Hello students</h1>
+<p>Served from a bind-mounted folder on the host - Vansh Dobhal (10099)</p>
+~/devops-homework/session-08-docker-networking/03-bind-mount$ docker run -d --name s08-bind-nginx -p 8023:80 -v "$(readlink -f site)":/usr/share/nginx/html nginx:alpine
+aa93e9d2574963e6330fbc62ba242a9d36c68d5edcc92bdd0d7cdf63d9070621
+~/devops-homework/session-08-docker-networking/03-bind-mount$ sleep 2
+~/devops-homework/session-08-docker-networking/03-bind-mount$ curl -s localhost:8023
+<h1>Hello students</h1>
+<p>Served from a bind-mounted folder on the host - Vansh Dobhal (10099)</p>
+~/devops-homework/session-08-docker-networking/03-bind-mount$ docker inspect s08-bind-nginx | jq '.[0].Mounts'
+[
+  {
+    "Type": "bind",
+    "Source": "/mnt/c/Users/Vansh/OneDrive/Desktop/dev-ops/devops-homework/session-08-docker-networking/03-bind-mount/site",
+    "Destination": "/usr/share/nginx/html",
+    "Mode": "",
+    "RW": true,
+    "Propagation": "rprivate"
+  }
+]
+~/devops-homework/session-08-docker-networking/03-bind-mount$ docker inspect -f 'StartedAt={{.State.StartedAt}} RestartCount={{.RestartCount}}' s08-bind-nginx
+StartedAt=2026-10-07T17:46:03.093681259Z RestartCount=0

@@ -1,0 +1,10 @@
+# FIX: correct registry (docker.io)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: errimagepull-app
+  namespace: s14
+spec:
+  containers:
+    - name: web
+      image: docker.io/library/nginx:1.27

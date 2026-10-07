@@ -1,0 +1,41 @@
+~/devops-homework/session-15-helm/02-helm-rollback$ cd ~/devops-homework/session-15-helm/02-helm-rollback
+~/devops-homework/session-15-helm/02-helm-rollback$ cat rollback-demo/values-v3.yaml
+# Revision 3 - second upgrade: newest nginx, 3 replicas, resource limits, new page
+replicaCount: 3
+image:
+  tag: "1.27-alpine"
+app:
+  version: v3
+  color: red
+  message: "Upgrade #2 - 3 replicas on nginx 1.27 with resource limits"
+resources:
+  requests:
+    cpu: 10m
+    memory: 16Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+~/devops-homework/session-15-helm/02-helm-rollback$ helm upgrade rb-web rollback-demo -n s15-rollback -f rollback-demo/values-v3.yaml --wait --timeout 120s
+Release "rb-web" has been upgraded. Happy Helming!
+NAME: rb-web
+LAST DEPLOYED: Wed Oct  7 17:22:52 2026
+NAMESPACE: s15-rollback
+STATUS: deployed
+REVISION: 3
+TEST SUITE: None
+NOTES:
+rb-web is now at revision 3 -> app v3 (nginx:1.27-alpine, 3 replica(s)).
+
+Check it from inside the cluster:
+  kubectl -n s15-rollback exec client -- wget -qO- http://rb-web
+
+History / rollback:
+  helm history rb-web -n s15-rollback
+  helm rollback rb-web <REVISION> -n s15-rollback
+~/devops-homework/session-15-helm/02-helm-rollback$ kubectl rollout status deploy/rb-web -n s15-rollback --timeout=120s
+deployment "rb-web" successfully rolled out
+~/devops-homework/session-15-helm/02-helm-rollback$ helm history rb-web -n s15-rollback
+REVISION	UPDATED                 	STATUS    	CHART              	APP VERSION	DESCRIPTION     
+1       	Wed Oct  7 17:22:07 2026	superseded	rollback-demo-0.1.0	1.25       	Install complete
+2       	Wed Oct  7 17:22:28 2026	superseded	rollback-demo-0.1.0	1.25       	Upgrade complete
+3       	Wed Oct  7 17:22:52 2026	deployed  	rollback-demo-0.1.0	1.25       	Upgrade complete

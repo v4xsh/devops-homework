@@ -1,0 +1,25 @@
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl apply -n s10-lifecycle -f task2-pod-lifecycle/09-startup.yaml
+pod/lifecycle-startup created
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 15; kubectl get pod lifecycle-startup -n s10-lifecycle
+NAME                READY   STATUS    RESTARTS   AGE
+lifecycle-startup   0/1     Running   0          16s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-startup -n s10-lifecycle -o jsonpath='started={.status.containerStatuses[0].started} ready={.status.containerStatuses[0].ready}{"\n"}'
+started=false ready=false
+~/devops-homework/session-10-pods-replicasets-deployments$ sleep 25; kubectl get pod lifecycle-startup -n s10-lifecycle
+NAME                READY   STATUS    RESTARTS   AGE
+lifecycle-startup   1/1     Running   0          42s
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl get pod lifecycle-startup -n s10-lifecycle -o jsonpath='started={.status.containerStatuses[0].started} ready={.status.containerStatuses[0].ready} restarts={.status.containerStatuses[0].restartCount}{"\n"}'
+started=true ready=true restarts=0
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl logs lifecycle-startup -n s10-lifecycle
+Application starting...
+Application started
+~/devops-homework/session-10-pods-replicasets-deployments$ kubectl describe pod lifecycle-startup -n s10-lifecycle | sed -n '/Startup:/p;/^Events:/,$p'
+    Startup:        exec [sh -c test -f /tmp/started] delay=0s timeout=1s period=5s successThreshold=1 failureThreshold=10
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  44s                default-scheduler  Successfully assigned s10-lifecycle/lifecycle-startup to minikube
+  Normal   Pulled     43s                kubelet            spec.containers{slow-app}: Container image "busybox:1.36" already present on machine and can be accessed by the pod
+  Normal   Created    42s                kubelet            spec.containers{slow-app}: Container created
+  Normal   Started    42s                kubelet            spec.containers{slow-app}: Container started
+  Warning  Unhealthy  13s (x6 over 38s)  kubelet            spec.containers{slow-app}: Startup probe failed:

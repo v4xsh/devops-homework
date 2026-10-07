@@ -1,0 +1,21 @@
+~/devops-homework/session-08-docker-networking$ docker volume create s08-mysql-data
+s08-mysql-data
+~/devops-homework/session-08-docker-networking$ docker run -d --name s08-voldb -e MYSQL_ROOT_PASSWORD="$MYSQL_PWD" -v s08-mysql-data:/var/lib/mysql mysql:8
+ccc760424d63df0558f059276da677ad824937ae26af5d0d249a2eeb6998b598
+~/devops-homework/session-08-docker-networking$ until docker logs s08-voldb 2>&1 | grep -q 'ready for connections.*port: 3306'; do sleep 3; done; echo "mysql is ready"
+mysql is ready
+~/devops-homework/session-08-docker-networking$ docker exec -e MYSQL_PWD s08-voldb mysql -uroot -e "CREATE DATABASE school; CREATE TABLE school.students(id INT PRIMARY KEY, name VARCHAR(50), roll INT); INSERT INTO school.students VALUES (1,'Vansh Dobhal',10099);"
+~/devops-homework/session-08-docker-networking$ docker exec -e MYSQL_PWD s08-voldb mysql -uroot -e "SELECT * FROM school.students;"
+id	name	roll
+1	Vansh Dobhal	10099
+~/devops-homework/session-08-docker-networking$ docker rm -f s08-voldb
+s08-voldb
+~/devops-homework/session-08-docker-networking$ docker ps -a --filter name=s08-voldb --format '{{.Names}}' | wc -l
+0
+~/devops-homework/session-08-docker-networking$ docker run -d --name s08-voldb-new -e MYSQL_ROOT_PASSWORD="$MYSQL_PWD" -v s08-mysql-data:/var/lib/mysql mysql:8
+ab76f9cb3f8edd51c25c59c278deea0dfbe9b7d6cb9ea279d6ea7d6b0303489a
+~/devops-homework/session-08-docker-networking$ until docker logs s08-voldb-new 2>&1 | grep -q 'ready for connections.*port: 3306'; do sleep 3; done; echo "new mysql container is ready"
+new mysql container is ready
+~/devops-homework/session-08-docker-networking$ docker exec -e MYSQL_PWD s08-voldb-new mysql -uroot -e "SELECT * FROM school.students;"
+id	name	roll
+1	Vansh Dobhal	10099

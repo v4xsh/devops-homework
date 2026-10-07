@@ -1,0 +1,12 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ echo "--- an Ingress that names a class with NO controller is accepted by the API but nobody implements it"
+--- an Ingress that names a class with NO controller is accepted by the API but nobody implements it
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl create ingress orphan-ingress -n s12 --class=traefik --rule="orphan.local/=app1-service:80"
+ingress.networking.k8s.io/orphan-ingress created
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ sleep 15
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl get ingress orphan-ingress -n s12
+NAME             CLASS     HOSTS          ADDRESS   PORTS   AGE
+orphan-ingress   traefik   orphan.local             80      15s
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ curl -s -o /dev/null -w "Host: orphan.local -> HTTP %{http_code} (no controller programmed this route)\n" -H "Host: orphan.local" http://$(minikube ip)/
+Host: orphan.local -> HTTP 404 (no controller programmed this route)
+~/devops-homework/session-12-ingress-configmaps-secrets/ingress-vs-controller$ kubectl delete ingress orphan-ingress -n s12
+ingress.networking.k8s.io "orphan-ingress" deleted from s12 namespace

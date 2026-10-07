@@ -1,0 +1,27 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ FIX=$(git log feature --format=%h --grep "critical" -n 1); echo "cherry-picking $FIX onto main"
+cherry-picking d39a6c4 onto main
+~/practice/git-homework$ git cherry-pick $FIX
+[main bae6c92] feature: critical input-validation fix
+ Date: Wed Oct 7 17:22:47 2026 +0000
+ 1 file changed, 1 insertion(+)
+ create mode 100644 hotfix.txt
+~/practice/git-homework$ git log --oneline
+bae6c92 feature: critical input-validation fix
+8aa17b7 main: add VERSION file
+e175067 main: add logout to auth.py
+47b6805 main: add auth.py login stub
+670d217 commit -am also stages deletions of tracked files
+df8bc52 Add new_file.txt with explicit git add + commit -m
+183a17b commit -a: auto-stage modified tracked files
+7cfaa34 Initial commit: README and app.txt
+~/practice/git-homework$ ls
+README.md
+VERSION
+app.txt
+auth.py
+hotfix.txt
+~/practice/git-homework$ cat hotfix.txt
+BUGFIX: validate user input before login
+~/practice/git-homework$ test -f payment.py || echo "payment.py is NOT on main (only the chosen commit was copied)"
+payment.py is NOT on main (only the chosen commit was copied)

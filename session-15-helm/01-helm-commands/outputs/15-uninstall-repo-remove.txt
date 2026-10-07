@@ -1,0 +1,19 @@
+~/devops-homework/session-15-helm/01-helm-commands$ helm uninstall web1 -n s15 --wait
+release "web1" uninstalled
+~/devops-homework/session-15-helm/01-helm-commands$ helm list -n s15 --all
+NAME	NAMESPACE	REVISION	UPDATED	STATUS	CHART	APP VERSION
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get all,secrets -n s15
+NAME                               READY   STATUS      RESTARTS   AGE
+pod/web1-webapp-69db6f5dc6-sdspx   0/1     Completed   0          3m5s
+pod/web1-webapp-test-connection    0/1     Completed   0          2m10s
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl delete pod web1-webapp-test-connection -n s15 --wait
+pod "web1-webapp-test-connection" deleted from s15 namespace
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl wait --for=delete pod -l app.kubernetes.io/instance=web1 -n s15 --timeout=90s
+~/devops-homework/session-15-helm/01-helm-commands$ kubectl get all,secrets -n s15
+No resources found in s15 namespace.
+~/devops-homework/session-15-helm/01-helm-commands$ helm repo remove bitnami
+"bitnami" has been removed from your repositories
+~/devops-homework/session-15-helm/01-helm-commands$ helm repo list
+NAME                	URL                                               
+prometheus-community	https://prometheus-community.github.io/helm-charts
+argo                	https://argoproj.github.io/argo-helm              

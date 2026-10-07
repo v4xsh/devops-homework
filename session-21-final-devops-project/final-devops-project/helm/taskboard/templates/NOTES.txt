@@ -1,0 +1,8 @@
+TaskBoard {{ .Chart.AppVersion }} deployed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+{{- if .Values.ingress.enabled }}
+Open:   http://{{ .Values.ingress.host }}/          (add "<ingress IP> {{ .Values.ingress.host }}" to /etc/hosts)
+API:    http://{{ .Values.ingress.host }}/api/tasks
+{{- end }}
+Pods:   kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+Test:   helm test {{ .Release.Name }} -n {{ .Release.Namespace }}

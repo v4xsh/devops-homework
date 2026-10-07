@@ -1,0 +1,42 @@
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 create-key-pair --key-name s18-vansh-key --query 'KeyName' --output text
+s18-vansh-key
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 describe-key-pairs --query 'KeyPairs[].[KeyName,KeyFingerprint]' --output table
+----------------------------------------------------------------------------------
+|                                DescribeKeyPairs                                |
++---------------+----------------------------------------------------------------+
+|  s18-vansh-key|  12:14:f9:cf:eb:17:d0:bf:ea:ac:cd:89:84:03:2c:0e:15:20:5e:93   |
++---------------+----------------------------------------------------------------+
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ SG=$(awsl ec2 create-security-group --group-name s18-web-sg --description "web demo" --query GroupId --output text); echo "SG=$SG"
+SG=sg-e69a0d9ccd30fdc12
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 authorize-security-group-ingress --group-id $SG --protocol tcp --port 80 --cidr 0.0.0.0/0 --query 'Return'
+true
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 authorize-security-group-ingress --group-id $SG --protocol tcp --port 22 --cidr 203.0.113.10/32 --query 'Return'
+true
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 describe-security-groups --group-ids $SG --query 'SecurityGroups[].IpPermissions[].[IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]' --output table
+----------------------------------------
+|        DescribeSecurityGroups        |
++-----+-----+-----+--------------------+
+|  tcp|  80 |  80 |  0.0.0.0/0         |
+|  tcp|  22 |  22 |  203.0.113.10/32   |
++-----+-----+-----+--------------------+
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ IID=$(awsl ec2 run-instances --image-id ami-760aaa0f --instance-type t2.micro --key-name s18-vansh-key --security-group-ids $SG --query 'Instances[0].InstanceId' --output text); echo "IID=$IID"
+IID=i-11dd18c283f3a4d95
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 describe-instances --instance-ids $IID --query 'Reservations[].Instances[].{Id:InstanceId,Type:InstanceType,AMI:ImageId,State:State.Name,PrivateIP:PrivateIpAddress,PublicIP:PublicIpAddress,RootDevice:RootDeviceType}' --output table
+---------------------------------------
+|          DescribeInstances          |
++-------------+-----------------------+
+|  AMI        |  ami-760aaa0f         |
+|  Id         |  i-11dd18c283f3a4d95  |
+|  PrivateIP  |  10.164.211.60        |
+|  PublicIP   |  54.214.151.142       |
+|  RootDevice |  ebs                  |
+|  State      |  running              |
+|  Type       |  t2.micro             |
++-------------+-----------------------+
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 stop-instances --instance-ids $IID --query 'StoppingInstances[].[InstanceId,PreviousState.Name,CurrentState.Name]' --output text
+i-11dd18c283f3a4d95	running	stopping
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 start-instances --instance-ids $IID --query 'StartingInstances[].[InstanceId,PreviousState.Name,CurrentState.Name]' --output text
+i-11dd18c283f3a4d95	stopped	pending
+~/devops-homework/session-18-terraform-iac/aws-services/02-ec2$ awsl ec2 terminate-instances --instance-ids $IID --query 'TerminatingInstances[].[InstanceId,PreviousState.Name,CurrentState.Name]' --output text
+i-11dd18c283f3a4d95	running	shutting-down

@@ -1,0 +1,17 @@
+# Long-running client pod used to send HTTP requests to the Services from *inside* the cluster.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl-client
+  labels:
+    app: curl-client
+spec:
+  containers:
+    - name: curl
+      image: curlimages/curl:8.10.1
+      command: ["sh", "-c", "sleep 36000"]
+      resources:
+        requests:
+          cpu: "10m"
+          memory: "16Mi"
+  terminationGracePeriodSeconds: 1

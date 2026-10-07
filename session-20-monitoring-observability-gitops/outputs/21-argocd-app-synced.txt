@@ -1,0 +1,55 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ argocd login localhost:18443 --username admin --password "$ARGO_PWD" --insecure --grpc-web
+'admin:login' logged in successfully
+Context 'localhost:18443' updated
+~/devops-homework/session-20-monitoring-observability-gitops$ cat task3-gitops/argocd/application-instructor-repo.yaml | grep -vE '^\s*#'
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: s20-gitops-instructor
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Nency-Ravaliya/devops-heros.git
+    targetRevision: main
+    path: session20-monitoring-observability-gitops/07-argocd/app
+    directory:
+      exclude: argocd-application.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: s20-app
+  syncPolicy:
+    automated:
+      prune: true      # delete resources that were removed from Git
+      selfHeal: true   # revert manual changes made in the cluster
+    syncOptions:
+      - CreateNamespace=true
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl apply -f task3-gitops/argocd/application-instructor-repo.yaml
+application.argoproj.io/s20-gitops-instructor created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl wait -n argocd application/s20-gitops-instructor --for=jsonpath='{.status.health.status}'=Healthy --timeout=300s
+application.argoproj.io/s20-gitops-instructor condition met
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get application -n argocd s20-gitops-instructor -o jsonpath='sync={.status.sync.status} health={.status.health.status} revision={.status.sync.revision}{"\n"}'
+sync=Synced health=Healthy revision=8376590a668ac8d6f2700d181c0739d0ed3fc5ea
+~/devops-homework/session-20-monitoring-observability-gitops$ argocd app get s20-gitops-instructor --grpc-web | head -n 25
+Name:               argocd/s20-gitops-instructor
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          s20-app
+URL:                https://localhost:18443/applications/s20-gitops-instructor
+Source:
+- Repo:             https://github.com/Nency-Ravaliya/devops-heros.git
+  Target:           main
+  Path:             session20-monitoring-observability-gitops/07-argocd/app
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to main (8376590)
+Health Status:      Healthy
+
+GROUP  KIND        NAMESPACE  NAME                  STATUS  HEALTH   HOOK  MESSAGE
+       Service     s20-app    session20-gitops-app  Synced  Healthy        service/session20-gitops-app created
+apps   Deployment  s20-app    session20-gitops-app  Synced  Healthy        deployment.apps/session20-gitops-app created
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get deploy,svc -n s20-app -l app=session20-gitops-app
+NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/session20-gitops-app   5/5     5            5           2s

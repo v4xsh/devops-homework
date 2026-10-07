@@ -1,0 +1,17 @@
+#!/bin/bash
+# Bootstrap script rendered by Terraform (templatefile) and run by cloud-init
+# on the first boot of the EC2 instance.
+set -euxo pipefail
+apt-get update -y
+apt-get install -y nginx
+cat > /var/www/html/index.html <<HTML
+<!DOCTYPE html>
+<html>
+  <head><title>${project}</title></head>
+  <body style="font-family: sans-serif; text-align: center; margin-top: 15%;">
+    <h1>Deployed by ${student} - ${roll_no}</h1>
+    <p>Provisioned with Terraform (session-19-cloud-terraform)</p>
+  </body>
+</html>
+HTML
+systemctl enable --now nginx

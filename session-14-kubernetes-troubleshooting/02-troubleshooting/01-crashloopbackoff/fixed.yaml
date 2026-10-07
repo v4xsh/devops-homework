@@ -1,0 +1,41 @@
+# FIX: provide DATABASE_URL (from a ConfigMap) so the app can start
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crashloop-app-config
+  namespace: s14
+data:
+  DATABASE_URL: "postgres://app@postgres.s14.svc.cluster.local:5432/orders"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crashloop-app
+  namespace: s14
+  labels:
+    scenario: crashloop
+spec:
+  containers:
+    - name: python-app
+      image: python:3.11-alpine
+      env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: crashloop-app-config
+              key: DATABASE_URL
+      command:
+        - python3
+        - -u
+        - -c
+        - |
+          import os, sys, time
+          print("order-service v1.4 starting, reading configuration...", flush=True)
+          time.sleep(3)
+          db_url = os.environ.get("DATABASE_URL")
+          if not db_url:
+              print("[FATAL ERROR]: DATABASE_URL environment variable is MISSING!", file=sys.stderr)
+              sys.exit(1)
+          print("Application started successfully, using " + db_url)
+          while True:
+              print("healthy"); time.sleep(10)

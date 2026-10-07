@@ -1,0 +1,26 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl events -n s14 --for pod/restarter
+LAST SEEN           TYPE      REASON      OBJECT          MESSAGE
+74s                 Normal    Scheduled   Pod/restarter   Successfully assigned s14/restarter to minikube
+29s (x2 over 54s)   Warning   BackOff     Pod/restarter   Back-off restarting failed container app in pod restarter_s14(4661adf8-c276-4b9d-a571-08b57a3372dc)
+8s (x4 over 71s)    Normal    Pulled      Pod/restarter   Container image "busybox:1.36" already present on machine and can be accessed by the pod
+8s (x4 over 71s)    Normal    Created     Pod/restarter   Container created
+8s (x4 over 71s)    Normal    Started     Pod/restarter   Container started
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get events -n s14 --sort-by=.lastTimestamp | tail -n 12
+72s         Normal    Started             pod/multi                   Container started
+72s         Normal    Started             pod/multi                   Container started
+72s         Normal    Pulled              pod/web-5644464899-j99n8    Container image "nginx:1.27" already present on machine and can be accessed by the pod
+72s         Normal    Created             pod/web-5644464899-j99n8    Container created
+72s         Normal    Created             pod/multi                   Container created
+72s         Normal    Pulled              pod/multi                   Container image "busybox:1.36" already present on machine and can be accessed by the pod
+72s         Normal    Started             pod/web-5644464899-lz6f6    Container started
+72s         Normal    Created             pod/web-5644464899-lz6f6    Container created
+9s          Normal    Pulled              pod/restarter               Container image "busybox:1.36" already present on machine and can be accessed by the pod
+9s          Normal    Started             pod/restarter               Container started
+9s          Normal    Created             pod/restarter               Container created
+0s          Warning   BackOff             pod/restarter               Back-off restarting failed container app in pod restarter_s14(4661adf8-c276-4b9d-a571-08b57a3372dc)
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl get events -n s14 --field-selector type=Warning
+LAST SEEN   TYPE      REASON    OBJECT          MESSAGE
+0s          Warning   BackOff   pod/restarter   Back-off restarting failed container app in pod restarter_s14(4661adf8-c276-4b9d-a571-08b57a3372dc)
+~/devops-homework/session-14-kubernetes-troubleshooting/01-kubectl-commands$ kubectl events -n s14 --types=Warning
+LAST SEEN          TYPE      REASON    OBJECT          MESSAGE
+1s (x3 over 56s)   Warning   BackOff   Pod/restarter   Back-off restarting failed container app in pod restarter_s14(4661adf8-c276-4b9d-a571-08b57a3372dc)

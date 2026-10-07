@@ -1,0 +1,34 @@
+~/devops-homework/session-16-cicd-github-actions$ python --version
+Python 3.12.3
+~/devops-homework/session-16-cicd-github-actions$ flake8 app tests --count --statistics
+0
+~/devops-homework/session-16-cicd-github-actions$ pytest -v -p no:cacheprovider --cov=app --cov-report=term-missing --cov-report=xml:reports/coverage.xml --junitxml=reports/junit.xml --cov-fail-under=90
+================================================================ test session starts =================================================================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /mnt/c/Users/Vansh/OneDrive/Desktop/dev-ops/devops-homework/session-16-cicd-github-actions
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1, cov-7.1.0, platformdirs-4.12.3
+collected 18 items
+
+tests/test_api.py ........                                                                                                                     [ 44%]
+tests/test_calculator.py ..........                                                                                                            [100%]
+
+---------- generated xml file: /mnt/c/Users/Vansh/OneDrive/Desktop/dev-ops/devops-homework/session-16-cicd-github-actions/reports/junit.xml ----------
+=================================================================== tests coverage ===================================================================
+__________________________________________________ coverage: platform linux, python 3.12.3-final-0 ___________________________________________________
+
+Name                Stmts   Miss  Cover   Missing
+-------------------------------------------------
+app/__init__.py         0      0   100%
+app/calculator.py      16      0   100%
+app/main.py            33      0   100%
+-------------------------------------------------
+TOTAL                  49      0   100%
+Coverage XML written to file reports/coverage.xml
+Required test coverage of 90% reached. Total coverage: 100.00%
+================================================================= 18 passed in 2.02s =================================================================
+~/devops-homework/session-16-cicd-github-actions$ ls -l reports/
+total 8
+-rwxrwxrwx 1 vansh vansh 2816 Oct  7 17:27 coverage.xml
+-rwxrwxrwx 1 vansh vansh 1835 Oct  7 17:27 junit.xml

@@ -1,0 +1,8 @@
+{{ .Release.Name }} is now at revision {{ .Release.Revision }} -> app {{ .Values.app.version }} ({{ .Values.image.repository }}:{{ .Values.image.tag }}, {{ .Values.replicaCount }} replica(s)).
+
+Check it from inside the cluster:
+  kubectl -n {{ .Release.Namespace }} exec client -- wget -qO- http://{{ include "rollback-demo.fullname" . }}
+
+History / rollback:
+  helm history {{ .Release.Name }} -n {{ .Release.Namespace }}
+  helm rollback {{ .Release.Name }} <REVISION> -n {{ .Release.Namespace }}

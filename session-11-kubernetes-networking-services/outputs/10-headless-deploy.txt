@@ -1,0 +1,42 @@
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl apply -f 05-headless/
+statefulset.apps/web created
+service/web-service-headless created
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl rollout status statefulset/web -n s11 --timeout=180s
+Waiting for 3 pods to be ready...
+Waiting for 2 pods to be ready...
+Waiting for 2 pods to be ready...
+Waiting for 1 pods to be ready...
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 3 new pods have been updated...
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get sts,pods -n s11 -l app=web-headless -o wide
+NAME                   READY   AGE   CONTAINERS       IMAGES
+statefulset.apps/web   3/3     3s    nginx-stateful   nginx:1.25-alpine
+
+NAME        READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+pod/web-0   1/1     Running   0          3s    10.244.0.99    minikube   <none>           <none>
+pod/web-1   1/1     Running   0          2s    10.244.0.100   minikube   <none>           <none>
+pod/web-2   1/1     Running   0          1s    10.244.0.101   minikube   <none>           <none>
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get svc web-service-headless -n s11 -o wide
+NAME                   TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+web-service-headless   ClusterIP   None         <none>        80/TCP    4s    app=web-headless
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl get endpoints web-service-headless -n s11
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                   ENDPOINTS                                        AGE
+web-service-headless   10.244.0.100:80,10.244.0.101:80,10.244.0.99:80   4s
+~/devops-homework/session-11-kubernetes-networking-services$ kubectl describe svc web-service-headless -n s11
+Name:                     web-service-headless
+Namespace:                s11
+Labels:                   app=web-headless
+Annotations:              <none>
+Selector:                 app=web-headless
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       None
+IPs:                      None
+Port:                     web  80/TCP
+TargetPort:               80/TCP
+Endpoints:                10.244.0.99:80,10.244.0.100:80,10.244.0.101:80
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>

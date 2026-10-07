@@ -1,0 +1,25 @@
+~/devops-homework/session-08-docker-networking$ sudo ss -ltnp 'sport = :80' ; echo "(nothing is listening on :80 before the test)"
+State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+(nothing is listening on :80 before the test)
+~/devops-homework/session-08-docker-networking$ docker run -d --name s08-apache-host --network host ubuntu/apache2:latest
+ab87aea7281497951bd743659d05cc868e42f3a4c252077454f5a3617d20b996
+~/devops-homework/session-08-docker-networking$ sleep 3
+~/devops-homework/session-08-docker-networking$ docker ps --filter name=s08-apache-host --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Networks}}"
+NAMES             IMAGE                   STATUS         PORTS     NETWORKS
+s08-apache-host   ubuntu/apache2:latest   Up 3 seconds             host
+~/devops-homework/session-08-docker-networking$ sudo ss -ltnp 'sport = :80'
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      511                *:80              *:*    users:(("apache2",pid=879310,fd=4),("apache2",pid=879307,fd=4),("apache2",pid=879304,fd=4))
+~/devops-homework/session-08-docker-networking$ curl -s -I localhost:80 | head -n 4
+HTTP/1.1 200 OK
+Date: Wed, 07 Oct 2026 17:45:59 GMT
+Server: Apache/2.4.63 (Ubuntu)
+Last-Modified: Mon, 24 Nov 2025 13:13:27 GMT
+~/devops-homework/session-08-docker-networking$ curl -s localhost:80 | grep -o '<title>.*</title>'
+<title>Apache2 Ubuntu Default Page: It works</title>
+~/devops-homework/session-08-docker-networking$ docker inspect s08-apache-host -f 'NetworkMode={{.HostConfig.NetworkMode}}  PortBindings={{.HostConfig.PortBindings}}'
+NetworkMode=host  PortBindings=map[]
+~/devops-homework/session-08-docker-networking$ docker rm -f s08-apache-host
+s08-apache-host
+~/devops-homework/session-08-docker-networking$ curl -s -o /dev/null -w "after stop -> curl exit code %{exitcode}, http code %{http_code}\n" localhost:80
+after stop -> curl exit code 7, http code 000

@@ -1,0 +1,5 @@
+config: {appEnv: dev, logLevel: DEBUG}
+backend: {replicaCount: 1}
+frontend: {replicaCount: 1}
+hpa: {enabled: false}
+ingress: {host: taskboard-dev.local}

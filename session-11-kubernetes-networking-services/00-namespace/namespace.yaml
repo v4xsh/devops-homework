@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: s11
+  labels:
+    owner: vansh-dobhal
+    session: "11"

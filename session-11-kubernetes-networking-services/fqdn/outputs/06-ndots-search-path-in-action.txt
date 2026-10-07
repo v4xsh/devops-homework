@@ -1,0 +1,22 @@
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ echo "--- +search makes dig use the resolv.conf search list like an application would"
+--- +search makes dig use the resolv.conf search list like an application would
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- dig +search +noall +answer +question web-service-clusterip.s11
+;web-service-clusterip.s11.svc.cluster.local. IN	A
+web-service-clusterip.s11.svc.cluster.local. 30	IN A 10.102.6.189
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ echo "--- an external name (fewer than 5 dots) is first tried with every search suffix, then as-is"
+--- an external name (fewer than 5 dots) is first tried with every search suffix, then as-is
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s12 dnsutils-s12 -- nslookup -debug example.com 2>&1 | grep -E "QUESTIONS|example.com" | head -14
+    QUESTIONS:
+	example.com.s12.svc.cluster.local, type = A, class = IN
+** server can't find example.com.s12.svc.cluster.local: NXDOMAIN
+    QUESTIONS:
+	example.com.svc.cluster.local, type = A, class = IN
+** server can't find example.com.svc.cluster.local: NXDOMAIN
+    QUESTIONS:
+	example.com.cluster.local, type = A, class = IN
+** server can't find example.com.cluster.local: NXDOMAIN
+    QUESTIONS:
+	example.com, type = A, class = IN
+    ->  example.com
+    ->  example.com
+    ->  example.com

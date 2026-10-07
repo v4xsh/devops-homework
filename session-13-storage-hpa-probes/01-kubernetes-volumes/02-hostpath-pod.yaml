@@ -1,0 +1,19 @@
+# hostPath mounts a directory of the NODE (the minikube container) into the pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostpath-demo
+  namespace: s13
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "echo \"hostPath write at $(date) from $(hostname)\" >> /host-data/hostpath.log; sleep 3600"]
+      volumeMounts:
+        - name: host-storage
+          mountPath: /host-data
+  volumes:
+    - name: host-storage
+      hostPath:
+        path: /tmp/s13-hostpath-data
+        type: DirectoryOrCreate

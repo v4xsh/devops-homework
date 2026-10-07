@@ -1,0 +1,540 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ terraform show -no-color
+# data.aws_ami.ubuntu:
+data "aws_ami" "ubuntu" {
+    architecture          = "x86_64"
+    arn                   = "arn:aws:ec2:ap-south-1::image/ami-1e749f67"
+    block_device_mappings = [
+        {
+            device_name  = "/dev/sda1"
+            ebs          = {
+                "delete_on_termination"      = "false"
+                "encrypted"                  = "false"
+                "iops"                       = "0"
+                "snapshot_id"                = "snap-00d3f0c8fcd3f5800"
+                "throughput"                 = "0"
+                "volume_initialization_rate" = "0"
+                "volume_size"                = "15"
+                "volume_type"                = "standard"
+            }
+            no_device    = null
+            virtual_name = null
+        },
+    ]
+    boot_mode             = "uefi"
+    creation_date         = "2026-10-07T17:08:27.000Z"
+    deprecation_time      = null
+    description           = "Canonical, Ubuntu, 14.04 LTS, amd64 trusty image build on 2017-07-27"
+    ena_support           = false
+    hypervisor            = "xen"
+    id                    = "ami-1e749f67"
+    image_id              = "ami-1e749f67"
+    image_location        = "amazon/getting-started"
+    image_owner_alias     = "amazon"
+    image_type            = "machine"
+    imds_support          = null
+    include_deprecated    = false
+    kernel_id             = null
+    last_launched_time    = null
+    most_recent           = true
+    name                  = "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20170727"
+    owner_id              = "099720109477"
+    owners                = [
+        "099720109477",
+    ]
+    platform              = null
+    platform_details      = null
+    product_codes         = []
+    public                = true
+    ramdisk_id            = null
+    region                = "ap-south-1"
+    root_device_name      = "/dev/sda1"
+    root_device_type      = "ebs"
+    root_snapshot_id      = "snap-00d3f0c8fcd3f5800"
+    sriov_net_support     = null
+    state                 = "available"
+    state_reason          = {
+        "code"    = "UNSET"
+        "message" = "UNSET"
+    }
+    tags                  = {}
+    tpm_support           = null
+    usage_operation       = null
+    virtualization_type   = "hvm"
+
+    filter {
+        name   = "name"
+        values = [
+            "ubuntu/images/hvm-ssd*/ubuntu-*-amd64-server-*",
+        ]
+    }
+}
+
+# aws_instance.web:
+resource "aws_instance" "web" {
+    ami                                  = "ami-1e749f67"
+    arn                                  = "arn:aws:ec2:ap-south-1::instance/i-9878221feb6427ab4"
+    associate_public_ip_address          = true
+    availability_zone                    = "ap-south-1a"
+    disable_api_stop                     = false
+    disable_api_termination              = false
+    ebs_optimized                        = false
+    force_destroy                        = false
+    get_password_data                    = false
+    hibernation                          = false
+    host_id                              = null
+    iam_instance_profile                 = null
+    id                                   = "i-9878221feb6427ab4"
+    instance_initiated_shutdown_behavior = "stop"
+    instance_lifecycle                   = null
+    instance_state                       = "running"
+    instance_type                        = "t2.micro"
+    ipv6_address_count                   = 0
+    ipv6_addresses                       = []
+    key_name                             = null
+    monitoring                           = false
+    outpost_arn                          = null
+    password_data                        = null
+    placement_group                      = null
+    placement_group_id                   = null
+    placement_partition_number           = 0
+    primary_network_interface_id         = "eni-edf15022f99488198"
+    private_dns                          = "ip-10-19-1-4.ap-south-1.compute.internal"
+    private_ip                           = "10.19.1.4"
+    public_dns                           = "ec2-54-214-106-197.ap-south-1.compute.amazonaws.com"
+    public_ip                            = "54.214.106.197"
+    region                               = "ap-south-1"
+    secondary_private_ips                = []
+    security_groups                      = []
+    source_dest_check                    = true
+    spot_instance_request_id             = null
+    subnet_id                            = "subnet-ac1f83a4d7b25ee74"
+    tags                                 = {
+        "Name" = "s19-vansh-web"
+    }
+    tags_all                             = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "s19-vansh-web"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+    tenancy                              = "default"
+    user_data                            = <<-EOT
+        #!/bin/bash
+        # Bootstrap script rendered by Terraform (templatefile) and run by cloud-init
+        # on the first boot of the EC2 instance.
+        set -euxo pipefail
+        apt-get update -y
+        apt-get install -y nginx
+        cat > /var/www/html/index.html <<HTML
+        <!DOCTYPE html>
+        <html>
+          <head><title>s19-vansh</title></head>
+          <body style="font-family: sans-serif; text-align: center; margin-top: 15%;">
+            <h1>Deployed by Vansh Dobhal - 10099</h1>
+            <p>Provisioned with Terraform (session-19-cloud-terraform)</p>
+          </body>
+        </html>
+        HTML
+        systemctl enable --now nginx
+    EOT
+    user_data_replace_on_change          = false
+    vpc_security_group_ids               = [
+        "sg-2befe72ec5e567990",
+    ]
+
+    metadata_options {
+        http_endpoint               = "enabled"
+        http_protocol_ipv6          = "disabled"
+        http_put_response_hop_limit = 1
+        http_tokens                 = "optional"
+        instance_metadata_tags      = "disabled"
+    }
+
+    primary_network_interface {
+        delete_on_termination = true
+        network_interface_id  = "eni-edf15022f99488198"
+    }
+
+    root_block_device {
+        delete_on_termination = true
+        device_name           = "/dev/sda1"
+        encrypted             = false
+        iops                  = 3000
+        kms_key_id            = null
+        tags_all              = {
+            "ManagedBy" = "Terraform"
+            "Owner"     = "Vansh Dobhal"
+            "Project"   = "s19-vansh"
+            "RollNo"    = "10099"
+        }
+        throughput            = 0
+        volume_id             = "vol-ed0bc9859960e7f91"
+        volume_size           = 8
+        volume_type           = "gp3"
+    }
+}
+
+# aws_internet_gateway.main:
+resource "aws_internet_gateway" "main" {
+    arn      = "arn:aws:ec2:ap-south-1:000000000000:internet-gateway/igw-613f6a9edd214c755"
+    id       = "igw-613f6a9edd214c755"
+    owner_id = "000000000000"
+    region   = "ap-south-1"
+    tags     = {
+        "Name" = "s19-vansh-igw"
+    }
+    tags_all = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "s19-vansh-igw"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+    vpc_id   = "vpc-163f2a080834ae667"
+}
+
+# aws_route_table.public:
+resource "aws_route_table" "public" {
+    arn              = "arn:aws:ec2:ap-south-1:000000000000:route-table/rtb-b76dcc28b082dbcab"
+    id               = "rtb-b76dcc28b082dbcab"
+    owner_id         = "000000000000"
+    propagating_vgws = []
+    region           = "ap-south-1"
+    route            = [
+        {
+            carrier_gateway_id         = null
+            cidr_block                 = "0.0.0.0/0"
+            core_network_arn           = null
+            destination_prefix_list_id = null
+            egress_only_gateway_id     = null
+            gateway_id                 = "igw-613f6a9edd214c755"
+            ipv6_cidr_block            = null
+            local_gateway_id           = null
+            nat_gateway_id             = null
+            network_interface_id       = null
+            transit_gateway_id         = null
+            vpc_endpoint_id            = null
+            vpc_peering_connection_id  = null
+        },
+    ]
+    tags             = {
+        "Name" = "s19-vansh-public-rt"
+    }
+    tags_all         = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "s19-vansh-public-rt"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+    vpc_id           = "vpc-163f2a080834ae667"
+}
+
+# aws_route_table_association.public:
+resource "aws_route_table_association" "public" {
+    gateway_id     = null
+    id             = "rtbassoc-1d909c6b12de9a2df"
+    region         = "ap-south-1"
+    route_table_id = "rtb-b76dcc28b082dbcab"
+    subnet_id      = "subnet-ac1f83a4d7b25ee74"
+}
+
+# aws_s3_bucket.artifacts:
+resource "aws_s3_bucket" "artifacts" {
+    acceleration_status         = null
+    arn                         = "arn:aws:s3:::vansh-dobhal-10099-s19-artifacts"
+    bucket                      = "vansh-dobhal-10099-s19-artifacts"
+    bucket_domain_name          = "vansh-dobhal-10099-s19-artifacts.s3.amazonaws.com"
+    bucket_prefix               = null
+    bucket_region               = "ap-south-1"
+    bucket_regional_domain_name = "vansh-dobhal-10099-s19-artifacts.s3.ap-south-1.amazonaws.com"
+    force_destroy               = true
+    hosted_zone_id              = "Z11RGJOFQNVJUP"
+    id                          = "vansh-dobhal-10099-s19-artifacts"
+    object_lock_enabled         = false
+    policy                      = null
+    region                      = "ap-south-1"
+    request_payer               = "BucketOwner"
+    tags                        = {
+        "Name"    = "vansh-dobhal-10099-s19-artifacts"
+        "Purpose" = "logs-and-artifacts"
+    }
+    tags_all                    = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "vansh-dobhal-10099-s19-artifacts"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "Purpose"   = "logs-and-artifacts"
+        "RollNo"    = "10099"
+    }
+
+    grant {
+        id          = "75aa57f09aa0c8caeab4f8c24e99d10f8e7faeebf76c078efc7c6caea54ba06a"
+        permissions = [
+            "FULL_CONTROL",
+        ]
+        type        = "CanonicalUser"
+        uri         = null
+    }
+
+    server_side_encryption_configuration {
+        rule {
+            bucket_key_enabled = false
+
+            apply_server_side_encryption_by_default {
+                kms_master_key_id = null
+                sse_algorithm     = "AES256"
+            }
+        }
+    }
+
+    versioning {
+        enabled    = false
+        mfa_delete = false
+    }
+}
+
+# aws_s3_bucket_public_access_block.artifacts:
+resource "aws_s3_bucket_public_access_block" "artifacts" {
+    block_public_acls       = true
+    block_public_policy     = true
+    bucket                  = "vansh-dobhal-10099-s19-artifacts"
+    id                      = "vansh-dobhal-10099-s19-artifacts"
+    ignore_public_acls      = true
+    region                  = "ap-south-1"
+    restrict_public_buckets = true
+}
+
+# aws_s3_bucket_server_side_encryption_configuration.artifacts:
+resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
+    bucket                = "vansh-dobhal-10099-s19-artifacts"
+    expected_bucket_owner = null
+    id                    = "vansh-dobhal-10099-s19-artifacts"
+    region                = "ap-south-1"
+
+    rule {
+        blocked_encryption_types = []
+
+        apply_server_side_encryption_by_default {
+            kms_master_key_id = null
+            sse_algorithm     = "AES256"
+        }
+    }
+}
+
+# aws_s3_bucket_versioning.artifacts:
+resource "aws_s3_bucket_versioning" "artifacts" {
+    bucket                = "vansh-dobhal-10099-s19-artifacts"
+    expected_bucket_owner = null
+    id                    = "vansh-dobhal-10099-s19-artifacts"
+    region                = "ap-south-1"
+
+    versioning_configuration {
+        mfa_delete = null
+        status     = "Enabled"
+    }
+}
+
+# aws_s3_object.user_data_artifact:
+resource "aws_s3_object" "user_data_artifact" {
+    arn                           = "arn:aws:s3:::vansh-dobhal-10099-s19-artifacts/artifacts/i-9878221feb6427ab4/user_data.sh"
+    bucket                        = "vansh-dobhal-10099-s19-artifacts"
+    bucket_key_enabled            = false
+    cache_control                 = null
+    checksum_crc32                = null
+    checksum_crc32c               = null
+    checksum_crc64nvme            = null
+    checksum_sha1                 = null
+    checksum_sha256               = null
+    content                       = <<-EOT
+        #!/bin/bash
+        # Bootstrap script rendered by Terraform (templatefile) and run by cloud-init
+        # on the first boot of the EC2 instance.
+        set -euxo pipefail
+        apt-get update -y
+        apt-get install -y nginx
+        cat > /var/www/html/index.html <<HTML
+        <!DOCTYPE html>
+        <html>
+          <head><title>s19-vansh</title></head>
+          <body style="font-family: sans-serif; text-align: center; margin-top: 15%;">
+            <h1>Deployed by Vansh Dobhal - 10099</h1>
+            <p>Provisioned with Terraform (session-19-cloud-terraform)</p>
+          </body>
+        </html>
+        HTML
+        systemctl enable --now nginx
+    EOT
+    content_disposition           = null
+    content_encoding              = null
+    content_language              = null
+    content_type                  = "text/x-shellscript"
+    etag                          = "6ac99be86b96905c7a9f5daafe917739"
+    force_destroy                 = false
+    id                            = "vansh-dobhal-10099-s19-artifacts/artifacts/i-9878221feb6427ab4/user_data.sh"
+    key                           = "artifacts/i-9878221feb6427ab4/user_data.sh"
+    object_lock_legal_hold_status = null
+    object_lock_mode              = null
+    object_lock_retain_until_date = null
+    region                        = "ap-south-1"
+    server_side_encryption        = "AES256"
+    storage_class                 = "STANDARD"
+    tags_all                      = {
+        "ManagedBy" = "Terraform"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+    version_id                    = "AaEXWUUtHflN6F18wp6XcjhbN1hj4NSL"
+    website_redirect              = null
+}
+
+# aws_security_group.web:
+resource "aws_security_group" "web" {
+    arn                    = "arn:aws:ec2:ap-south-1:000000000000:security-group/sg-2befe72ec5e567990"
+    description            = "SSH from my IP only, HTTP from anywhere"
+    egress                 = [
+        {
+            cidr_blocks      = [
+                "0.0.0.0/0",
+            ]
+            description      = "All outbound (apt-get needs it)"
+            from_port        = 0
+            ipv6_cidr_blocks = []
+            prefix_list_ids  = []
+            protocol         = "-1"
+            security_groups  = []
+            self             = false
+            to_port          = 0
+        },
+    ]
+    id                     = "sg-2befe72ec5e567990"
+    ingress                = [
+        {
+            cidr_blocks      = [
+                "0.0.0.0/0",
+            ]
+            description      = "HTTP from anywhere"
+            from_port        = 80
+            ipv6_cidr_blocks = []
+            prefix_list_ids  = []
+            protocol         = "tcp"
+            security_groups  = []
+            self             = false
+            to_port          = 80
+        },
+        {
+            cidr_blocks      = [
+                "203.0.113.10/32",
+            ]
+            description      = "SSH from my IP"
+            from_port        = 22
+            ipv6_cidr_blocks = []
+            prefix_list_ids  = []
+            protocol         = "tcp"
+            security_groups  = []
+            self             = false
+            to_port          = 22
+        },
+    ]
+    name                   = "s19-vansh-web-sg"
+    name_prefix            = null
+    owner_id               = "000000000000"
+    region                 = "ap-south-1"
+    revoke_rules_on_delete = false
+    tags                   = {
+        "Name" = "s19-vansh-web-sg"
+    }
+    tags_all               = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "s19-vansh-web-sg"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+    vpc_id                 = "vpc-163f2a080834ae667"
+}
+
+# aws_subnet.public:
+resource "aws_subnet" "public" {
+    arn                                            = "arn:aws:ec2:ap-south-1:000000000000:subnet/subnet-ac1f83a4d7b25ee74"
+    assign_ipv6_address_on_creation                = false
+    availability_zone                              = "ap-south-1a"
+    availability_zone_id                           = "aps1-az1"
+    cidr_block                                     = "10.19.1.0/24"
+    customer_owned_ipv4_pool                       = null
+    enable_dns64                                   = false
+    enable_lni_at_device_index                     = 0
+    enable_resource_name_dns_a_record_on_launch    = false
+    enable_resource_name_dns_aaaa_record_on_launch = false
+    id                                             = "subnet-ac1f83a4d7b25ee74"
+    ipv6_cidr_block                                = null
+    ipv6_cidr_block_association_id                 = null
+    ipv6_native                                    = false
+    map_customer_owned_ip_on_launch                = false
+    map_public_ip_on_launch                        = true
+    outpost_arn                                    = null
+    owner_id                                       = "000000000000"
+    private_dns_hostname_type_on_launch            = "ip-name"
+    region                                         = "ap-south-1"
+    tags                                           = {
+        "Name" = "s19-vansh-public-subnet"
+    }
+    tags_all                                       = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "s19-vansh-public-subnet"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+    vpc_id                                         = "vpc-163f2a080834ae667"
+}
+
+# aws_vpc.main:
+resource "aws_vpc" "main" {
+    arn                                  = "arn:aws:ec2:ap-south-1:000000000000:vpc/vpc-163f2a080834ae667"
+    assign_generated_ipv6_cidr_block     = false
+    cidr_block                           = "10.19.0.0/16"
+    default_network_acl_id               = "acl-da38c40092828431f"
+    default_route_table_id               = "rtb-97ca75c7f4ccb6c10"
+    default_security_group_id            = "sg-0f89b748a642367f9"
+    dhcp_options_id                      = "default"
+    enable_dns_hostnames                 = true
+    enable_dns_support                   = true
+    enable_network_address_usage_metrics = false
+    id                                   = "vpc-163f2a080834ae667"
+    instance_tenancy                     = "default"
+    ipv6_association_id                  = null
+    ipv6_cidr_block                      = null
+    ipv6_cidr_block_network_border_group = null
+    ipv6_ipam_pool_id                    = null
+    ipv6_netmask_length                  = 0
+    main_route_table_id                  = "rtb-97ca75c7f4ccb6c10"
+    owner_id                             = "000000000000"
+    region                               = "ap-south-1"
+    tags                                 = {
+        "Name" = "s19-vansh-vpc"
+    }
+    tags_all                             = {
+        "ManagedBy" = "Terraform"
+        "Name"      = "s19-vansh-vpc"
+        "Owner"     = "Vansh Dobhal"
+        "Project"   = "s19-vansh"
+        "RollNo"    = "10099"
+    }
+}
+
+
+Outputs:
+
+ami_id = "ami-1e749f67"
+artifact_bucket = "vansh-dobhal-10099-s19-artifacts"
+instance_id = "i-9878221feb6427ab4"
+instance_public_ip = "54.214.106.197"
+internet_gateway_id = "igw-613f6a9edd214c755"
+public_subnet_id = "subnet-ac1f83a4d7b25ee74"
+security_group_id = "sg-2befe72ec5e567990"
+user_data_artifact_key = "artifacts/i-9878221feb6427ab4/user_data.sh"
+vpc_id = "vpc-163f2a080834ae667"
+website_url = "http://54.214.106.197"

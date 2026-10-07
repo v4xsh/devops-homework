@@ -1,0 +1,25 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f ../00-namespace/namespaces.yaml
+namespace/s12 unchanged
+namespace/s12-troubleshoot unchanged
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/01-backend.yaml
+deployment.apps/yatri-backend created
+pod/debug-client created
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl rollout status deployment/yatri-backend -n s12-troubleshoot --timeout=120s
+Waiting for deployment "yatri-backend" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "yatri-backend" rollout to finish: 1 of 2 updated replicas are available...
+deployment "yatri-backend" successfully rolled out
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl wait --for=condition=Ready pod/debug-client -n s12-troubleshoot --timeout=120s
+pod/debug-client condition met
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl apply -f manifests/01-empty-endpoints-broken.yaml
+service/broken-backend-service created
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pods,svc -n s12-troubleshoot
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/debug-client                     1/1     Running   0          5s
+pod/yatri-backend-5b6cdbdb5b-cpjrn   1/1     Running   0          5s
+pod/yatri-backend-5b6cdbdb5b-jp6rn   1/1     Running   0          5s
+
+NAME                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+service/broken-backend-service   ClusterIP   10.106.203.252   <none>        80/TCP    0s
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl exec -n s12-troubleshoot debug-client -- curl -s -m 5 http://broken-backend-service || echo "curl exit code $? -> service resolves but nothing answers"
+command terminated with exit code 7
+curl exit code 7 -> service resolves but nothing answers

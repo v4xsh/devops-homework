@@ -1,0 +1,17 @@
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl apply -f fixed.yaml
+deployment.apps/shop-web unchanged
+service/shop-web configured
+pod/svc-client unchanged
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ sleep 3
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl describe svc shop-web -n s14 | grep -E 'Selector|TargetPort|Endpoints'
+Selector:                 app=shop-web
+TargetPort:               80/TCP
+Endpoints:                10.244.0.218:80,10.244.0.219:80
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl get endpoints shop-web -n s14
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME       ENDPOINTS                         AGE
+shop-web   10.244.0.218:80,10.244.0.219:80   15s
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl exec svc-client -n s14 -- curl -sS -m 3 http://shop-web | grep -i '<title>'
+<title>Welcome to nginx!</title>
+~/devops-homework/session-14-kubernetes-troubleshooting/02-troubleshooting/06-service-connectivity$ kubectl exec svc-client -n s14 -- curl -sS -m 3 -o /dev/null -w "shop-web.s14.svc.cluster.local -> HTTP %{http_code}\n" http://shop-web.s14.svc.cluster.local
+shop-web.s14.svc.cluster.local -> HTTP 200

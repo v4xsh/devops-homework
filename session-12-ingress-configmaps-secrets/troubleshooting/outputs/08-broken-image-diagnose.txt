@@ -1,0 +1,18 @@
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ BAD=$(kubectl get pods -n s12-troubleshoot -l app=yatri-web,version=broken-v3 -o jsonpath='{.items[0].metadata.name}'); echo "failing pod: $BAD"
+failing pod: yatri-web-7f6f8496f5-qhwcx
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get pod $BAD -n s12-troubleshoot -o jsonpath='{.status.containerStatuses[0].state.waiting}{"\n"}'
+{"message":"Back-off pulling image \"yatri-backend:non-existent-tag-v999\": ErrImagePull: failed to pull and unpack image \"docker.io/library/yatri-backend:non-existent-tag-v999\": failed to resolve reference \"docker.io/library/yatri-backend:non-existent-tag-v999\": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed","reason":"ImagePullBackOff"}
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl describe pod $BAD -n s12-troubleshoot | sed -n '/Events:/,$p' | tail -8
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  45s                default-scheduler  Successfully assigned s12-troubleshoot/yatri-web-7f6f8496f5-qhwcx to minikube
+  Warning  Failed     26s (x2 over 42s)  kubelet            spec.containers{backend}: Failed to pull image "yatri-backend:non-existent-tag-v999": failed to pull and unpack image "docker.io/library/yatri-backend:non-existent-tag-v999": failed to resolve reference "docker.io/library/yatri-backend:non-existent-tag-v999": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+  Warning  Failed     26s (x2 over 42s)  kubelet            spec.containers{backend}: Error: ErrImagePull
+  Normal   BackOff    15s (x2 over 42s)  kubelet            spec.containers{backend}: Back-off pulling image "yatri-backend:non-existent-tag-v999"
+  Warning  Failed     15s (x2 over 42s)  kubelet            spec.containers{backend}: Error: ImagePullBackOff
+  Normal   Pulling    1s (x3 over 44s)   kubelet            spec.containers{backend}: Pulling image "yatri-backend:non-existent-tag-v999"
+~/devops-homework/session-12-ingress-configmaps-secrets/troubleshooting$ kubectl get events -n s12-troubleshoot --field-selector involvedObject.name=$BAD --sort-by=.lastTimestamp | tail -4
+26s         Warning   Failed      pod/yatri-web-7f6f8496f5-qhwcx   Error: ErrImagePull
+15s         Normal    BackOff     pod/yatri-web-7f6f8496f5-qhwcx   Back-off pulling image "yatri-backend:non-existent-tag-v999"
+15s         Warning   Failed      pod/yatri-web-7f6f8496f5-qhwcx   Error: ImagePullBackOff
+1s          Normal    Pulling     pod/yatri-web-7f6f8496f5-qhwcx   Pulling image "yatri-backend:non-existent-tag-v999"

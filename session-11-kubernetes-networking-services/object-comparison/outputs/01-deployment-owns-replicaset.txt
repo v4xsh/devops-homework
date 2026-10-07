@@ -1,0 +1,26 @@
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl apply -f deployment.yaml
+deployment.apps/demo-deploy created
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl rollout status deployment/demo-deploy -n s11 --timeout=120s
+Waiting for deployment "demo-deploy" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "demo-deploy" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "demo-deploy" rollout to finish: 2 of 3 updated replicas are available...
+deployment "demo-deploy" successfully rolled out
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get deploy,rs,pods -n s11 -l app=demo-deploy
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/demo-deploy   3/3     3            3           2s
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/demo-deploy-5fd8d985d5   3         3         3       2s
+
+NAME                               READY   STATUS    RESTARTS   AGE
+pod/demo-deploy-5fd8d985d5-8t2x9   1/1     Running   0          2s
+pod/demo-deploy-5fd8d985d5-l29vq   1/1     Running   0          2s
+pod/demo-deploy-5fd8d985d5-tzmpv   1/1     Running   0          2s
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get rs -n s11 -l app=demo-deploy -o custom-columns='RS:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name,CONTROLLER:.metadata.ownerReferences[0].controller'
+RS                       OWNER-KIND   OWNER         CONTROLLER
+demo-deploy-5fd8d985d5   Deployment   demo-deploy   true
+~/devops-homework/session-11-kubernetes-networking-services/object-comparison$ kubectl get pods -n s11 -l app=demo-deploy -o custom-columns='POD:.metadata.name,OWNER-KIND:.metadata.ownerReferences[0].kind,OWNER:.metadata.ownerReferences[0].name,HASH:.metadata.labels.pod-template-hash'
+POD                            OWNER-KIND   OWNER                    HASH
+demo-deploy-5fd8d985d5-8t2x9   ReplicaSet   demo-deploy-5fd8d985d5   5fd8d985d5
+demo-deploy-5fd8d985d5-l29vq   ReplicaSet   demo-deploy-5fd8d985d5   5fd8d985d5
+demo-deploy-5fd8d985d5-tzmpv   ReplicaSet   demo-deploy-5fd8d985d5   5fd8d985d5

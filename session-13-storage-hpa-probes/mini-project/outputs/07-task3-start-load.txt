@@ -1,0 +1,13 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl run load-generator -n s13-mini --image=busybox:1.36 --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://web-service > /dev/null; done"
+pod/load-generator created
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl wait --for=condition=Ready pod/load-generator -n s13-mini --timeout=60s
+pod/load-generator condition met
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ sleep 60
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get hpa -n s13-mini
+NAME          REFERENCE            TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+web-app-hpa   Deployment/web-app   cpu: 13%/50%   2         5         2          2m21s
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl top pods -n s13-mini
+NAME                      CPU(cores)   MEMORY(bytes)   
+load-generator            712m         3Mi             
+web-app-d45775485-7hp2b   40m          17Mi            
+web-app-d45775485-hdxv5   13m          13Mi            

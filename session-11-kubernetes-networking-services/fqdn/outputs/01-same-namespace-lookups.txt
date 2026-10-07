@@ -1,0 +1,36 @@
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl get svc -n s11
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+db-headless                ClusterIP      None            <none>        80/TCP           2m26s
+external-docs-service      ExternalName   <none>          example.com   <none>           5m55s
+web-service-clusterip      ClusterIP      10.102.6.189    <none>        8080/TCP         17m
+web-service-headless       ClusterIP      None            <none>        80/TCP           5m47s
+web-service-loadbalancer   LoadBalancer   10.104.10.192   <pending>     8081:31470/TCP   6m25s
+web-service-nodeport       NodePort       10.99.14.109    <none>        80:31111/TCP     16m
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s11 dnsutils -- nslookup web-service-clusterip
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s11 dnsutils -- nslookup web-service-clusterip.s11
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s11 dnsutils -- nslookup web-service-clusterip.s11.svc
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+
+~/devops-homework/session-11-kubernetes-networking-services/fqdn$ kubectl exec -n s11 dnsutils -- nslookup web-service-clusterip.s11.svc.cluster.local.
+Server:		10.96.0.10
+Address:	10.96.0.10#53
+
+Name:	web-service-clusterip.s11.svc.cluster.local
+Address: 10.102.6.189
+

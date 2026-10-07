@@ -1,0 +1,18 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ POD_NAME=$(kubectl get pods -n s13-mini -l app=web-app -o jsonpath='{.items[0].metadata.name}'); echo "POD_NAME=$POD_NAME"
+POD_NAME=web-app-d45775485-5dsfz
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl exec -n s13-mini "$POD_NAME" -- sh -c 'echo "Student: Vansh Dobhal (Roll No. 10099)" > /data/student.txt'
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl exec -n s13-mini "$POD_NAME" -- cat /data/student.txt
+Student: Vansh Dobhal (Roll No. 10099)
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl delete pod -n s13-mini "$POD_NAME"
+pod "web-app-d45775485-5dsfz" deleted from s13-mini namespace
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl rollout status deployment/web-app -n s13-mini --timeout=120s
+Waiting for deployment "web-app" rollout to finish: 1 of 2 updated replicas are available...
+deployment "web-app" successfully rolled out
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl get pods -n s13-mini
+NAME                      READY   STATUS    RESTARTS   AGE
+web-app-d45775485-7hp2b   1/1     Running   0          12s
+web-app-d45775485-hdxv5   1/1     Running   0          91s
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ NEW_POD=$(kubectl get pods -n s13-mini -l app=web-app --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1:].metadata.name}'); echo "NEW_POD=$NEW_POD"
+NEW_POD=web-app-d45775485-7hp2b
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl exec -n s13-mini "$NEW_POD" -- cat /data/student.txt
+Student: Vansh Dobhal (Roll No. 10099)

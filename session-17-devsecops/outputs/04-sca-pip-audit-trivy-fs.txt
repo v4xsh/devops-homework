@@ -1,0 +1,51 @@
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ cat requirements.txt
+Flask==3.1.3
+gunicorn==23.0.0
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ pip-audit -r requirements.txt --desc off
+No known vulnerabilities found
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ trivy fs --config trivy.yaml --quiet --format table . 2>&1 | tail -n 8
+│      Target      │ Type │ Vulnerabilities │
+├──────────────────┼──────┼─────────────────┤
+│ requirements.txt │ pip  │        0        │
+└──────────────────┴──────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ cat /tmp/s17-vuln-deps/requirements.txt
+Flask==3.1.2
+gunicorn==20.1.0
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ pip-audit -r /tmp/s17-vuln-deps/requirements.txt --desc off; echo "pip-audit exit code: $?"
+Found 6 known vulnerabilities in 2 packages
+Name     Version ID              Fix Versions
+-------- ------- --------------- ------------
+flask    3.1.2   PYSEC-2026-2151 3.1.3
+flask    3.1.2   PYSEC-2026-2151 3.1.3
+gunicorn 20.1.0  PYSEC-2026-1434 22.0.0
+gunicorn 20.1.0  PYSEC-2026-1433 22.0.0
+gunicorn 20.1.0  PYSEC-2026-1434 22.0.0
+gunicorn 20.1.0  PYSEC-2026-1433 22.0.0
+pip-audit exit code: 1
+~/act-stage/session-17-devsecops/devops-homework/session-17-devsecops$ trivy fs --config trivy.yaml --quiet --format table /tmp/s17-vuln-deps 2>&1 | grep -vE '^\s*$' | cut -c1-158 | head -n 30
+Report Summary
+┌──────────────────┬──────┬─────────────────┐
+│      Target      │ Type │ Vulnerabilities │
+├──────────────────┼──────┼─────────────────┤
+│ requirements.txt │ pip  │        2        │
+└──────────────────┴──────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+requirements.txt (pip)
+======================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+┌──────────┬───────────────┬──────────┬────────┬────�
+│ Library  │ Vulnerability │ Severity │ Status │ Installed Version │ Fixed Version │                          Title                          │
+├──────────┼───────────────┼──────────┼────────┼────�
+│ gunicorn │ CVE-2024-1135 │ HIGH     │ fixed  │ 20.1.0            │ 22.0.0        │ python-gunicorn: HTTP Request Smuggling due to improper │
+│          │               │          │        │                   │               │ validation of Transfer-Encoding headers                 │
+│          │               │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-1135               │
+│          ├───────────────┤          │        │                   │               ├──────────
+│          │ CVE-2024-6827 │          │        │                   │               │ gunicorn: HTTP Request Smuggling in benoitc/gunicorn    │
+│          │               │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-6827               │
+└──────────┴───────────────┴──────────┴────────┴────�

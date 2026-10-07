@@ -1,0 +1,7 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl port-forward -n s13-mini svc/web-service 8080:80 > /tmp/s13-pf.log 2>&1 & PF=$!; sleep 3
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ curl -s http://localhost:8080 | head -n 8
+<h1>Hello World from Docker Multi-Stage Build!</h1>~/devops-homework/session-13-storage-hpa-probes/mini-project$ cat /tmp/s13-pf.log
+Unable to listen on port 8080: Listeners failed to create with the following errors: [unable to create listener: Error listen tcp4 127.0.0.1:8080: bind: address already in use unable to create listener: Error listen tcp6 [::1]:8080: bind: address already in use]
+error: unable to listen on any of the requested ports: [{8080 80}]
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kill $PF
+/usr/local/bin/snap: line 41: kill: (85653) - No such process

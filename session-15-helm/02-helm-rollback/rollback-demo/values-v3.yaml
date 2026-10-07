@@ -1,0 +1,15 @@
+# Revision 3 - second upgrade: newest nginx, 3 replicas, resource limits, new page
+replicaCount: 3
+image:
+  tag: "1.27-alpine"
+app:
+  version: v3
+  color: red
+  message: "Upgrade #2 - 3 replicas on nginx 1.27 with resource limits"
+resources:
+  requests:
+    cpu: 10m
+    memory: 16Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi

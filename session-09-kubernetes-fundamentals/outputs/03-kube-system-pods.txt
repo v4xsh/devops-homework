@@ -1,0 +1,31 @@
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n kube-system -o wide
+NAME                               READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+coredns-559f6c778d-jxzsm           1/1     Running   0          14m   10.244.0.4     minikube   <none>           <none>
+etcd-minikube                      1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+kindnet-f2x6d                      1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+kube-apiserver-minikube            1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+kube-controller-manager-minikube   1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+kube-proxy-p8685                   1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+kube-scheduler-minikube            1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+metrics-server-768f9f6999-r9cgx    1/1     Running   0          14m   10.244.0.3     minikube   <none>           <none>
+storage-provisioner                1/1     Running   0          14m   192.168.49.2   minikube   <none>           <none>
+~/devops-homework/session-09-kubernetes-fundamentals$ minikube ssh -- sudo ls -l /etc/kubernetes/manifests
+total 20
+-rw------- 1 root root 2655 Oct  7 16:57 etcd.yaml
+-rw------- 1 root root 4171 Oct  7 16:57 kube-apiserver.yaml
+-rw------- 1 root root 3254 Oct  7 16:57 kube-controller-manager.yaml
+-rw------- 1 root root 1727 Oct  7 16:57 kube-scheduler.yaml
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get pods -n kube-system -l tier=control-plane -o custom-columns=NAME:.metadata.name,COMPONENT:.metadata.labels.component,STATIC-POD-OWNER:.metadata.ownerReferences[0].kind
+NAME                               COMPONENT                 STATIC-POD-OWNER
+etcd-minikube                      etcd                      Node
+kube-apiserver-minikube            kube-apiserver            Node
+kube-controller-manager-minikube   kube-controller-manager   Node
+kube-scheduler-minikube            kube-scheduler            Node
+~/devops-homework/session-09-kubernetes-fundamentals$ kubectl get daemonset,deployment -n kube-system
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+daemonset.apps/kindnet      1         1         1       1            1           <none>                   14m
+daemonset.apps/kube-proxy   1         1         1       1            1           kubernetes.io/os=linux   14m
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/coredns          1/1     1            1           14m
+deployment.apps/metrics-server   1/1     1            1           14m

@@ -1,0 +1,14 @@
+~/devops-homework/session-20-monitoring-observability-gitops$ kubectl get prometheusrule -n s20-app s20-metrics-app-alerts -o jsonpath='{range .spec.groups[0].rules[*]}{.alert}{"\t"}{.expr}{"\n"}{end}' | cut -c1-140
+AppDown	absent(up{namespace="s20-app", service="s20-metrics-app"} == 1)
+AppHighErrorRate	sum(rate(app_requests_total{namespace="s20-app", status=~"5.."}[2m]))
+  / sum(rate(app_requests_total{namespace="s20-app"}[2m])) > 0.10
+
+HighPodRestarts	increase(kube_pod_container_status_restarts_total{namespace="s20-app"}[10m]) > 3
+AppHighCPU	sum by (pod) (rate(container_cpu_usage_seconds_total{namespace="s20-app", container="app"}[2m]))
+  / sum by (pod) (kube_pod_container_resource_limits{namespace="s20-app", container="app", resource="cpu"}) > 0.8
+
+~/devops-homework/session-20-monitoring-observability-gitops$ curl -s localhost:19090/api/v1/rules | jq -r '.data.groups[] | select(.name=="s20-metrics-app.rules") | .rules[] | [.name, .state, .health] | @tsv' | column -t
+AppDown           inactive  ok
+AppHighErrorRate  inactive  ok
+HighPodRestarts   inactive  ok
+AppHighCPU        inactive  ok

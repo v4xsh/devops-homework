@@ -1,0 +1,28 @@
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl apply -f 04-startup.yaml
+pod/startup-demo created
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ sleep 10
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod startup-demo -n s13
+NAME           READY   STATUS    RESTARTS   AGE
+startup-demo   0/1     Running   0          10s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl wait --for=condition=Ready pod/startup-demo -n s13 --timeout=90s
+pod/startup-demo condition met
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl get pod startup-demo -n s13
+NAME           READY   STATUS    RESTARTS   AGE
+startup-demo   1/1     Running   0          27s
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl describe pod startup-demo -n s13 | grep -E 'Startup|Liveness|Readiness|Restart Count'
+    Restart Count:  0
+    Liveness:       http-get http://:80/ delay=0s timeout=1s period=5s successThreshold=1 failureThreshold=3
+    Readiness:      http-get http://:80/ delay=0s timeout=1s period=5s successThreshold=1 failureThreshold=3
+    Startup:        http-get http://:80/ delay=0s timeout=1s period=2s successThreshold=1 failureThreshold=30
+  Warning  Unhealthy  3s (x12 over 25s)  kubelet            spec.containers{nginx}: Startup probe failed: Get "http://10.244.0.83:80/": dial tcp 10.244.0.83:80: connect: connection refused
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl events -n s13 --for pod/startup-demo
+LAST SEEN           TYPE      REASON      OBJECT             MESSAGE
+27s                 Normal    Scheduled   Pod/startup-demo   Successfully assigned s13/startup-demo to minikube
+26s                 Normal    Pulled      Pod/startup-demo   Container image "nginx:1.27" already present on machine and can be accessed by the pod
+26s                 Normal    Created     Pod/startup-demo   Container created
+26s                 Normal    Started     Pod/startup-demo   Container started
+3s (x12 over 25s)   Warning   Unhealthy   Pod/startup-demo   Startup probe failed: Get "http://10.244.0.83:80/": dial tcp 10.244.0.83:80: connect: connection refused
+~/devops-homework/session-13-storage-hpa-probes/03-probes$ kubectl logs startup-demo -n s13 --tail=3
+2026/10/07 17:43:16 [notice] 1#1: start worker process 18
+10.244.0.1 - - [07/Oct/2026:17:43:16 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.37" "-"
+10.244.0.1 - - [07/Oct/2026:17:43:16 +0000] "GET / HTTP/1.1" 200 615 "-" "kube-probe/1.37" "-"

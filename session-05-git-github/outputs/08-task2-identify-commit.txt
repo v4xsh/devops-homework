@@ -1,0 +1,21 @@
+~$ cd ~/practice/git-homework
+~/practice/git-homework$ git log feature --oneline --grep "critical"
+d39a6c4 feature: critical input-validation fix
+~/practice/git-homework$ FIX=$(git log feature --format=%h --grep "critical" -n 1); echo "commit to cherry-pick: $FIX"
+commit to cherry-pick: d39a6c4
+~/practice/git-homework$ git show --stat $FIX
+commit d39a6c4fb156c4c8d8bcee03369489145c507ea9
+Author: Vansh Dobhal <vanshdobhal11@gmail.com>
+Date:   Wed Oct 7 17:22:47 2026 +0000
+
+    feature: critical input-validation fix
+
+ hotfix.txt | 1 +
+ 1 file changed, 1 insertion(+)
+~/practice/git-homework$ git switch main
+Switched to branch 'main'
+~/practice/git-homework$ ls
+README.md
+VERSION
+app.txt
+auth.py

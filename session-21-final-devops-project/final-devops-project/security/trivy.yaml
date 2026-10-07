@@ -1,0 +1,4 @@
+# shared Trivy settings for local runs: trivy --config security/trivy.yaml image <ref>
+severity: [HIGH, CRITICAL]
+vulnerability:
+  ignore-unfixed: true

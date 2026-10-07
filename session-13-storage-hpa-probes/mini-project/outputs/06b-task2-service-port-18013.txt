@@ -1,0 +1,16 @@
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ ss -ltn | grep -E ':8080 ' | head -n 2
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kubectl port-forward -n s13-mini svc/web-service 18013:80 > /tmp/s13-pf.log 2>&1 & PF=$!; sleep 3
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ curl -s http://localhost:18013 | head -n 8
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ cat /tmp/s13-pf.log
+Forwarding from 127.0.0.1:18013 -> 80
+Forwarding from [::1]:18013 -> 80
+Handling connection for 18013
+~/devops-homework/session-13-storage-hpa-probes/mini-project$ kill $PF

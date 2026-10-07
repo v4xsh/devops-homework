@@ -1,0 +1,47 @@
+# StatefulSet with volumeClaimTemplates: every replica gets its OWN PVC (data-db-0, data-db-1)
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-headless
+  namespace: s11
+spec:
+  clusterIP: None
+  selector:
+    app: db
+  ports:
+    - port: 80
+      name: web
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: s11
+spec:
+  serviceName: db-headless
+  replicas: 2
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db
+          image: busybox:1.36
+          command: ["sh", "-c", "echo \"I am $(hostname), my data survives restarts\" >> /data/identity.txt; sleep 36000"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests: { cpu: "5m", memory: "8Mi" }
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Mi

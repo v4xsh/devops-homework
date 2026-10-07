@@ -1,0 +1,26 @@
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl() { aws --endpoint-url=http://localhost:4566 "$@"; }   # LocalStack shortcut
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-instances --instance-ids $(terraform output -raw instance_id) --query 'Reservations[].Instances[].{Id:InstanceId,Type:InstanceType,State:State.Name,AMI:ImageId,Subnet:SubnetId,PrivateIP:PrivateIpAddress,PublicIP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' --output table
+-------------------------------------------
+|            DescribeInstances            |
++------------+----------------------------+
+|  AMI       |  ami-1e749f67              |
+|  Id        |  i-9878221feb6427ab4       |
+|  Name      |  s19-vansh-web             |
+|  PrivateIP |  10.19.1.4                 |
+|  PublicIP  |  54.214.106.197            |
+|  State     |  running                   |
+|  Subnet    |  subnet-ac1f83a4d7b25ee74  |
+|  Type      |  t2.micro                  |
++------------+----------------------------+
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl ec2 describe-instance-attribute --instance-id $(terraform output -raw instance_id) --attribute userData --query 'UserData.Value' --output text | base64 -d | grep -E 'nginx|Deployed by'
+apt-get install -y nginx
+    <h1>Deployed by Vansh Dobhal - 10099</h1>
+systemctl enable --now nginx
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl s3 ls
+2026-10-07 17:39:10 vansh-dobhal-10099-s19-artifacts
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl s3 ls s3://vansh-dobhal-10099-s19-artifacts --recursive
+2026-10-07 17:39:40        538 artifacts/i-9878221feb6427ab4/user_data.sh
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl s3 cp s3://$(terraform output -raw artifact_bucket)/$(terraform output -raw user_data_artifact_key) - | grep 'Deployed by'
+    <h1>Deployed by Vansh Dobhal - 10099</h1>
+~/devops-homework/session-19-cloud-terraform/terraform$ awsl s3api get-bucket-versioning --bucket vansh-dobhal-10099-s19-artifacts --output text
+Enabled

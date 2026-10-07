@@ -1,0 +1,13 @@
+# Section 8 of the assignment: selector intentionally changed to a label no pod has
+apiVersion: v1
+kind: Service
+metadata:
+  name: troubleshooting-service
+  namespace: s14-mini
+spec:
+  selector:
+    app: wrong-app
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
