@@ -1,0 +1,27 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm test taskboard -n final-app --logs | tail -n 12
+Last Completed: Wed Oct  7 18:59:21 2026
+Phase:          Succeeded
+NOTES:
+TaskBoard 1.0.1 deployed as release "taskboard" in namespace "final-app".
+Open:   http://taskboard.local/          (add "<ingress IP> taskboard.local" to /etc/hosts)
+API:    http://taskboard.local/api/tasks
+Pods:   kubectl get pods -n final-app -l app.kubernetes.io/instance=taskboard
+Test:   helm test taskboard -n final-app
+
+POD LOGS: taskboard-test-api
+{"status":"UP"}{"status":"READY"}{"total":0,"todo":0,"inProgress":0,"done":0}ok
+
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -H 'Host: taskboard.local' http://$IP/api/info; echo
+{"service":"TaskBoard API","version":"1.0.1","env":"dev"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ for t in "Plan sprint" "Write Terraform" "Configure Argo CD"; do curl -s -o /dev/null -w "POST /api/tasks ($t) -> %{http_code}\n" -H 'Host: taskboard.local' -H 'Content-Type: application/json' -X POST http://$IP/api/tasks -d "{\"title\":\"$t\",\"priority\":\"HIGH\",\"assignee\":\"Vansh\"}"; done
+POST /api/tasks (Plan sprint) -> 201
+POST /api/tasks (Write Terraform) -> 201
+POST /api/tasks (Configure Argo CD) -> 201
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -H 'Host: taskboard.local' -X PUT http://$IP/api/tasks/1 -H 'Content-Type: application/json' -d '{"status":"DONE"}' | jq -c '{id,title,status}'
+{"id":1,"title":"Plan sprint","status":"DONE"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -H 'Host: taskboard.local' http://$IP/api/tasks/stats; echo
+{"total":3,"todo":2,"inProgress":0,"done":1}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET / (frontend) -> HTTP %{http_code}\n' -H 'Host: taskboard.local' http://$IP/
+GET / (frontend) -> HTTP 200
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET /metrics via ingress -> HTTP %{http_code} content-type=%{content_type} (served by the frontend SPA, backend /metrics is not public)\n' -H 'Host: taskboard.local' http://$IP/metrics
+GET /metrics via ingress -> HTTP 200 content-type=text/html (served by the frontend SPA, backend /metrics is not public)

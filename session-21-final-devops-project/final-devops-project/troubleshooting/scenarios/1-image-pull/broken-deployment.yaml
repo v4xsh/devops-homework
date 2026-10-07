@@ -1,3 +1,4 @@
+# BROKEN ON PURPOSE (troubleshooting challenge): image tag 1.0.2 was never built/pushed -> ErrImagePull / ImagePullBackOff
 apiVersion: apps/v1
 kind: Deployment
 metadata:

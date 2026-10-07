@@ -1,0 +1,20 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/build/s21-tf && terraform version | head -n 2
+Terraform v1.16.5
+on linux_amd64
+~/build/s21-tf$ terraform fmt -check -recursive -diff && echo "terraform fmt: OK (no changes needed)"
+terraform fmt: OK (no changes needed)
+~/build/s21-tf$ terraform init -backend=false -input=false -no-color | grep -E 'Installing|Installed|initialized'
+- Installing hashicorp/aws v5.100.0...
+- Installed hashicorp/aws v5.100.0 (signed by HashiCorp)
+Terraform has been successfully initialized!
+~/build/s21-tf$ terraform validate -no-color
+Success! The configuration is valid.
+
+~/build/s21-tf$ ls *.tf
+eks.tf
+outputs.tf
+providers.tf
+registry-storage.tf
+variables.tf
+versions.tf
+vpc.tf

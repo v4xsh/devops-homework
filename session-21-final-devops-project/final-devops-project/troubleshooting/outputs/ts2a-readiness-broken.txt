@@ -1,0 +1,41 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ diff troubleshooting/base/03-backend.yaml troubleshooting/scenarios/2-readiness-path/broken-deployment.yaml | grep '^[<>]'
+> # BROKEN ON PURPOSE (troubleshooting challenge): readinessProbe path /readyz does not exist (app serves /ready) -> pods never Ready, Service has no endpoints
+<             httpGet: {path: /ready, port: http}
+>             httpGet: {path: /readyz, port: http}
+< ---
+< apiVersion: v1
+< kind: Service
+< metadata:
+<   name: taskboard-backend
+<   namespace: final-ts
+<   labels: {app: taskboard-backend, app.kubernetes.io/part-of: taskboard}
+< spec:
+<   selector: {app: taskboard-backend}
+<   ports:
+<     - {name: http, port: 8000, targetPort: http}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl delete deploy taskboard-backend -n final-ts --wait=true
+deployment.apps "taskboard-backend" deleted from final-ts namespace
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/2-readiness-path/broken-deployment.yaml
+deployment.apps/taskboard-backend created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 40
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-ts -l app=taskboard-backend
+NAME                                 READY   STATUS    RESTARTS   AGE
+taskboard-backend-85656857b9-7f8v9   0/1     Running   0          41s
+taskboard-backend-85656857b9-js2c7   0/1     Running   0          41s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get endpointslices -n final-ts -l kubernetes.io/service-name=taskboard-backend -o jsonpath='{range .items[*].endpoints[*]}{.addresses[0]} ready={.conditions.ready}{"\n"}{end}'
+10.244.0.197 ready=false
+10.244.0.198 ready=false
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get events -n final-ts --field-selector reason=Unhealthy --sort-by=.lastTimestamp | tail -n 2 | cut -c1-190
+5s          Warning   Unhealthy   pod/taskboard-backend-85656857b9-js2c7   Readiness probe failed: HTTP probe failed with statuscode: 404
+0s          Warning   Unhealthy   pod/taskboard-backend-85656857b9-7f8v9   Readiness probe failed: HTTP probe failed with statuscode: 404
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl logs -n final-ts deploy/taskboard-backend --tail=50 | grep readyz | tail -n 2
+Found 2 pods, using pod/taskboard-backend-85656857b9-7f8v9
+Defaulted container "backend" out of: backend, migrate (init)
+{"ts": "2026-10-07T19:13:06+0000", "level": "INFO", "service": "taskboard-backend", "env": "k8s", "msg": "request", "method": "GET", "path": "/readyz", "status": 404, "duration_ms": 0.36}
+INFO:     10.244.0.1:47074 - "GET /readyz HTTP/1.1" 404 Not Found
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -w '  -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks | tail -c 120
+nter><h1>503 Service Temporarily Unavailable</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+  -> HTTP 503

@@ -1,0 +1,34 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ CTRL=$(kubectl get pod -n ingress-nginx -l app.kubernetes.io/component=controller -o name | head -n 1); echo "$CTRL"
+pod/ingress-nginx-controller-d7cd8c989-z97jr
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl exec -n ingress-nginx $CTRL -- /dbg backends list | grep final-ts
+final-ts-taskboard-backend-http
+final-ts-taskboard-frontend-http
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/3-service-targetport/broken-service.yaml
+service/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 10
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl exec -n ingress-nginx $CTRL -- /dbg backends get final-ts-taskboard-backend-http | jq -c '[.endpoints[] | "\(.address):\(.port)"]'
+["10.244.0.224:8080","10.244.0.225:8080"]
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/03-backend.yaml
+deployment.apps/taskboard-backend unchanged
+service/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 20
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get endpointslices -n final-ts -l kubernetes.io/service-name=taskboard-backend -o jsonpath='EndpointSlice port now: {.items[0].ports[0].port}{"\n"}'
+EndpointSlice port now: 8000
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl exec -n ingress-nginx $CTRL -- /dbg backends get final-ts-taskboard-backend-http | jq -c '[.endpoints[] | "\(.address):\(.port)"]'
+["10.244.0.224:8080","10.244.0.225:8080"]
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'after Service fix only: GET /api/tasks -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+after Service fix only: GET /api/tasks -> HTTP 502
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout restart deploy/taskboard-backend -n final-ts && kubectl rollout status deploy/taskboard-backend -n final-ts --timeout=180s
+deployment.apps/taskboard-backend restarted
+Waiting for deployment "taskboard-backend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 old replicas are pending termination...
+deployment "taskboard-backend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 10
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl exec -n ingress-nginx $CTRL -- /dbg backends get final-ts-taskboard-backend-http | jq -c '[.endpoints[] | "\(.address):\(.port)"]'
+["10.244.0.229:8000","10.244.0.230:8000"]
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'after new pods (new endpoint addresses): GET /api/tasks -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+after new pods (new endpoint addresses): GET /api/tasks -> HTTP 200

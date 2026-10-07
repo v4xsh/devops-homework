@@ -1,0 +1,22 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ grep -c 'requests:' troubleshooting/scenarios/5-hpa-no-requests/broken-deployment.yaml
+0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/5-hpa-no-requests/broken-deployment.yaml -f troubleshooting/scenarios/5-hpa-no-requests/hpa.yaml
+deployment.apps/taskboard-frontend configured
+horizontalpodautoscaler.autoscaling/taskboard-frontend created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-frontend -n final-ts --timeout=120s
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 old replicas are pending termination...
+deployment "taskboard-frontend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 75
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get hpa taskboard-frontend -n final-ts
+NAME                 REFERENCE                       TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+taskboard-frontend   Deployment/taskboard-frontend   cpu: <unknown>/70%   2         4         2          82s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl describe hpa taskboard-frontend -n final-ts | grep -E 'FailedGetResourceMetric|missing request' | tail -n 2 | cut -c1-220
+  Warning  FailedGetResourceMetric       37s (x3 over 67s)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedGetResourceMetric       6s (x2 over 21s)   horizontal-pod-autoscaler  failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get deploy taskboard-frontend -n final-ts -o jsonpath='resources={.spec.template.spec.containers[0].resources}{"\n"}'
+resources={}

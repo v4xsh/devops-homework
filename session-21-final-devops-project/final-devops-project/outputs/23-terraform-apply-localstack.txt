@@ -1,0 +1,49 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/build/s21-tf && grep -vE '^\s*#' localstack.tfvars
+use_localstack     = true
+create_eks         = false
+create_ecr         = false
+enable_nat_gateway = true
+aws_region         = "us-east-1"
+azs                = ["us-east-1a", "us-east-1b"]
+~/build/s21-tf$ docker ps --filter name=s21-localstack --format '{{.Names}} {{.Image}} {{.Status}}'
+s21-localstack localstack/localstack:4.9 Up 43 seconds (healthy)
+~/build/s21-tf$ terraform apply -input=false -no-color -auto-approve -var-file=localstack.tfvars -var localstack_endpoint=http://localhost:4596 | grep -E 'Creation complete|Apply complete|Error' | sed 's/\[id=.*\]//' | sort | uniq | head -n 40
+Apply complete! Resources: 24 added, 0 changed, 0 destroyed.
+aws_default_security_group.default: Creation complete after 0s 
+aws_eip.nat[0]: Creation complete after 3s 
+aws_internet_gateway.main: Creation complete after 0s 
+aws_kms_key.s3: Creation complete after 10s 
+aws_nat_gateway.main[0]: Creation complete after 0s 
+aws_route.private_nat[0]: Creation complete after 0s 
+aws_route.public_internet: Creation complete after 0s 
+aws_route_table.private: Creation complete after 0s 
+aws_route_table.public: Creation complete after 0s 
+aws_route_table_association.private[0]: Creation complete after 0s 
+aws_route_table_association.private[1]: Creation complete after 0s 
+aws_route_table_association.public[0]: Creation complete after 0s 
+aws_route_table_association.public[1]: Creation complete after 0s 
+aws_s3_bucket.artifacts: Creation complete after 2s 
+aws_s3_bucket_lifecycle_configuration.artifacts: Creation complete after 57s 
+aws_s3_bucket_ownership_controls.artifacts: Creation complete after 0s 
+aws_s3_bucket_public_access_block.artifacts: Creation complete after 0s 
+aws_s3_bucket_server_side_encryption_configuration.artifacts: Creation complete after 0s 
+aws_s3_bucket_versioning.artifacts: Creation complete after 2s 
+aws_subnet.private[0]: Creation complete after 0s 
+aws_subnet.private[1]: Creation complete after 0s 
+aws_subnet.public[0]: Creation complete after 0s 
+aws_subnet.public[1]: Creation complete after 0s 
+aws_vpc.main: Creation complete after 13s 
+~/build/s21-tf$ terraform output -no-color
+artifacts_bucket = "vansh-10099-taskboard-artifacts"
+ecr_repository_urls = {}
+private_subnet_ids = [
+  "subnet-e22cca436e6a8ddd7",
+  "subnet-9e2c3510f0202b554",
+]
+public_subnet_ids = [
+  "subnet-c96f999b115e2cb9a",
+  "subnet-54b8943dc2253dcd8",
+]
+vpc_id = "vpc-87f83f5ef4058bf8b"
+~/build/s21-tf$ terraform state list | wc -l
+26

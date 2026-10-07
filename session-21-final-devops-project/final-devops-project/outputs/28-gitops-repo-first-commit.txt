@@ -1,0 +1,9 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ rm -rf ~/practice/taskboard-gitops && mkdir -p ~/practice/taskboard-gitops && cp -r helm ~/practice/taskboard-gitops/ && cd ~/practice/taskboard-gitops
+~/practice/taskboard-gitops$ git init -q -b main && git config user.name "Vansh Dobhal" && git config user.email vansh@taskboard.local
+~/practice/taskboard-gitops$ git add . && git commit -q -m "Add TaskBoard Helm chart (1.0.1) for Argo CD" && git log --oneline
+18d393b Add TaskBoard Helm chart (1.0.1) for Argo CD
+~/practice/taskboard-gitops$ git push "http://vansh:$GITEA_PWD@localhost:13001/vansh/taskboard-gitops.git" main 2>&1 | grep -E "^(To |   [0-9a-f]| * )" | sed "s/$GITEA_PWD/*****/"
+To http://localhost:13001/vansh/taskboard-gitops.git
+ * [new branch]      main -> main
+~/practice/taskboard-gitops$ curl -s -u "vansh:$GITEA_PWD" localhost:13001/api/v1/repos/vansh/taskboard-gitops/commits | jq -r '.[] | "\(.sha[0:7]) \(.commit.message | split("\n")[0])"'
+jq: error (at <stdin>:1): Cannot index string with string "commit"

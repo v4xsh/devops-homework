@@ -1,0 +1,23 @@
+/tmp/act-ws$ grep -E '^\[.*\] (🏁|✅|❌|⭐ Run (Main|Post)? ?(Pytest|Lint|Bandit|pip-audit|npm audit|Trivy|gitleaks|Build images|All quality|npm ci))' /tmp/act-run.log | sed -E 's/^\[session21-final-pipeline\/([^]]*)\]/[\1]/' | grep -vE 'Post ' | head -n 70
+[Secret scan (gitleaks)                                ] ⭐ Run Main gitleaks (whole project directory)
+[Secret scan (gitleaks)                                ] 🏁  Job succeeded
+[SAST (bandit)                                         ] ⭐ Run Main Bandit (fail on medium+ severity, medium+ confidence)
+[Frontend build                                        ] ⭐ Run Main npm ci + build
+[SAST (bandit)                                         ] 🏁  Job succeeded
+[SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main pip-audit (Python dependencies, OSV/PyPI advisory DB)
+[Unit tests + lint (backend)                           ] ⭐ Run Main Lint (ruff)
+[Unit tests + lint (backend)                           ] ⭐ Run Main Pytest with coverage
+[Frontend build                                        ] 🏁  Job succeeded
+[Unit tests + lint (backend)                           ] 🏁  Job succeeded
+[SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main npm audit (frontend dependencies)
+[SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] 🏁  Job failed
+[Security gate                                         ] ⭐ Run Main All quality and security checks must be green
+[Security gate                                         ] 🏁  Job failed
+/tmp/act-ws$ grep -E 'Job (succeeded|failed)|act exit code' /tmp/act-run.log | sed -E 's/^\[session21-final-pipeline\/([^]]*)\]/[\1]/'
+[Secret scan (gitleaks)                                ] 🏁  Job succeeded
+[SAST (bandit)                                         ] 🏁  Job succeeded
+[Frontend build                                        ] 🏁  Job succeeded
+[Unit tests + lint (backend)                           ] 🏁  Job succeeded
+[SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] 🏁  Job failed
+[Security gate                                         ] 🏁  Job failed
+act exit code: 1

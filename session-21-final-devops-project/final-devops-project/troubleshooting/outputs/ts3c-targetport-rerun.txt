@@ -1,0 +1,49 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/3-service-targetport/broken-service.yaml
+service/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 10
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'broken: GET /api/tasks via ingress -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+broken: GET /api/tasks via ingress -> HTTP 502
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl logs -n ingress-nginx deploy/ingress-nginx-controller --tail=200 | grep -E 'Connection refused' | grep 8080 | tail -n 1 | cut -c1-230
+2026/10/07 19:52:52 [error] 6061#6061: *375015 connect() failed (111: Connection refused) while connecting to upstream, client: 192.168.49.1, server: taskboard-ts.local, request: "GET /api/tasks HTTP/1.1", upstream: "http://10.244
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/03-backend.yaml
+deployment.apps/taskboard-backend unchanged
+service/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get endpointslices -n final-ts -l kubernetes.io/service-name=taskboard-backend -o jsonpath='{range .items[*]}{.ports[0].port}{" -> "}{.endpoints[*].addresses[0]}{"\n"}{end}'
+8000 -> 10.244.0.215 10.244.0.216
+~/devops-homework/session-21-final-devops-project/final-devops-project$ for i in $(seq 1 36); do c=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: taskboard-ts.local' http://$IP/api/tasks); echo "fixed, attempt $i (5s apart): GET /api/tasks -> HTTP $c"; [ "$c" = 200 ] && break; sleep 5; done
+fixed, attempt 1 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 2 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 3 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 4 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 5 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 6 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 7 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 8 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 9 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 10 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 11 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 12 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 13 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 14 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 15 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 16 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 17 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 18 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 19 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 20 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 21 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 22 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 23 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 24 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 25 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 26 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 27 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 28 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 29 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 30 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 31 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 32 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 33 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 34 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 35 (5s apart): GET /api/tasks -> HTTP 502
+fixed, attempt 36 (5s apart): GET /api/tasks -> HTTP 502

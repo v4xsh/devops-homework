@@ -1,3 +1,4 @@
+# BROKEN ON PURPOSE (troubleshooting challenge): secretKeyRef key 'password' does not exist in Secret taskboard-db (key is db-password) -> CreateContainerConfigError
 apiVersion: apps/v1
 kind: Deployment
 metadata:

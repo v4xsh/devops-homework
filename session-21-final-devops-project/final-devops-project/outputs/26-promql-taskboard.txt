@@ -1,0 +1,31 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ PQ=~/devops-homework/session-20-monitoring-observability-gitops/scripts/promq.sh
+~/devops-homework/session-21-final-devops-project/final-devops-project$ $PQ 'up{namespace="final-app", service="taskboard-backend"}' | sed 's/container="backend", //'
+{endpoint="http", instance="10.244.0.165:8000", job="taskboard-backend", namespace="final-app", pod="taskboard-backend-766688f5db-8nqm9", service="taskboard-backend"}  =>  1
+{endpoint="http", instance="10.244.0.166:8000", job="taskboard-backend", namespace="final-app", pod="taskboard-backend-766688f5db-sp2dh", service="taskboard-backend"}  =>  1
+{endpoint="http", instance="10.244.0.174:8000", job="taskboard-backend", namespace="final-app", pod="taskboard-backend-766688f5db-gkxq6", service="taskboard-backend"}  =>  1
+{endpoint="http", instance="10.244.0.173:8000", job="taskboard-backend", namespace="final-app", pod="taskboard-backend-766688f5db-gnnpf", service="taskboard-backend"}  =>  1
+~/devops-homework/session-21-final-devops-project/final-devops-project$ $PQ 'sum by (handler, method, status) (increase(http_requests_total{namespace="final-app", service="taskboard-backend"}[30m]))' | sort -t'>' -k2 -rn | head -n 8
+{handler="/api/tasks", method="GET", status="2xx"}  =>  20905.702734138915
+{handler="/api/tasks/{task_id}", method="PUT", status="2xx"}  =>  0
+{handler="/api/tasks/stats", method="GET", status="2xx"}  =>  0
+{handler="/api/tasks", method="POST", status="2xx"}  =>  0
+{handler="/api/info", method="GET", status="2xx"}  =>  0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ $PQ 'histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{namespace="final-app", service="taskboard-backend"}[30m])))'
+{}  =>  0.4140474514863596
+~/devops-homework/session-21-final-devops-project/final-devops-project$ $PQ 'sum by (priority) (taskboard_tasks_created_total{namespace="final-app"})'
+{priority="HIGH"}  =>  3
+~/devops-homework/session-21-final-devops-project/final-devops-project$ $PQ 'max_over_time(kube_horizontalpodautoscaler_status_current_replicas{namespace="final-app"}[30m])'
+{container="kube-state-metrics", endpoint="http", horizontalpodautoscaler="taskboard-backend", instance="10.244.0.49:8080", job="kube-state-metrics", namespace="final-app", pod="kps-kube-state-metrics-5f69fb89b6-nc2tl", service="kps-kube-state-metrics"}  =>  5
+~/devops-homework/session-21-final-devops-project/final-devops-project$ $PQ 'sum by (pod) (container_memory_working_set_bytes{namespace="final-app", container!=""}) / 1024 / 1024'
+{pod="taskboard-frontend-6f7b69dbb8-wzbfh"}  =>  10.1875
+{pod="taskboard-frontend-6f7b69dbb8-s9d9d"}  =>  10.08984375
+{pod="taskboard-postgres-0"}  =>  60.3671875
+{pod="taskboard-backend-766688f5db-sp2dh"}  =>  68.40625
+{pod="taskboard-backend-766688f5db-8nqm9"}  =>  68.05078125
+{pod="taskboard-backend-766688f5db-gkxq6"}  =>  64.0859375
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s localhost:19090/api/v1/rules | jq -r '.data.groups[] | select(.name=="taskboard.rules") | .rules[] | [.name, .state, .health] | @tsv' | column -t
+TaskboardBackendDown       inactive  ok
+TaskboardHigh5xxRate       inactive  ok
+TaskboardHighLatencyP95    inactive  ok
+TaskboardPodRestarting     inactive  ok
+TaskboardDatabaseNotReady  inactive  ok

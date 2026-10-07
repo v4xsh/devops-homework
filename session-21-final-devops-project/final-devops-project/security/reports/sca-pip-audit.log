@@ -1,4 +1,1 @@
-ERROR:pip_audit._virtual_env:internal pip failure: ERROR: Cannot install -r application/backend/requirements.txt (line 3), -r application/backend/requirements.txt (line 9) and starlette==1.7.0 because these package versions have conflicting dependencies.
-ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
-
-ERROR:pip_audit._cli:Failed to install packages: ['/tmp/tmpqmiymgzm/bin/python3.12', '-m', 'pip', 'install', '--no-input', '--keyring-provider=subprocess', '--dry-run', '--report', '/tmp/tmp53pg5_42/tmpxzgodynp', '-r', 'application/backend/requirements.txt']
+No known vulnerabilities found

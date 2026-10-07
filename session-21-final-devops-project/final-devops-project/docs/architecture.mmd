@@ -1,0 +1,48 @@
+flowchart LR
+  dev([Developer<br/>Vansh Dobhal 10099]) -->|git push / PR| gh[(GitHub repo<br/>v4xsh/devops-homework)]
+
+  subgraph CI["GitHub Actions - session21-final-pipeline"]
+    direction TB
+    t[test<br/>ruff + pytest + coverage] --> g{security gate}
+    f[frontend<br/>npm ci + vite build] --> g
+    sast[SAST<br/>bandit] --> g
+    sca[SCA + IaC<br/>pip-audit, npm audit,<br/>trivy fs / config] --> g
+    gl[secrets<br/>gitleaks] --> g
+    b[docker build<br/>+ trivy image] --> g
+    g -->|pass| push[push :sha to GHCR]
+    g -->|pass| kind[helm install on kind<br/>+ helm test]
+  end
+  gh --> CI
+  push --> ghcr[(GHCR images<br/>taskboard-backend / frontend)]
+
+  subgraph TF["Terraform (AWS)"]
+    vpc[VPC 10.20.0.0/16<br/>2 public + 2 private subnets<br/>IGW + NAT]
+    eks[EKS 1.33<br/>managed node group t3.medium]
+    ecr[ECR repos<br/>immutable tags, scan on push]
+    bucket[S3 artifacts<br/>KMS, versioned, private]
+  end
+
+  subgraph K8S["Kubernetes cluster (minikube locally / EKS)"]
+    direction TB
+    argo[Argo CD<br/>Application taskboard] -->|helm template + apply,<br/>prune, self-heal| app
+    subgraph app["namespace final-app (Helm release taskboard)"]
+      ing[Ingress nginx<br/>taskboard.local] -->|/| fe[frontend Deployment<br/>nginx-unprivileged :8080]
+      ing -->|/api| be[backend Deployment<br/>FastAPI :8000<br/>HPA 2-5]
+      be -->|SQLAlchemy| pg[(PostgreSQL StatefulSet<br/>PVC 1Gi)]
+      cm[ConfigMap] -.-> be
+      sec[Secret] -.-> be
+      sec -.-> pg
+    end
+    subgraph mon["namespace monitoring (kube-prometheus-stack)"]
+      prom[Prometheus] -->|alerts| am[Alertmanager]
+      graf[Grafana]
+    end
+    prom -->|ServiceMonitor /metrics| be
+    graf --> prom
+  end
+
+  gh -->|watched by| argo
+  ghcr -->|image pull| be
+  ghcr -->|image pull| fe
+  TF -.->|provisions| K8S
+  user([User browser]) --> ing

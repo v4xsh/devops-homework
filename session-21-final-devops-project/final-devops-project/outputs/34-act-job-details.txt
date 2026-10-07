@@ -1,0 +1,18 @@
+/tmp/act-ws$ grep -E '[0-9]+ passed|TOTAL|Required test coverage' /tmp/act-run.log | sed -E 's/^\[session21-final-pipeline\/([^]]*)\]/[\1]/' | head -n 4
+[Unit tests + lint (backend)                           ]   | TOTAL               177      3    98%
+[Unit tests + lint (backend)                           ]   | Required test coverage of 80% reached. Total coverage: 98.31%
+[Unit tests + lint (backend)                           ]   | ======================== 12 passed, 1 warning in 1.06s =========================
+/tmp/act-ws$ grep -E 'No issues identified|No known vulnerabilities found|found 0 vulnerabilities|no leaks found' /tmp/act-run.log | sed -E 's/^\[session21-final-pipeline\/([^]]*)\]/[\1]/'
+[Secret scan (gitleaks)                                ]   | [90m8:06PM[0m [32mINF[0m [1mno leaks found[0m
+[SAST (bandit)                                         ]   | 	No issues identified.
+[SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | No known vulnerabilities found
+[SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | found 0 vulnerabilities
+/tmp/act-ws$ grep -E 'Total: [0-9]+ \(HIGH|security gate|test=|sca=' /tmp/act-run.log | sed -E 's/^\[session21-final-pipeline\/([^]]*)\]/[\1]/' | head -n 12
+[Unit tests + lint (backend)                           ]   | Requirement already satisfied: pytest==8.4.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 2)) (8.4.2)
+[Unit tests + lint (backend)                           ]   | Requirement already satisfied: iniconfig>=1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.3.1)
+[Unit tests + lint (backend)                           ]   | Requirement already satisfied: packaging>=20 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (26.3)
+[Unit tests + lint (backend)                           ]   | Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (1.6.0)
+[Unit tests + lint (backend)                           ]   | Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.21.0)
+[Security gate                                         ]   | test=success frontend=success sast=success
+[Security gate                                         ]   | sca=success secrets=success image-scan=success
+[Security gate                                         ]   | security gate PASSED - image may be published

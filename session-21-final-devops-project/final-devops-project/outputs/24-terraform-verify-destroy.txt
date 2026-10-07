@@ -1,0 +1,22 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/build/s21-tf
+~/build/s21-tf$ AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url http://localhost:4596 --region us-east-1 ec2 describe-subnets --filters Name=vpc-id,Values=$(terraform output -raw vpc_id) --query 'Subnets[].[CidrBlock,AvailabilityZone,Tags[?Key==`Name`]|[0].Value]' --output text
+10.20.1.0/24	us-east-1a	taskboard-private-us-east-1a
+10.20.101.0/24	us-east-1a	taskboard-public-us-east-1a
+10.20.2.0/24	us-east-1b	taskboard-private-us-east-1b
+10.20.102.0/24	us-east-1b	taskboard-public-us-east-1b
+~/build/s21-tf$ AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url http://localhost:4596 --region us-east-1 s3api get-bucket-versioning --bucket vansh-10099-taskboard-artifacts
+{
+    "Status": "Enabled"
+}
+~/build/s21-tf$ AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url http://localhost:4596 --region us-east-1 s3api get-bucket-encryption --bucket vansh-10099-taskboard-artifacts --query "ServerSideEncryptionConfiguration.Rules[0]"
+{
+    "ApplyServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "aws:kms",
+        "KMSMasterKeyID": "arn:aws:kms:us-east-1:000000000000:key/680d6b50-37d0-4029-9759-674af3da7fa0"
+    },
+    "BucketKeyEnabled": true
+}
+~/build/s21-tf$ terraform destroy -input=false -no-color -auto-approve -var-file=localstack.tfvars -var localstack_endpoint=http://localhost:4596 | grep -E 'Destroy complete|Error'
+Destroy complete! Resources: 24 destroyed.
+~/build/s21-tf$ terraform state list | wc -l
+0

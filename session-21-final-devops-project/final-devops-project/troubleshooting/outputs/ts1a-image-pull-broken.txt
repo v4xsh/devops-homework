@@ -1,0 +1,25 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ diff troubleshooting/base/03-backend.yaml troubleshooting/scenarios/1-image-pull/broken-deployment.yaml | grep '^[<>].*image:'
+<           image: ghcr.io/v4xsh/taskboard-backend:1.0.1
+>           image: ghcr.io/v4xsh/taskboard-backend:1.0.2
+<           image: ghcr.io/v4xsh/taskboard-backend:1.0.1
+>           image: ghcr.io/v4xsh/taskboard-backend:1.0.2
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/1-image-pull/broken-deployment.yaml
+deployment.apps/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 45
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-ts -l app=taskboard-backend
+NAME                                 READY   STATUS              RESTARTS   AGE
+taskboard-backend-5d94ffbc45-6krfj   1/1     Running             0          78s
+taskboard-backend-5d94ffbc45-rtw4m   1/1     Running             0          78s
+taskboard-backend-b9b9bcd7f-kp6cv    0/1     Init:ErrImagePull   0          46s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl describe pod -n final-ts $(kubectl get pods -n final-ts -l app=taskboard-backend --field-selector=status.phase=Pending -o name | head -n 1 | cut -d/ -f2) | grep -E 'Image:|Reason:|Failed|Back-off' | sort -u | cut -c1-190
+      Reason:       ImagePullBackOff
+      Reason:       PodInitializing
+    Image:          ghcr.io/v4xsh/taskboard-backend:1.0.2
+    Image:         ghcr.io/v4xsh/taskboard-backend:1.0.2
+  Normal   BackOff    13s (x2 over 44s)  kubelet            spec.initContainers{migrate}: Back-off pulling image "ghcr.io/v4xsh/taskboard-backend:1.0.2"
+  Warning  Failed     13s (x2 over 44s)  kubelet            spec.initContainers{migrate}: Error: ImagePullBackOff
+  Warning  Failed     29s (x2 over 45s)  kubelet            spec.initContainers{migrate}: Error: ErrImagePull
+  Warning  Failed     29s (x2 over 45s)  kubelet            spec.initContainers{migrate}: Failed to pull image "ghcr.io/v4xsh/taskboard-backend:1.0.2": failed to pull and unpack image "ghcr.
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-backend -n final-ts --timeout=5s
+Waiting for deployment "taskboard-backend" rollout to finish: 1 out of 2 new replicas have been updated...
+error: timed out waiting for the condition

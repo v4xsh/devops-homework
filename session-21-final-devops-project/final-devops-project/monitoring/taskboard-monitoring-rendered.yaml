@@ -1,0 +1,138 @@
+---
+# Source: taskboard/templates/monitoring.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskboard-final-app-dashboard
+  namespace: monitoring
+  labels:
+    helm.sh/chart: taskboard-1.0.1
+    app.kubernetes.io/name: taskboard
+    app.kubernetes.io/instance: taskboard
+    app.kubernetes.io/version: "1.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: taskboard
+    grafana_dashboard: "1"
+data:
+  taskboard-final-app.json: |-
+    {
+      "uid": "taskboard-final-app",
+      "title": "TaskBoard API (final-app) - Vansh Dobhal 10099",
+      "tags": ["taskboard", "final-project", "fastapi"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "refresh": "10s",
+      "time": {"from": "now-30m", "to": "now"},
+      "panels": [
+        {"id": 1, "type": "stat", "title": "Backend targets up", "gridPos": {"h": 4, "w": 4, "x": 0, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum(up{namespace=\"final-app\", service=\"taskboard-backend\"})"}]},
+        {"id": 2, "type": "stat", "title": "Requests / s", "gridPos": {"h": 4, "w": 5, "x": 4, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "reqps", "decimals": 2}},
+         "targets": [{"refId": "A", "expr": "sum(rate(http_requests_total{namespace=\"final-app\", service=\"taskboard-backend\"}[1m]))"}]},
+        {"id": 3, "type": "stat", "title": "5xx ratio", "gridPos": {"h": 4, "w": 5, "x": 9, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 2}},
+         "targets": [{"refId": "A", "expr": "sum(rate(http_requests_total{namespace=\"final-app\", service=\"taskboard-backend\", status=\"5xx\"}[5m])) / clamp_min(sum(rate(http_requests_total{namespace=\"final-app\", service=\"taskboard-backend\"}[5m])), 0.001)"}]},
+        {"id": 4, "type": "stat", "title": "Tasks created (total)", "gridPos": {"h": 4, "w": 5, "x": 14, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum(taskboard_tasks_created_total{namespace=\"final-app\"})"}]},
+        {"id": 5, "type": "stat", "title": "Backend replicas (HPA)", "gridPos": {"h": 4, "w": 5, "x": 19, "y": 0},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum(kube_horizontalpodautoscaler_status_current_replicas{namespace=\"final-app\"})"}]},
+        {"id": 6, "type": "timeseries", "title": "Request rate by handler", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "reqps"}},
+         "targets": [{"refId": "A", "expr": "sum by (handler, method, status) (rate(http_requests_total{namespace=\"final-app\", service=\"taskboard-backend\"}[1m]))", "legendFormat": "{{method}} {{handler}} {{status}}"}]},
+        {"id": 7, "type": "timeseries", "title": "Latency p50 / p95 / p99", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "s"}},
+         "targets": [
+           {"refId": "A", "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{namespace=\"final-app\", service=\"taskboard-backend\"}[2m])))", "legendFormat": "p50"},
+           {"refId": "B", "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{namespace=\"final-app\", service=\"taskboard-backend\"}[2m])))", "legendFormat": "p95"},
+           {"refId": "C", "expr": "histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{namespace=\"final-app\", service=\"taskboard-backend\"}[2m])))", "legendFormat": "p99"}]},
+        {"id": 8, "type": "timeseries", "title": "CPU (cores) per pod", "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "targets": [{"refId": "A", "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"final-app\", container!=\"\"}[1m]))", "legendFormat": "{{pod}}"}]},
+        {"id": 9, "type": "timeseries", "title": "Memory working set per pod", "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+         "datasource": {"type": "prometheus", "uid": "prometheus"},
+         "fieldConfig": {"defaults": {"unit": "bytes"}},
+         "targets": [{"refId": "A", "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"final-app\", container!=\"\"})", "legendFormat": "{{pod}}"}]}
+      ]
+    }
+---
+# Source: taskboard/templates/monitoring.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: taskboard-alerts
+  labels:
+    helm.sh/chart: taskboard-1.0.1
+    app.kubernetes.io/name: taskboard
+    app.kubernetes.io/instance: taskboard
+    app.kubernetes.io/version: "1.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: taskboard
+spec:
+  groups:
+    - name: taskboard.rules
+      rules:
+        - alert: TaskboardBackendDown
+          expr: absent(up{namespace="final-app", service="taskboard-backend"} == 1)
+          for: 1m
+          labels: {severity: critical, app: taskboard}
+          annotations:
+            summary: "TaskBoard backend has no healthy scrape targets in final-app"
+        - alert: TaskboardHigh5xxRate
+          expr: |
+            sum(rate(http_requests_total{namespace="final-app", service="taskboard-backend", status="5xx"}[5m]))
+              / clamp_min(sum(rate(http_requests_total{namespace="final-app", service="taskboard-backend"}[5m])), 0.001) > 0.05
+          for: 5m
+          labels: {severity: warning, app: taskboard}
+          annotations:
+            summary: "More than 5% of TaskBoard API requests fail with 5xx"
+        - alert: TaskboardHighLatencyP95
+          expr: |
+            histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{namespace="final-app", service="taskboard-backend"}[5m]))) > 0.5
+          for: 5m
+          labels: {severity: warning, app: taskboard}
+          annotations:
+            summary: "TaskBoard API p95 latency above 500ms"
+        - alert: TaskboardPodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="final-app", pod=~"taskboard-.*"}[15m]) > 3
+          for: 1m
+          labels: {severity: warning, app: taskboard}
+          annotations:
+            summary: "Pod {{ $labels.pod }} restarted more than 3 times in 15m"
+        - alert: TaskboardDatabaseNotReady
+          expr: kube_statefulset_status_replicas_ready{namespace="final-app", statefulset="taskboard-postgres"} < 1
+          for: 2m
+          labels: {severity: critical, app: taskboard}
+          annotations:
+            summary: "TaskBoard PostgreSQL has no ready replica"
+---
+# Source: taskboard/templates/monitoring.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: taskboard-backend
+  labels:
+    helm.sh/chart: taskboard-1.0.1
+    app.kubernetes.io/name: taskboard
+    app.kubernetes.io/instance: taskboard
+    app.kubernetes.io/version: "1.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: taskboard
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: taskboard
+      app.kubernetes.io/instance: taskboard
+      app.kubernetes.io/component: backend
+  namespaceSelector:
+    matchNames: [final-app]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

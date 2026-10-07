@@ -1,0 +1,27 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl logs -n final-k8s deploy/taskboard-backend -c migrate | tail -n 3
+Found 2 pods, using pod/taskboard-backend-5d94ffbc45-2bbdv
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_create_tasks
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-k8s -o custom-columns=POD:.metadata.name,READY:.status.containerStatuses[0].ready,USER:.spec.securityContext.runAsUser,NODE:.spec.nodeName
+POD                                   READY   USER    NODE
+taskboard-backend-5d94ffbc45-2bbdv    true    10001   minikube
+taskboard-backend-5d94ffbc45-rvpt8    true    10001   minikube
+taskboard-frontend-574999784f-lcn9p   true    101     minikube
+taskboard-frontend-574999784f-rxscc   true    101     minikube
+taskboard-postgres-0                  true    70      minikube
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get endpointslices -n final-k8s -l kubernetes.io/service-name=taskboard-backend -o jsonpath='{range .items[*].endpoints[*]}{.addresses[0]} ready={.conditions.ready}{"\n"}{end}'
+10.244.0.160 ready=true
+10.244.0.161 ready=true
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -H 'Host: taskboard-k8s.local' http://$IP/api/info; echo
+{"service":"TaskBoard API","version":"1.0.1","env":"k8s"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -H 'Host: taskboard-k8s.local' -X POST http://$IP/api/tasks -H 'Content-Type: application/json' -d '{"title":"Deployed with plain manifests","priority":"LOW"}'; echo
+{"title":"Deployed with plain manifests","description":"","priority":"LOW","status":"TODO","assignee":"Unassigned","id":1,"created_at":"2026-10-07T18:58:06.632828Z"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET / via ingress -> HTTP %{http_code}\n' -H 'Host: taskboard-k8s.local' http://$IP/
+GET / via ingress -> HTTP 200
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get hpa -n final-k8s
+NAME                REFERENCE                      TARGETS                               MINPODS   MAXPODS   REPLICAS   AGE
+taskboard-backend   Deployment/taskboard-backend   cpu: <unknown>/60%, memory: 52%/80%   2         5         2          102s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pvc -n final-k8s -o custom-columns=PVC:.metadata.name,STATUS:.status.phase,SIZE:.status.capacity.storage,CLASS:.spec.storageClassName
+PVC                         STATUS   SIZE   CLASS
+data-taskboard-postgres-0   Bound    1Gi    standard

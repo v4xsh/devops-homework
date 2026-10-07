@@ -1,0 +1,8 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 150
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get hpa taskboard-backend -n final-app
+NAME                REFERENCE                      TARGETS                        MINPODS   MAXPODS   REPLICAS   AGE
+taskboard-backend   Deployment/taskboard-backend   cpu: 3%/60%, memory: 51%/80%   2         5         4          5m52s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl describe hpa taskboard-backend -n final-app | grep -E 'SuccessfulRescale' | tail -n 3
+  Normal   SuccessfulRescale             5m52s                  horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+  Normal   SuccessfulRescale             3m34s                  horizontal-pod-autoscaler  New size: 5; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             45s                    horizontal-pod-autoscaler  New size: 4; reason: All metrics below target

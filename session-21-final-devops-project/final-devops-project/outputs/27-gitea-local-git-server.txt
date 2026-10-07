@@ -1,0 +1,13 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f gitops/local-git-server/gitea.yaml
+namespace/final-gitea created
+deployment.apps/gitea created
+service/gitea created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/gitea -n final-gitea --timeout=300s
+Waiting for deployment "gitea" rollout to finish: 0 of 1 updated replicas are available...
+deployment "gitea" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl exec -n final-gitea deploy/gitea -- gitea admin user create --username vansh --password "$GITEA_PWD" --email vansh@taskboard.local --admin --must-change-password=false
+New user 'vansh' has been successfully created!
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl port-forward -n final-gitea svc/gitea 13001:3000 > /dev/null 2>&1 &
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 4
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -u "vansh:$GITEA_PWD" -H 'Content-Type: application/json' -X POST localhost:13001/api/v1/user/repos -d '{"name":"taskboard-gitops","default_branch":"main","private":false}' | jq -c '{full_name, clone_url, default_branch}'
+{"full_name":"vansh/taskboard-gitops","clone_url":"http://gitea.final-gitea.svc:3000/vansh/taskboard-gitops.git","default_branch":"main"}

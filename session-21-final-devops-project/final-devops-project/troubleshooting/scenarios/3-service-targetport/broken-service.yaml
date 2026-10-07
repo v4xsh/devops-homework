@@ -1,3 +1,4 @@
+# BROKEN ON PURPOSE (troubleshooting challenge): targetPort 8080 but the container listens on 8000 -> connection refused, ingress 502
 apiVersion: v1
 kind: Service
 metadata:

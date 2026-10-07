@@ -1,0 +1,8 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/05-ingress.yaml
+ingress.networking.k8s.io/taskboard configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 8
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl describe ingress taskboard -n final-ts | grep -E '/api|/ ' | cut -c1-160
+                      /api   taskboard-backend:http (10.244.0.200:8000,10.244.0.199:8000)
+                      /      taskboard-frontend:http (10.244.0.204:8080,10.244.0.205:8080)
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET /api/tasks via ingress -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+GET /api/tasks via ingress -> HTTP 200

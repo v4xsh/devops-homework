@@ -1,0 +1,49 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/build/s21-tf && grep -vE '^\s*#' localstack.tfvars
+use_localstack     = true
+create_eks         = false
+create_ecr         = false
+enable_nat_gateway = true
+aws_region         = "us-east-1"
+azs                = ["us-east-1a", "us-east-1b"]
+~/build/s21-tf$ docker ps --filter name=s21-localstack --format '{{.Names}} {{.Image}} {{.Status}}'
+s21-localstack localstack/localstack:4.9 Up About a minute (healthy)
+~/build/s21-tf$ terraform apply -input=false -no-color -auto-approve -var-file=localstack.tfvars -var localstack_endpoint=http://localhost:4596 | grep -E 'Creation complete|Apply complete|Error' | sed 's/\[id=.*\]//' | sort | uniq | head -n 40
+
+Error: setting S3 Bucket (vansh-10099-taskboard-artifacts) tags: setting resource tags (vansh-10099-taskboard-artifacts): operation error S3: PutBucketTagging, https response error StatusCode: 400, RequestID: eb8abc85-187b-4162-9382-d5eb82f98a72, HostID: s9lzHYrFp76ZVxRcpX9+5cjAnEH2ROuNkd2BHfIa6UkFVdtjf5mKR3/eTPFvsiP/XV/VLi31234=, api error InvalidTag: The TagValue you have provided is invalid
+
+  with aws_s3_bucket.artifacts,
+  on registry-storage.tf line 30, in resource "aws_s3_bucket" "artifacts":
+  30: resource "aws_s3_bucket" "artifacts" {
+
+aws_default_security_group.default: Creation complete after 1s 
+aws_eip.nat[0]: Creation complete after 4s 
+aws_internet_gateway.main: Creation complete after 1s 
+aws_kms_key.s3: Creation complete after 10s 
+aws_nat_gateway.main[0]: Creation complete after 0s 
+aws_route.private_nat[0]: Creation complete after 1s 
+aws_route.public_internet: Creation complete after 0s 
+aws_route_table.private: Creation complete after 1s 
+aws_route_table.public: Creation complete after 1s 
+aws_route_table_association.private[0]: Creation complete after 0s 
+aws_route_table_association.private[1]: Creation complete after 0s 
+aws_route_table_association.public[0]: Creation complete after 0s 
+aws_route_table_association.public[1]: Creation complete after 0s 
+aws_subnet.private[0]: Creation complete after 1s 
+aws_subnet.private[1]: Creation complete after 1s 
+aws_subnet.public[0]: Creation complete after 1s 
+aws_subnet.public[1]: Creation complete after 1s 
+aws_vpc.main: Creation complete after 14s 
+~/build/s21-tf$ terraform output -no-color
+artifacts_bucket = "vansh-10099-taskboard-artifacts"
+ecr_repository_urls = {}
+private_subnet_ids = [
+  "subnet-68d2ea1843f2a4ad5",
+  "subnet-0ddbc9f73d8a6bceb",
+]
+public_subnet_ids = [
+  "subnet-ce1280282360a394a",
+  "subnet-39ec9dfd430ada780",
+]
+vpc_id = "vpc-bbc9a408b2caf369b"
+~/build/s21-tf$ terraform state list | wc -l
+21

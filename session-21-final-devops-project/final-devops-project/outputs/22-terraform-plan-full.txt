@@ -1,0 +1,46 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/build/s21-tf
+~/build/s21-tf$ terraform plan -input=false -no-color -var use_localstack=true -var localstack_endpoint=http://localhost:4596 -out full.tfplan > plan-full.txt; echo "plan exit code: $?"
+plan exit code: 0
+~/build/s21-tf$ grep -E '^  # ' plan-full.txt | sed 's/ will be created//' | sort | head -n 60
+  # aws_default_security_group.default
+  # aws_ecr_lifecycle_policy.app["taskboard-backend"]
+  # aws_ecr_lifecycle_policy.app["taskboard-frontend"]
+  # aws_ecr_repository.app["taskboard-backend"]
+  # aws_ecr_repository.app["taskboard-frontend"]
+  # aws_eip.nat[0]
+  # aws_eks_cluster.main[0]
+  # aws_eks_node_group.main[0]
+  # aws_iam_role.eks_cluster[0]
+  # aws_iam_role.eks_nodes[0]
+  # aws_iam_role_policy_attachment.eks_cluster[0]
+  # aws_iam_role_policy_attachment.eks_nodes["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
+  # aws_iam_role_policy_attachment.eks_nodes["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]
+  # aws_iam_role_policy_attachment.eks_nodes["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]
+  # aws_internet_gateway.main
+  # aws_kms_key.eks[0]
+  # aws_kms_key.s3
+  # aws_nat_gateway.main[0]
+  # aws_route.private_nat[0]
+  # aws_route.public_internet
+  # aws_route_table.private
+  # aws_route_table.public
+  # aws_route_table_association.private[0]
+  # aws_route_table_association.private[1]
+  # aws_route_table_association.public[0]
+  # aws_route_table_association.public[1]
+  # aws_s3_bucket.artifacts
+  # aws_s3_bucket_lifecycle_configuration.artifacts
+  # aws_s3_bucket_ownership_controls.artifacts
+  # aws_s3_bucket_public_access_block.artifacts
+  # aws_s3_bucket_server_side_encryption_configuration.artifacts
+  # aws_s3_bucket_versioning.artifacts
+  # aws_subnet.private[0]
+  # aws_subnet.private[1]
+  # aws_subnet.public[0]
+  # aws_subnet.public[1]
+  # aws_vpc.main
+~/build/s21-tf$ grep -E '^Plan:' plan-full.txt
+Plan: 37 to add, 0 to change, 0 to destroy.
+~/build/s21-tf$ terraform show -json full.tfplan | jq -r '.resource_changes[] | select(.type=="aws_eks_cluster" or .type=="aws_eks_node_group") | "\(.address): \(.change.after | {name, version, instance_types, scaling_config} | tostring)"' | cut -c1-200
+aws_eks_cluster.main[0]: {"name":"taskboard-cluster","version":"1.33","instance_types":null,"scaling_config":null}
+aws_eks_node_group.main[0]: {"name":null,"version":null,"instance_types":["t3.medium"],"scaling_config":[{"desired_size":2,"max_size":3,"min_size":1}]}

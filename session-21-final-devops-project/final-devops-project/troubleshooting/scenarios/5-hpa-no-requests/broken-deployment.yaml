@@ -1,3 +1,4 @@
+# BROKEN ON PURPOSE (troubleshooting challenge): no resources.requests -> HPA cannot compute CPU utilisation, TARGETS shows <unknown>
 apiVersion: apps/v1
 kind: Deployment
 metadata:

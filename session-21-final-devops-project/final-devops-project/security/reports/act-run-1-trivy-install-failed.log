@@ -1,0 +1,415 @@
+time="2026-10-07T20:04:20Z" level=info msg="Using docker host 'unix:///var/run/docker.sock', and daemon socket 'unix:///var/run/docker.sock'"
+[session21-final-pipeline/Frontend build                                        ] ⭐ Run Set up job
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Set up job
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Set up job
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] 🚀  Start image=catthehacker/ubuntu:act-latest
+[session21-final-pipeline/Unit tests + lint (backend)                           ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[session21-final-pipeline/Secret scan (gitleaks)                                ] ⭐ Run Set up job
+[session21-final-pipeline/Secret scan (gitleaks)                                ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Set up job
+[session21-final-pipeline/SAST (bandit)                                         ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[session21-final-pipeline/Frontend build                                        ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Set up job
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   ✅  Success - Set up job
+[session21-final-pipeline/Frontend build                                        ]   ✅  Success - Set up job
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Set up job
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Set up job
+[session21-final-pipeline/SAST (bandit)                                         ]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[session21-final-pipeline/Frontend build                                        ]   ☁  git clone 'https://github.com/actions/setup-node' # ref=v4
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ☁  git clone 'https://github.com/actions/setup-python' # ref=v5
+[session21-final-pipeline/Secret scan (gitleaks)                                ] ⭐ Run Main actions/checkout@v4
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker cp src=/tmp/act-ws/. dst=/tmp/act-ws
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   ✅  Success - Main actions/checkout@v4 [105.03929ms]
+[session21-final-pipeline/Secret scan (gitleaks)                                ] ⭐ Run Main Install gitleaks
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/1] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Main actions/checkout@v4
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker cp src=/tmp/act-ws/. dst=/tmp/act-ws
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Main actions/checkout@v4 [136.861575ms]
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Main actions/setup-python@v5
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   ✅  Success - Main Install gitleaks [1.535098448s]
+[session21-final-pipeline/Secret scan (gitleaks)                                ] ⭐ Run Main gitleaks (whole project directory)
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/2] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   | [90m8:04PM[0m [32mINF[0m [1mscanned ~231788 bytes (231.79 KB) in 67.8ms[0m
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   | [90m8:04PM[0m [32mINF[0m [1mno leaks found[0m
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   ✅  Success - Main gitleaks (whole project directory) [523.229873ms]
+[session21-final-pipeline/Secret scan (gitleaks)                                ] ⭐ Run Complete job
+[session21-final-pipeline/Secret scan (gitleaks)                                ] Cleaning up container for job Secret scan (gitleaks)
+[session21-final-pipeline/Secret scan (gitleaks)                                ]   ✅  Success - Complete job
+[session21-final-pipeline/Secret scan (gitleaks)                                ] 🏁  Job succeeded
+[session21-final-pipeline/Frontend build                                        ] ⭐ Run Main actions/checkout@v4
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker cp src=/tmp/act-ws/. dst=/tmp/act-ws
+[session21-final-pipeline/Frontend build                                        ]   ✅  Success - Main actions/checkout@v4 [240.229539ms]
+[session21-final-pipeline/Frontend build                                        ] ⭐ Run Main actions/setup-node@v4
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-node@v4/ dst=/var/run/act/actions/actions-setup-node@v4/
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ☁  git clone 'https://github.com/actions/upload-artifact' # ref=v4
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[session21-final-pipeline/SAST (bandit)                                         ]   ❓  ::group::Installed versions
+[session21-final-pipeline/SAST (bandit)                                         ]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/SAST (bandit)                                         ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Successfully set up CPython (3.12.15)
+[session21-final-pipeline/SAST (bandit)                                         ]   ❓  ::endgroup::
+[session21-final-pipeline/SAST (bandit)                                         ]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Main actions/setup-python@v5 [3.688565852s]
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-output:: python-version=3.12.15
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.12.15/x64/bin/python
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SAST (bandit)                                         ]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64/bin
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Main pip install bandit==1.9.4
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/2] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ☁  git clone 'https://github.com/actions/setup-node' # ref=v4
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: bandit==1.9.4 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (1.9.4)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: PyYAML>=5.3.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from bandit==1.9.4) (6.0.3)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: stevedore>=1.20.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from bandit==1.9.4) (5.9.1)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: rich in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from bandit==1.9.4) (15.0.0)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: markdown-it-py>=2.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from rich->bandit==1.9.4) (4.2.0)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from rich->bandit==1.9.4) (2.21.0)
+[session21-final-pipeline/SAST (bandit)                                         ]   | Requirement already satisfied: mdurl~=0.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich->bandit==1.9.4) (0.1.2)
+[session21-final-pipeline/SAST (bandit)                                         ]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Main pip install bandit==1.9.4 [3.410791447s]
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Main Bandit (fail on medium+ severity, medium+ confidence)
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/3] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Main actions/checkout@v4
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker cp src=/tmp/act-ws/. dst=/tmp/act-ws
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-node@v4/dist/setup/index.js] user= workdir=
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Main actions/checkout@v4 [144.574997ms]
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Main actions/setup-python@v5
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[session21-final-pipeline/Frontend build                                        ]   | Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+[session21-final-pipeline/Frontend build                                        ]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/Frontend build                                        ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/Frontend build                                        ]   ❓  ::group::Environment details
+[session21-final-pipeline/SAST (bandit)                                         ]   | [main]	INFO	profile include tests: None
+[session21-final-pipeline/SAST (bandit)                                         ]   | [main]	INFO	profile exclude tests: None
+[session21-final-pipeline/SAST (bandit)                                         ]   | [main]	INFO	cli include tests: None
+[session21-final-pipeline/SAST (bandit)                                         ]   | [main]	INFO	cli exclude tests: None
+[session21-final-pipeline/SAST (bandit)                                         ]   | [main]	INFO	using config: security/bandit.yaml
+[session21-final-pipeline/SAST (bandit)                                         ]   | [main]	INFO	running on Python 3.12.15
+[session21-final-pipeline/SAST (bandit)                                         ]   | Run started:2026-10-07 20:04:32.689127+00:00
+[session21-final-pipeline/SAST (bandit)                                         ]   | 
+[session21-final-pipeline/SAST (bandit)                                         ]   | Test results:
+[session21-final-pipeline/SAST (bandit)                                         ]   | 	No issues identified.
+[session21-final-pipeline/SAST (bandit)                                         ]   | 
+[session21-final-pipeline/SAST (bandit)                                         ]   | Code scanned:
+[session21-final-pipeline/SAST (bandit)                                         ]   | 	Total lines of code: 195
+[session21-final-pipeline/SAST (bandit)                                         ]   | 	Total lines skipped (#nosec): 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 
+[session21-final-pipeline/SAST (bandit)                                         ]   | Run metrics:
+[session21-final-pipeline/SAST (bandit)                                         ]   | 	Total issues (by severity):
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		Undefined: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		Low: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		Medium: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		High: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 	Total issues (by confidence):
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		Undefined: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		Low: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		Medium: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | 		High: 0
+[session21-final-pipeline/SAST (bandit)                                         ]   | Files skipped (0):
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Main Bandit (fail on medium+ severity, medium+ confidence) [501.683979ms]
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Post actions/setup-python@v5
+[session21-final-pipeline/SAST (bandit)                                         ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/cache-save/index.js] user= workdir=
+[session21-final-pipeline/SAST (bandit)                                         ]   | (node:74) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/SAST (bandit)                                         ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Post actions/setup-python@v5 [265.8657ms]
+[session21-final-pipeline/SAST (bandit)                                         ] ⭐ Run Complete job
+[session21-final-pipeline/SAST (bandit)                                         ] Cleaning up container for job SAST (bandit)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main actions/checkout@v4
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker cp src=/tmp/act-ws/. dst=/tmp/act-ws
+[session21-final-pipeline/Frontend build                                        ]   | node: v22.23.3
+[session21-final-pipeline/Frontend build                                        ]   | npm: 10.9.9
+[session21-final-pipeline/Frontend build                                        ]   | yarn: 
+[session21-final-pipeline/Frontend build                                        ]   ❓  ::endgroup::
+[session21-final-pipeline/Frontend build                                        ]   ❓ add-matcher /run/act/actions/actions-setup-node@v4/.github/tsc.json
+[session21-final-pipeline/Frontend build                                        ]   ❓ add-matcher /run/act/actions/actions-setup-node@v4/.github/eslint-stylish.json
+[session21-final-pipeline/Frontend build                                        ]   ❓ add-matcher /run/act/actions/actions-setup-node@v4/.github/eslint-compact.json
+[session21-final-pipeline/Frontend build                                        ]   ✅  Success - Main actions/setup-node@v4 [7.218597301s]
+[session21-final-pipeline/Frontend build                                        ]   ⚙  ::set-output:: node-version=v22.23.3
+[session21-final-pipeline/Frontend build                                        ]   ⚙  ::add-path:: /opt/hostedtoolcache/node/22.23.3/x64/bin
+[session21-final-pipeline/Frontend build                                        ] ⭐ Run Main npm ci + build
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/2] user= workdir=session-21-final-devops-project/final-devops-project/application/frontend
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Main actions/checkout@v4 [3.946970713s]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main actions/setup-python@v5
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-python@v5/ dst=/var/run/act/actions/actions-setup-python@v5/
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ❓  ::group::Installed versions
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | (node:32) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Successfully set up CPython (3.12.15)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ❓  ::endgroup::
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Main actions/setup-python@v5 [6.703904334s]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-output:: python-version=3.12.15
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.12.15/x64/bin/python
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64/bin
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Main Install dependencies
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/2] user= workdir=session-21-final-devops-project/final-devops-project/application/backend
+[session21-final-pipeline/SAST (bandit)                                         ]   ✅  Success - Complete job
+[session21-final-pipeline/SAST (bandit)                                         ] 🏁  Job succeeded
+[session21-final-pipeline/Frontend build                                        ]   | 
+[session21-final-pipeline/Frontend build                                        ]   | added 66 packages in 7s
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/setup/index.js] user= workdir=
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓  ::group::Installed versions
+[session21-final-pipeline/Frontend build                                        ]   | 
+[session21-final-pipeline/Frontend build                                        ]   | > taskboard-frontend@1.0.0 build
+[session21-final-pipeline/Frontend build                                        ]   | > vite build
+[session21-final-pipeline/Frontend build                                        ]   | 
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | (node:31) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Successfully set up CPython (3.12.15)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓  ::endgroup::
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓ add-matcher /run/act/actions/actions-setup-python@v5/.github/python.json
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Main actions/setup-python@v5 [4.668713097s]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-env:: pythonLocation=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-env:: PKG_CONFIG_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-env:: Python_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-env:: Python2_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-env:: Python3_ROOT_DIR=/opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-env:: LD_LIBRARY_PATH=/opt/hostedtoolcache/Python/3.12.15/x64/lib
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-output:: python-path=/opt/hostedtoolcache/Python/3.12.15/x64/bin/python
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-output:: python-version=3.12.15
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::add-path:: /opt/hostedtoolcache/Python/3.12.15/x64/bin
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main pip install pip-audit==2.10.1
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/2] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/Frontend build                                        ]   | [36mvite v7.3.7 [32mbuilding client environment for production...[36m[39m
+[session21-final-pipeline/Frontend build                                        ]   | transforming...
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: fastapi==0.142.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (0.142.2)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: starlette==1.7.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 5)) (1.7.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: uvicorn==0.38.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (0.38.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: sqlalchemy==2.0.44 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 7)) (2.0.44)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: psycopg==3.2.12 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from psycopg[binary]==3.2.12->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 8)) (3.2.12)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pydantic-settings==2.11.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 9)) (2.11.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: prometheus-fastapi-instrumentator==8.1.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 10)) (8.1.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: prometheus-client==0.23.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 11)) (0.23.1)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: alembic==1.17.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 12)) (1.17.1)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pytest==8.4.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 2)) (8.4.2)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pytest-cov==7.0.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 3)) (7.0.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: pip-audit==2.10.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (2.10.1)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: httpx==0.28.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 4)) (0.28.1)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: ruff==0.14.3 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from -r requirements-dev.txt (line 5)) (0.14.3)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: CacheControl>=0.13.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from CacheControl[filecache]>=0.13.0->pip-audit==2.10.1) (0.14.4)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: cyclonedx-python-lib<12,>=5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (11.12.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pydantic>=2.9.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (2.13.5)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: typing-extensions>=4.8.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (4.16.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: packaging>=23.0.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (26.3)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: typing-inspection>=0.4.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (0.4.4)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: annotated-doc>=0.0.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (0.0.5)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: pip-api>=0.0.28 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (0.0.35)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: opentelemetry-api>=1.44.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (1.45.1)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: pip-requirements-parser>=32.0.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (32.0.1)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: requests>=2.31.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (2.34.2)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: rich>=12.4 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (15.0.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: tomli>=2.2.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (2.4.1)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: tomli-w>=1.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (1.2.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: platformdirs>=4.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-audit==2.10.1) (4.12.3)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: license-expression<31,>=30 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (30.4.4)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: anyio<5,>=4.0.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from starlette==1.7.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 5)) (4.15.1)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: packageurl-python<2,>=0.11 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (0.17.6)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: click>=7.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn==0.38.0->uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (8.4.2)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: py-serializable<3.0.0,>=2.1.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (2.1.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: h11>=0.8 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn==0.38.0->uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (0.16.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: sortedcontainers<3.0.0,>=2.4.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (2.4.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: greenlet>=1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from sqlalchemy==2.0.44->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 7)) (3.5.6)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: typing_extensions<5.0,>=4.6 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (4.16.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: boolean.py>=4.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from license-expression<31,>=30->cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (5.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: defusedxml<0.8.0,>=0.7.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from py-serializable<3.0.0,>=2.1.0->cyclonedx-python-lib<12,>=5->pip-audit==2.10.1) (0.7.1)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: python-dotenv>=0.21.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pydantic-settings==2.11.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 9)) (1.2.4)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: msgpack<2.0.0,>=0.5.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from CacheControl>=0.13.0->CacheControl[filecache]>=0.13.0->pip-audit==2.10.1) (1.2.3)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: Mako in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from alembic==1.17.1->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 12)) (1.4.3)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: iniconfig>=1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.3.1)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: packaging>=20 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (26.3)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (1.6.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pytest==8.4.2->-r requirements-dev.txt (line 2)) (2.21.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: filelock>=3.8.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from CacheControl[filecache]>=0.13.0->pip-audit==2.10.1) (4.0.12)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: coverage>=7.10.6 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from coverage[toml]>=7.10.6->pytest-cov==7.0.0->-r requirements-dev.txt (line 3)) (7.16.2)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-api>=0.0.28->pip-audit==2.10.1) (26.2.1)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: pyparsing in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pip-requirements-parser>=32.0.0->pip-audit==2.10.1) (3.3.3)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: certifi in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from httpx==0.28.1->-r requirements-dev.txt (line 4)) (2026.7.22)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: httpcore==1.* in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from httpx==0.28.1->-r requirements-dev.txt (line 4)) (1.0.9)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: idna in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from httpx==0.28.1->-r requirements-dev.txt (line 4)) (3.20)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: charset_normalizer<4,>=2 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from requests>=2.31.0->pip-audit==2.10.1) (3.5.2)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: idna<4,>=2.5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from requests>=2.31.0->pip-audit==2.10.1) (3.20)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: urllib3<3,>=1.26 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from requests>=2.31.0->pip-audit==2.10.1) (2.8.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: certifi>=2023.5.7 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from requests>=2.31.0->pip-audit==2.10.1) (2026.7.22)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: psycopg-binary==3.2.12 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from psycopg[binary]==3.2.12->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 8)) (3.2.12)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: httptools>=0.6.3 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (0.8.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pyyaml>=5.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (6.0.3)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: uvloop>=0.15.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (0.23.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: watchfiles>=0.13 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (1.3.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: websockets>=10.4 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from uvicorn[standard]==0.38.0->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 6)) (17.2)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: markdown-it-py>=2.2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from rich>=12.4->pip-audit==2.10.1) (4.2.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from rich>=12.4->pip-audit==2.10.1) (2.21.0)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Requirement already satisfied: mdurl~=0.1 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich>=12.4->pip-audit==2.10.1) (0.1.2)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: annotated-types>=0.6.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pydantic>=2.9.0->fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (0.8.0)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: pydantic-core==2.46.5 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from pydantic>=2.9.0->fastapi==0.142.2->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 4)) (2.46.5)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Requirement already satisfied: MarkupSafe>=2.0 in /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages (from Mako->alembic==1.17.1->-r /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/requirements.txt (line 12)) (3.0.4)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Main pip install pip-audit==2.10.1 [1.543403617s]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Main Install dependencies [3.99246217s]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main pip-audit (Python dependencies, OSV/PyPI advisory DB)
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Main Lint (ruff)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/3] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/3] user= workdir=session-21-final-devops-project/final-devops-project/application/backend
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | All checks passed!
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Main Lint (ruff) [337.012464ms]
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Main Pytest with coverage
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/4] user= workdir=session-21-final-devops-project/final-devops-project/application/backend
+[session21-final-pipeline/Frontend build                                        ]   | [32m✓[39m 28 modules transformed.
+[session21-final-pipeline/Frontend build                                        ]   | rendering chunks...
+[session21-final-pipeline/Frontend build                                        ]   | computing gzip size...
+[session21-final-pipeline/Frontend build                                        ]   | [2mdist/[22m[32mindex.html                 [39m[1m[2m  0.34 kB[22m[1m[22m[2m │ gzip:  0.25 kB[22m
+[session21-final-pipeline/Frontend build                                        ]   | [2mdist/[22m[2massets/[22m[35mindex-CcorwgzN.css  [39m[1m[2m  6.41 kB[22m[1m[22m[2m │ gzip:  2.05 kB[22m
+[session21-final-pipeline/Frontend build                                        ]   | [2mdist/[22m[2massets/[22m[36mindex-OwUaWGz6.js   [39m[1m[2m199.97 kB[22m[1m[22m[2m │ gzip: 62.66 kB[22m
+[session21-final-pipeline/Frontend build                                        ]   | [32m✓ built in 3.27s[39m
+[session21-final-pipeline/Frontend build                                        ]   ✅  Success - Main npm ci + build [12.118504248s]
+[session21-final-pipeline/Frontend build                                        ] ⭐ Run Post actions/setup-node@v4
+[session21-final-pipeline/Frontend build                                        ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-node@v4/dist/cache-save/index.js] user= workdir=
+[session21-final-pipeline/Frontend build                                        ]   | (node:128) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/Frontend build                                        ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/Frontend build                                        ]   ✅  Success - Post actions/setup-node@v4 [296.709965ms]
+[session21-final-pipeline/Frontend build                                        ] ⭐ Run Complete job
+[session21-final-pipeline/Frontend build                                        ] Cleaning up container for job Frontend build
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | ============================= test session starts ==============================
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | platform linux -- Python 3.12.15, pytest-8.4.2, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.12.15/x64/bin/python
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | cachedir: .pytest_cache
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | rootdir: /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | configfile: pytest.ini
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | testpaths: tests
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | plugins: anyio-4.15.1, cov-7.0.0, platformdirs-4.12.3
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | collecting ... collected 12 items
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | 
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_health.py::test_health_is_up PASSED                           [  8%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_health.py::test_ready_checks_database PASSED                  [ 16%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_health.py::test_root_and_info PASSED                          [ 25%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_health.py::test_metrics_endpoint_exposes_prometheus_format PASSED [ 33%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_health.py::test_ready_returns_503_when_database_down PASSED   [ 41%]
+[session21-final-pipeline/Frontend build                                        ]   ✅  Success - Complete job
+[session21-final-pipeline/Frontend build                                        ] 🏁  Job succeeded
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_create_and_get_task PASSED                     [ 50%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_list_tasks_newest_first PASSED                 [ 58%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_update_task_status PASSED                      [ 66%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_delete_task PASSED                             [ 75%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_stats_counts_by_status PASSED                  [ 83%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_missing_task_returns_404 PASSED                [ 91%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | tests/test_tasks.py::test_validation_rejects_bad_payload PASSED          [100%]
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | 
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | =============================== warnings summary ===============================
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | ../../../../../../opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/fastapi/testclient.py:1
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   |   /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   |     from starlette.testclient import TestClient as TestClient  # noqa
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | 
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | - generated xml file: /tmp/act-ws/session-21-final-devops-project/final-devops-project/application/backend/pytest-report.xml -
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | ================================ tests coverage ================================
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | _______________ coverage: platform linux, python 3.12.15-final-0 _______________
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | 
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Name              Stmts   Miss  Cover   Missing
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | -----------------------------------------------
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | app/__init__.py       0      0   100%
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | app/config.py        20      1    95%   30
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | app/db.py            13      0   100%
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | app/main.py         105      2    98%   55-56
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | app/models.py        13      0   100%
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | app/schemas.py       26      0   100%
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | -----------------------------------------------
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | TOTAL               177      3    98%
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | Required test coverage of 80% reached. Total coverage: 98.31%
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | ======================== 12 passed, 1 warning in 1.22s =========================
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Main Pytest with coverage [6.518502798s]
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Post actions/setup-python@v5
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-python@v5/dist/cache-save/index.js] user= workdir=
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | (node:130) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Post actions/setup-python@v5 [189.81277ms]
+[session21-final-pipeline/Unit tests + lint (backend)                           ] ⭐ Run Complete job
+[session21-final-pipeline/Unit tests + lint (backend)                           ] Cleaning up container for job Unit tests + lint (backend)
+[session21-final-pipeline/Unit tests + lint (backend)                           ]   ✅  Success - Complete job
+[session21-final-pipeline/Unit tests + lint (backend)                           ] 🏁  Job succeeded
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | No known vulnerabilities found
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Main pip-audit (Python dependencies, OSV/PyPI advisory DB) [17.260198384s]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main actions/setup-node@v4
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker cp src=/home/vansh/.cache/act/actions-setup-node@v4/ dst=/var/run/act/actions/actions-setup-node@v4/
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[/opt/acttoolcache/node/24.19.0/x64/bin/node /var/run/act/actions/actions-setup-node@v4/dist/setup/index.js] user= workdir=
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | (node:130) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | (Use `node --trace-deprecation ...` to show where the warning was created)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓  ::group::Environment details
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | node: v22.23.3
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | npm: 10.9.9
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | yarn: 
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓  ::endgroup::
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓ add-matcher /run/act/actions/actions-setup-node@v4/.github/tsc.json
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓ add-matcher /run/act/actions/actions-setup-node@v4/.github/eslint-stylish.json
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❓ add-matcher /run/act/actions/actions-setup-node@v4/.github/eslint-compact.json
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Main actions/setup-node@v4 [1.221301833s]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::set-output:: node-version=v22.23.3
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ⚙  ::add-path:: /opt/hostedtoolcache/node/22.23.3/x64/bin
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main npm audit (frontend dependencies)
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/5] user= workdir=session-21-final-devops-project/final-devops-project/application/frontend
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | found 0 vulnerabilities
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Main npm audit (frontend dependencies) [839.609597ms]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Main Install Trivy
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/6] user= workdir=session-21-final-devops-project/final-devops-project
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | aquasecurity/trivy info checking GitHub for tag 'v0.67.2'
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   | aquasecurity/trivy info found version: 0.67.2 for v0.67.2/Linux/64bit
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ❌  Failure - Main Install Trivy [1.181245163s]
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] exitcode '1': failure
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] ⭐ Run Complete job
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)]   ✅  Success - Complete job
+[session21-final-pipeline/SCA + IaC scan (pip-audit, npm audit, trivy fs/config)] 🏁  Job failed
+[session21-final-pipeline/Security gate                                         ] ⭐ Run Set up job
+[session21-final-pipeline/Security gate                                         ] 🚀  Start image=catthehacker/ubuntu:act-latest
+[session21-final-pipeline/Security gate                                         ]   🐳  docker pull image=catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[session21-final-pipeline/Security gate                                         ]   🐳  docker create image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Security gate                                         ]   🐳  docker run image=catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="bridge"
+[session21-final-pipeline/Security gate                                         ]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[session21-final-pipeline/Security gate                                         ]   ✅  Success - Set up job
+[session21-final-pipeline/Security gate                                         ] ⭐ Run Main All quality and security checks must be green
+[session21-final-pipeline/Security gate                                         ]   🐳  docker exec cmd=[bash -e /var/run/act/workflow/0] user= workdir=.
+[session21-final-pipeline/Security gate                                         ]   | test=success frontend=success sast=success
+[session21-final-pipeline/Security gate                                         ]   | sca=failure secrets=success image-scan=skipped
+[session21-final-pipeline/Security gate                                         ]   ❗  ::error::security gate FAILED (failure)
+[session21-final-pipeline/Security gate                                         ]   ❌  Failure - Main All quality and security checks must be green [57.487509ms]
+[session21-final-pipeline/Security gate                                         ] exitcode '1': failure
+[session21-final-pipeline/Security gate                                         ] ⭐ Run Complete job
+[session21-final-pipeline/Security gate                                         ]   ✅  Success - Complete job
+[session21-final-pipeline/Security gate                                         ] 🏁  Job failed
+Error: Job 'SCA + IaC scan (pip-audit, npm audit, trivy fs/config)' failed
+act exit code: 1

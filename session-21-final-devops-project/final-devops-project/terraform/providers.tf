@@ -28,7 +28,7 @@ provider "aws" {
   default_tags {
     tags = {
       Project   = var.project
-      Owner     = "Vansh Dobhal (10099)"
+      Owner     = "vansh-dobhal-10099" # S3 tag values may not contain "(" or ")"
       ManagedBy = "terraform"
       Env       = var.environment
     }

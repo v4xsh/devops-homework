@@ -1,0 +1,67 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ ls kubernetes/
+00-namespace.yaml
+01-config.yaml
+02-postgres.yaml
+03-backend.yaml
+04-frontend.yaml
+05-ingress-hpa.yaml
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f kubernetes/
+namespace/final-k8s created
+configmap/taskboard-config created
+secret/taskboard-db created
+service/taskboard-postgres created
+statefulset.apps/taskboard-postgres created
+deployment.apps/taskboard-backend created
+service/taskboard-backend created
+deployment.apps/taskboard-frontend created
+service/taskboard-frontend created
+ingress.networking.k8s.io/taskboard created
+horizontalpodautoscaler.autoscaling/taskboard-backend created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status statefulset/taskboard-postgres -n final-k8s --timeout=180s
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 1 new pods have been updated...
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-backend -n final-k8s --timeout=240s
+Waiting for deployment "taskboard-backend" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 of 2 updated replicas are available...
+deployment "taskboard-backend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-frontend -n final-k8s --timeout=120s
+deployment "taskboard-frontend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get all,cm,secret,pvc,ingress,hpa -n final-k8s
+NAME                                      READY   STATUS    RESTARTS   AGE
+pod/taskboard-backend-5d94ffbc45-2bbdv    1/1     Running   0          36s
+pod/taskboard-backend-5d94ffbc45-rvpt8    1/1     Running   0          36s
+pod/taskboard-frontend-574999784f-lcn9p   1/1     Running   0          36s
+pod/taskboard-frontend-574999784f-rxscc   1/1     Running   0          36s
+pod/taskboard-postgres-0                  1/1     Running   0          36s
+
+NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/taskboard-backend    ClusterIP   10.110.240.69   <none>        8000/TCP   36s
+service/taskboard-frontend   ClusterIP   10.106.172.75   <none>        80/TCP     36s
+service/taskboard-postgres   ClusterIP   None            <none>        5432/TCP   36s
+
+NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/taskboard-backend    2/2     2            2           36s
+deployment.apps/taskboard-frontend   2/2     2            2           36s
+
+NAME                                            DESIRED   CURRENT   READY   AGE
+replicaset.apps/taskboard-backend-5d94ffbc45    2         2         2       36s
+replicaset.apps/taskboard-frontend-574999784f   2         2         2       36s
+
+NAME                                  READY   AGE
+statefulset.apps/taskboard-postgres   1/1     36s
+
+NAME                                                    REFERENCE                      TARGETS                                     MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/taskboard-backend   Deployment/taskboard-backend   cpu: <unknown>/60%, memory: <unknown>/80%   2         5         2          36s
+
+NAME                         DATA   AGE
+configmap/kube-root-ca.crt   1      36s
+configmap/taskboard-config   7      36s
+
+NAME                  TYPE     DATA   AGE
+secret/taskboard-db   Opaque   1      36s
+
+NAME                                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/data-taskboard-postgres-0   Bound    pvc-6221ee91-42ca-4030-9cf6-9f5a31ddf174   1Gi        RWO            standard       <unset>                 36s
+
+NAME                                  CLASS   HOSTS                 ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/taskboard   nginx   taskboard-k8s.local             80      36s

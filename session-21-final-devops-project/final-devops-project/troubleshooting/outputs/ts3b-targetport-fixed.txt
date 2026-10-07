@@ -1,0 +1,9 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/03-backend.yaml
+deployment.apps/taskboard-backend unchanged
+service/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get svc taskboard-backend -n final-ts -o jsonpath='targetPort={.spec.ports[0].targetPort}{"\n"}'
+targetPort=http
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get endpointslices -n final-ts -l kubernetes.io/service-name=taskboard-backend -o jsonpath='{range .items[*]}{.ports[0].port}{" -> "}{.endpoints[*].addresses[0]}{"\n"}{end}'
+8000 -> 10.244.0.200 10.244.0.199
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET /api/tasks via ingress -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+GET /api/tasks via ingress -> HTTP 502

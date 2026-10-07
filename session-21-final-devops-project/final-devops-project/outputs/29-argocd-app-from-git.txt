@@ -1,0 +1,68 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl create namespace final-gitops --dry-run=client -o yaml | kubectl apply -f -
+namespace/final-gitops created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl -n final-gitops create secret generic taskboard-db-gitops --from-literal=db-password="$(openssl rand -hex 16)" --dry-run=client -o yaml | kubectl apply -f -
+secret/taskboard-db-gitops created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ grep -vE '^\s*#' gitops/application-local-gitea.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: taskboard-gitops
+  namespace: argocd
+  labels:
+    student: vansh-dobhal-10099
+spec:
+  project: default
+  source:
+    repoURL: http://gitea.final-gitea.svc:3000/vansh/taskboard-gitops.git
+    targetRevision: main
+    path: helm/taskboard
+    helm:
+      releaseName: taskboard
+      valueFiles:
+        - values-gitops.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: final-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f gitops/application-local-gitea.yaml
+application.argoproj.io/taskboard-gitops created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl wait -n argocd application/taskboard-gitops --for=jsonpath='{.status.health.status}'=Healthy --timeout=420s
+application.argoproj.io/taskboard-gitops condition met
+~/devops-homework/session-21-final-devops-project/final-devops-project$ argocd login localhost:18443 --username admin --password "$ARGO_PWD" --insecure --grpc-web > /dev/null && argocd app get taskboard-gitops --grpc-web | head -n 30
+Name:               argocd/taskboard-gitops
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          final-gitops
+URL:                https://localhost:18443/applications/taskboard-gitops
+Source:
+- Repo:             http://gitea.final-gitea.svc:3000/vansh/taskboard-gitops.git
+  Target:           main
+  Path:             helm/taskboard
+  Helm Values:      values-gitops.yaml
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to main (18d393b)
+Health Status:      Progressing
+
+GROUP                  KIND            NAMESPACE     NAME                STATUS  HEALTH       HOOK  MESSAGE
+                       ConfigMap       final-gitops  taskboard-config    Synced                     configmap/taskboard-config created
+                       Service         final-gitops  taskboard-postgres  Synced  Healthy            service/taskboard-postgres created
+                       Service         final-gitops  taskboard-frontend  Synced  Healthy            service/taskboard-frontend created
+                       Service         final-gitops  taskboard-backend   Synced  Healthy            service/taskboard-backend created
+apps                   Deployment      final-gitops  taskboard-backend   Synced  Progressing        deployment.apps/taskboard-backend created
+apps                   Deployment      final-gitops  taskboard-frontend  Synced  Progressing        deployment.apps/taskboard-frontend created
+apps                   StatefulSet     final-gitops  taskboard-postgres  Synced  Progressing        statefulset.apps/taskboard-postgres created
+networking.k8s.io      Ingress         final-gitops  taskboard           Synced  Progressing        ingress.networking.k8s.io/taskboard created
+monitoring.coreos.com  PrometheusRule  final-gitops  taskboard-alerts    Synced                     prometheusrule.monitoring.coreos.com/taskboard-alerts created
+monitoring.coreos.com  ServiceMonitor  final-gitops  taskboard-backend   Synced                     servicemonitor.monitoring.coreos.com/taskboard-backend created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-gitops
+NAME                                  READY   STATUS     RESTARTS   AGE
+taskboard-backend-8fbb8454d-jg89x     0/1     Init:0/1   0          2s
+taskboard-backend-8fbb8454d-v8bb6     0/1     Init:0/1   0          2s
+taskboard-frontend-6f7b69dbb8-x7k9w   0/1     Running    0          2s
+taskboard-postgres-0                  0/1     Running    0          2s

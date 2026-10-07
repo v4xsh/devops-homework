@@ -1,0 +1,5 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ minikube image load ghcr.io/v4xsh/taskboard-backend:1.0.1
+~/devops-homework/session-21-final-devops-project/final-devops-project$ minikube image load ghcr.io/v4xsh/taskboard-frontend:1.0.1
+~/devops-homework/session-21-final-devops-project/final-devops-project$ minikube image ls | grep taskboard
+ghcr.io/v4xsh/taskboard-frontend:1.0.1
+ghcr.io/v4xsh/taskboard-backend:1.0.1

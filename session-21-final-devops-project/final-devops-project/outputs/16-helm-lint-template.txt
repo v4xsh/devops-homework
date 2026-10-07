@@ -1,0 +1,28 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm version --short
+v3.16.2+g13654a5
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm lint helm/taskboard -f helm/taskboard/values-prod.yaml
+==> Linting helm/taskboard
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm lint helm/taskboard
+==> Linting helm/taskboard
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm template taskboard helm/taskboard -n final-app | grep -E '^kind:' | sort | uniq -c
+      2 kind: ConfigMap
+      2 kind: Deployment
+      1 kind: HorizontalPodAutoscaler
+      1 kind: Ingress
+      1 kind: Pod
+      1 kind: Secret
+      3 kind: Service
+      1 kind: StatefulSet
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm template taskboard helm/taskboard -n final-app -f helm/taskboard/values-prod.yaml | grep -E 'replicas:|minReplicas|maxReplicas|host:|secretName' | sort | uniq -c
+      1       secretName: taskboard-tls
+      1     - host: "taskboard.v4xsh.dev"
+      1   maxReplicas: 10
+      1   minReplicas: 3
+      1   replicas: 1
+      1   replicas: 3

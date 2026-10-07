@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------- ECR: one repo per image
 resource "aws_ecr_repository" "app" {
-  for_each             = toset(var.ecr_repositories)
+  for_each             = var.create_ecr ? toset(var.ecr_repositories) : toset([])
   name                 = each.value
   image_tag_mutability = "IMMUTABLE" # a tag (git SHA) can never be overwritten
 

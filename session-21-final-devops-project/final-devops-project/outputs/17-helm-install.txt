@@ -1,0 +1,65 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm upgrade --install taskboard helm/taskboard -n final-app --create-namespace --wait --timeout 6m
+Release "taskboard" does not exist. Installing it now.
+NAME: taskboard
+LAST DEPLOYED: Wed Oct  7 18:58:38 2026
+NAMESPACE: final-app
+STATUS: deployed
+REVISION: 1
+NOTES:
+TaskBoard 1.0.1 deployed as release "taskboard" in namespace "final-app".
+Open:   http://taskboard.local/          (add "<ingress IP> taskboard.local" to /etc/hosts)
+API:    http://taskboard.local/api/tasks
+Pods:   kubectl get pods -n final-app -l app.kubernetes.io/instance=taskboard
+Test:   helm test taskboard -n final-app
+~/devops-homework/session-21-final-devops-project/final-devops-project$ helm list -n final-app
+NAME     	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART          	APP VERSION
+taskboard	final-app	1       	2026-10-07 18:58:38.240604603 +0000 UTC	deployed	taskboard-1.0.1	1.0.1      
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods,svc,ingress,hpa,pvc -n final-app -o wide | cut -c1-170
+NAME                                      READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+pod/taskboard-backend-766688f5db-8nqm9    1/1     Running   0          35s   10.244.0.165   minikube   <none>           <none>
+pod/taskboard-backend-766688f5db-sp2dh    1/1     Running   0          34s   10.244.0.166   minikube   <none>           <none>
+pod/taskboard-frontend-6f7b69dbb8-s9d9d   1/1     Running   0          35s   10.244.0.167   minikube   <none>           <none>
+pod/taskboard-frontend-6f7b69dbb8-wzbfh   1/1     Running   0          35s   10.244.0.168   minikube   <none>           <none>
+pod/taskboard-postgres-0                  1/1     Running   0          35s   10.244.0.169   minikube   <none>           <none>
+
+NAME                         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE   SELECTOR
+service/taskboard-backend    ClusterIP   10.100.45.193    <none>        8000/TCP   35s   app.kubernetes.io/component=backend,app.kubernetes.io/instance=taskboard,app.kube
+service/taskboard-frontend   ClusterIP   10.103.151.255   <none>        80/TCP     35s   app.kubernetes.io/component=frontend,app.kubernetes.io/instance=taskboard,app.kub
+service/taskboard-postgres   ClusterIP   None             <none>        5432/TCP   35s   app.kubernetes.io/component=postgres,app.kubernetes.io/instance=taskboard,app.kub
+
+NAME                                  CLASS   HOSTS             ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/taskboard   nginx   taskboard.local             80      35s
+
+NAME                                                    REFERENCE                      TARGETS                                     MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/taskboard-backend   Deployment/taskboard-backend   cpu: <unknown>/60%, memory: <unknown>/80%   2         5         2          35s
+
+NAME                                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/data-taskboard-postgres-0   Bound    pvc-788f182e-7963-4f7c-afff-1da3ebc1ad77   1Gi        RWO            standard       <unset>                 35s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get configmap -n monitoring -l grafana_dashboard=1 -o name
+configmap/kps-alertmanager-overview
+configmap/kps-apiserver
+configmap/kps-cluster-total
+configmap/kps-grafana-overview
+configmap/kps-k8s-coredns
+configmap/kps-k8s-resources-cluster
+configmap/kps-k8s-resources-multicluster
+configmap/kps-k8s-resources-namespace
+configmap/kps-k8s-resources-node
+configmap/kps-k8s-resources-nodes-overview
+configmap/kps-k8s-resources-pod
+configmap/kps-k8s-resources-workload
+configmap/kps-k8s-resources-workloads-namespace
+configmap/kps-kubelet
+configmap/kps-namespace-by-pod
+configmap/kps-namespace-by-workload
+configmap/kps-node-cluster-rsrc-use
+configmap/kps-node-rsrc-use
+configmap/kps-nodes
+configmap/kps-nodes-aix
+configmap/kps-nodes-darwin
+configmap/kps-persistentvolumesusage
+configmap/kps-pod-total
+configmap/kps-prometheus
+configmap/kps-workload-total
+configmap/s20-metrics-app-dashboard
+configmap/taskboard-final-app-dashboard

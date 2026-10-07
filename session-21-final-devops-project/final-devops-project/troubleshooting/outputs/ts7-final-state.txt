@@ -1,0 +1,20 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods,svc,ingress,hpa -n final-ts
+NAME                                      READY   STATUS    RESTARTS   AGE
+pod/taskboard-backend-5d94ffbc45-snrlg    1/1     Running   0          4m27s
+pod/taskboard-backend-5d94ffbc45-x68k2    1/1     Running   0          4m21s
+pod/taskboard-frontend-574999784f-g4sms   1/1     Running   0          2m2s
+pod/taskboard-frontend-574999784f-nvfgb   1/1     Running   0          118s
+pod/taskboard-postgres-0                  1/1     Running   0          6m44s
+
+NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/taskboard-backend    ClusterIP   10.110.68.157   <none>        8000/TCP   6m44s
+service/taskboard-frontend   ClusterIP   10.98.100.87    <none>        80/TCP     6m44s
+service/taskboard-postgres   ClusterIP   None            <none>        5432/TCP   6m44s
+
+NAME                                  CLASS   HOSTS                ADDRESS        PORTS   AGE
+ingress.networking.k8s.io/taskboard   nginx   taskboard-ts.local   192.168.49.2   80      6m44s
+
+NAME                                                     REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/taskboard-frontend   Deployment/taskboard-frontend   cpu: 5%/70%   2         4         2          3m27s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -H 'Host: taskboard-ts.local' http://$IP/api/info; echo
+{"service":"TaskBoard API","version":"1.0.1","env":"k8s"}

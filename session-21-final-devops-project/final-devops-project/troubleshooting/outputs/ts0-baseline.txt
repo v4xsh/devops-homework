@@ -1,0 +1,37 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/
+namespace/final-ts created
+configmap/taskboard-config created
+secret/taskboard-db created
+service/taskboard-postgres created
+statefulset.apps/taskboard-postgres created
+deployment.apps/taskboard-backend created
+service/taskboard-backend created
+deployment.apps/taskboard-frontend created
+service/taskboard-frontend created
+ingress.networking.k8s.io/taskboard created
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status statefulset/taskboard-postgres -n final-ts --timeout=180s
+Waiting for 1 pods to be ready...
+partitioned roll out complete: 1 new pods have been updated...
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-backend -n final-ts --timeout=240s
+Waiting for deployment "taskboard-backend" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "taskboard-backend" rollout to finish: 1 of 2 updated replicas are available...
+deployment "taskboard-backend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-frontend -n final-ts --timeout=120s
+deployment "taskboard-frontend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods,svc,ingress -n final-ts
+NAME                                      READY   STATUS    RESTARTS   AGE
+pod/taskboard-backend-5d94ffbc45-6krfj    1/1     Running   0          28s
+pod/taskboard-backend-5d94ffbc45-rtw4m    1/1     Running   0          28s
+pod/taskboard-frontend-574999784f-6k28t   1/1     Running   0          28s
+pod/taskboard-frontend-574999784f-hxs8r   1/1     Running   0          28s
+pod/taskboard-postgres-0                  1/1     Running   0          28s
+
+NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/taskboard-backend    ClusterIP   10.110.68.157   <none>        8000/TCP   28s
+service/taskboard-frontend   ClusterIP   10.98.100.87    <none>        80/TCP     28s
+service/taskboard-postgres   ClusterIP   None            <none>        5432/TCP   28s
+
+NAME                                  CLASS   HOSTS                ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/taskboard   nginx   taskboard-ts.local             80      28s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'baseline: GET /api/tasks via ingress -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+baseline: GET /api/tasks via ingress -> HTTP 200

@@ -10,7 +10,7 @@ prometheus-fastapi-instrumentator==8.1.0
 13: && /opt/venv/bin/pip uninstall -y pip
 22: && pip uninstall -y pip setuptools wheel || true \
 ~/devops-homework/session-21-final-devops-project/final-devops-project$ ~/build/s21-venv/bin/pip install -q -r application/backend/requirements-dev.txt && cd application/backend && ~/build/s21-venv/bin/python -m pytest -q -p no:cacheprovider 2>&1 | tail -n 1; cd "$OLDPWD"
-12 passed, 1 warning in 1.78s
+12 passed, 1 warning in 3.50s
 ~/devops-homework/session-21-final-devops-project/final-devops-project$ pip-audit -r application/backend/requirements.txt --strict; echo "pip-audit exit code: $?"
 No known vulnerabilities found
 pip-audit exit code: 0
@@ -18,3 +18,12 @@ pip-audit exit code: 0
 found 0 vulnerabilities
 npm audit exit code: 0
 ~/devops-homework/session-21-final-devops-project/final-devops-project$ docker build -q -f docker/backend.Dockerfile -t taskboard-backend:1.0.1 -t ghcr.io/v4xsh/taskboard-backend:1.0.1 .
+sha256:919010b24489c8658b26876d73eddb658a9f0c4c0cdf0d6acecd6f5bc2156428
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker build -q -f docker/frontend.Dockerfile -t taskboard-frontend:1.0.1 -t ghcr.io/v4xsh/taskboard-frontend:1.0.1 .
+sha256:ac293c4292797ae7376c2e7bf8c9886d319509835c49e7361427e4ce927bd1f5
+~/devops-homework/session-21-final-devops-project/final-devops-project$ docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}' | grep -E '^ghcr.io/v4xsh/taskboard-.*:1.0.1'
+ghcr.io/v4xsh/taskboard-backend:1.0.1                    292MB
+ghcr.io/v4xsh/taskboard-frontend:1.0.1                   112MB
+~/devops-homework/session-21-final-devops-project/final-devops-project$ trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --quiet --format json -o /tmp/trivy-b101.json ghcr.io/v4xsh/taskboard-backend:1.0.1; echo "backend 1.0.1 image exit code: $?"; jq -r "\"fixable HIGH/CRITICAL findings in 1.0.1: \" + ([.Results[].Vulnerabilities[]?] | length | tostring)" /tmp/trivy-b101.json
+backend 1.0.1 image exit code: 0
+fixable HIGH/CRITICAL findings in 1.0.1: 0

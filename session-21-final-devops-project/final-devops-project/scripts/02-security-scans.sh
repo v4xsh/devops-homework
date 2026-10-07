@@ -4,6 +4,7 @@ set -u
 P=~/devops-homework/session-21-final-devops-project/final-devops-project
 cd "$P"
 export PATH="$HOME/venv-s21/bin:$PATH"
+export NODE_OPTIONS=--dns-result-order=ipv4first   # npm registry fetches stalled over IPv6 in this WSL network
 chmod +x security/security-gate.sh
 
 snap 05-sast-bandit --dir "$P" <<'EOF'

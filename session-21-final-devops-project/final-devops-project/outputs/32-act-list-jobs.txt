@@ -1,0 +1,13 @@
+/tmp/act-ws$ cd /tmp/act-ws && act --version
+act version 0.2.89
+/tmp/act-ws$ act pull_request -W .github/workflows/session21-final-pipeline.yml -l 2>/dev/null
+Stage  Job ID          Job name                                                    Workflow name             Workflow file                 Events                             
+0      sca             SCA + IaC scan (pip-audit, npm audit, trivy fs/config)      session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+0      frontend        Frontend build                                              session21-final-pipeline  session21-final-pipeline.yml  workflow_dispatch,push,pull_request
+0      secrets         Secret scan (gitleaks)                                      session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+0      test            Unit tests + lint (backend)                                 session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+0      sast            SAST (bandit)                                               session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+1      build-and-scan  Docker build + Trivy image scan                             session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+2      security-gate   Security gate                                               session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+3      deploy-kind     Deploy with Helm to kind (ephemeral cluster on the runner)  session21-final-pipeline  session21-final-pipeline.yml  push,pull_request,workflow_dispatch
+3      push            Push images to GHCR                                         session21-final-pipeline  session21-final-pipeline.yml  pull_request,workflow_dispatch,push

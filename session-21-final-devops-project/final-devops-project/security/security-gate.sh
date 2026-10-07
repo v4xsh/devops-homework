@@ -19,7 +19,7 @@ run() {  # run <name> <command...>
 
 run sast-bandit      bandit -c security/bandit.yaml -r application/backend/app -ll -ii
 run sca-pip-audit    pip-audit -r application/backend/requirements.txt --strict
-run sca-npm-audit    bash -c "cd application/frontend && npm audit --audit-level=high --package-lock-only"
+run sca-npm-audit    bash -c "cd application/frontend && timeout 180 npm audit --audit-level=high --package-lock-only"
 run sca-trivy-fs     trivy fs --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 application/
 run iac-trivy-config trivy config --severity HIGH,CRITICAL --ignorefile security/.trivyignore --exit-code 1 .
 run secrets-gitleaks gitleaks dir . --config security/gitleaks.toml --redact --no-banner --exit-code 1

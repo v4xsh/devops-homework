@@ -1,0 +1,20 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ diff troubleshooting/base/05-ingress.yaml troubleshooting/scenarios/6-ingress-service-name/broken-ingress.yaml | grep '^[<>]'
+> # BROKEN ON PURPOSE (troubleshooting challenge): /api rule points to Service taskboard-api which does not exist -> ingress-nginx returns 503
+<             backend: {service: {name: taskboard-backend, port: {name: http}}}
+>             backend: {service: {name: taskboard-api, port: {name: http}}}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/6-ingress-service-name/broken-ingress.yaml
+ingress.networking.k8s.io/taskboard configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 8
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -w '  -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks | grep -oE '<title>.*</title>|-> HTTP [0-9]+'
+<title>503 Service Temporarily Unavailable</title>
+-> HTTP 503
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET / (frontend rule still fine) -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/
+GET / (frontend rule still fine) -> HTTP 200
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl describe ingress taskboard -n final-ts | grep -E '/api|/ ' | cut -c1-160
+                      /api   taskboard-api:http (<error: services "taskboard-api" not found>)
+                      /      taskboard-frontend:http (10.244.0.204:8080,10.244.0.205:8080)
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get svc -n final-ts
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+taskboard-backend    ClusterIP   10.110.68.157   <none>        8000/TCP   6m33s
+taskboard-frontend   ClusterIP   10.98.100.87    <none>        80/TCP     6m33s
+taskboard-postgres   ClusterIP   None            <none>        5432/TCP   6m33s

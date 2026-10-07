@@ -1,7 +1,7 @@
-2026-10-07T18:35:54Z	INFO	[misconfig] Misconfiguration scanning is enabled
-2026-10-07T18:35:54Z	INFO	[checks-client] Using existing checks from cache	path="/home/vansh/.cache/trivy/policy/content"
-2026-10-07T18:35:56Z	INFO	[terraform scanner] Scanning root module	file_path="terraform"
-2026-10-07T18:36:01Z	INFO	Detected config files	num=35
+2026-10-07T18:55:31Z	INFO	[misconfig] Misconfiguration scanning is enabled
+2026-10-07T18:55:31Z	INFO	[checks-client] Using existing checks from cache	path="/home/vansh/.cache/trivy/policy/content"
+2026-10-07T18:55:33Z	INFO	[terraform scanner] Scanning root module	file_path="terraform"
+2026-10-07T18:55:38Z	INFO	Detected config files	num=36
 
 Report Summary
 
@@ -43,6 +43,8 @@ Report Summary
 │ kubernetes/04-frontend.yaml                                          │ kubernetes │         0         │
 ├──────────────────────────────────────────────────────────────────────┼────────────┼───────────────────┤
 │ kubernetes/05-ingress-hpa.yaml                                       │ kubernetes │         0         │
+├──────────────────────────────────────────────────────────────────────┼────────────┼───────────────────┤
+│ scripts/loadgen-pod.yaml                                             │ kubernetes │         0         │
 ├──────────────────────────────────────────────────────────────────────┼────────────┼───────────────────┤
 │ terraform                                                            │ terraform  │         0         │
 ├──────────────────────────────────────────────────────────────────────┼────────────┼───────────────────┤

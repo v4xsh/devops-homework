@@ -1,3 +1,4 @@
+# BROKEN ON PURPOSE (troubleshooting challenge): /api rule points to Service taskboard-api which does not exist -> ingress-nginx returns 503
 # Ingress: /api -> backend, / -> frontend (ingress-nginx addon on minikube)
 apiVersion: networking.k8s.io/v1
 kind: Ingress

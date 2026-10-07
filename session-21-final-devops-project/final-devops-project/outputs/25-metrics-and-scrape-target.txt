@@ -1,0 +1,18 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get servicemonitor,prometheusrule -n final-app
+NAME                                                     AGE
+servicemonitor.monitoring.coreos.com/taskboard-backend   6m17s
+
+NAME                                                    AGE
+prometheusrule.monitoring.coreos.com/taskboard-alerts   6m18s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl port-forward -n final-app svc/taskboard-backend 18000:8000 > /dev/null 2>&1 & sleep 3
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s localhost:18000/metrics | grep -E '^(http_requests_total|taskboard_tasks_created_total|taskboard_app_info)' | head -n 12
+taskboard_tasks_created_total{priority="HIGH"} 2.0
+taskboard_app_info{env="dev",version="1.0.1"} 1.0
+http_requests_total{handler="/api/info",method="GET",status="2xx"} 1.0
+http_requests_total{handler="/api/tasks",method="POST",status="2xx"} 2.0
+http_requests_total{handler="/api/tasks",method="GET",status="2xx"} 8578.0
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kill %1
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s localhost:19090/api/v1/targets | jq -r '.data.activeTargets[] | select(.labels.namespace=="final-app") | [.labels.job, .labels.pod, .scrapeUrl, .health] | @tsv' | column -t
+taskboard-backend  taskboard-backend-766688f5db-gkxq6  http://10.244.0.174:8000/metrics  up
+taskboard-backend  taskboard-backend-766688f5db-8nqm9  http://10.244.0.165:8000/metrics  up
+taskboard-backend  taskboard-backend-766688f5db-sp2dh  http://10.244.0.166:8000/metrics  up

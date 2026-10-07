@@ -1,0 +1,18 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl scale deploy/taskboard-backend -n final-gitops --replicas=1 && sleep 15 && kubectl get deploy taskboard-backend -n final-gitops
+deployment.apps/taskboard-backend scaled
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+taskboard-backend   3/3     3            3           46s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ cd ~/practice/taskboard-gitops && git revert --no-edit HEAD > /dev/null && git push "http://vansh:$GITEA_PWD@localhost:13001/vansh/taskboard-gitops.git" main 2>&1 | grep -E "^(To |   [0-9a-f]| * )" | sed "s/$GITEA_PWD/*****/"; git log --oneline | head -n 3
+To http://localhost:13001/vansh/taskboard-gitops.git
+   a136a9d..fd43aa4  main -> main
+fd43aa4 Revert "Scale TaskBoard backend to 3 replicas"
+a136a9d Scale TaskBoard backend to 3 replicas
+18d393b Add TaskBoard Helm chart (1.0.1) for Argo CD
+~/practice/taskboard-gitops$ argocd app get taskboard-gitops --grpc-web --refresh > /dev/null
+~/practice/taskboard-gitops$ kubectl wait -n argocd application/taskboard-gitops --for=jsonpath='{.status.sync.revision}'=$(git rev-parse HEAD) --timeout=180s
+application.argoproj.io/taskboard-gitops condition met
+~/practice/taskboard-gitops$ sleep 20; kubectl get deploy taskboard-backend -n final-gitops
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+taskboard-backend   2/2     2            2           67s
+~/practice/taskboard-gitops$ kubectl get application taskboard-gitops -n argocd -o jsonpath='sync={.status.sync.status} health={.status.health.status} revision={.status.sync.revision}{"\n"}'
+sync=Synced health=Healthy revision=fd43aa48c28fce1ff5ca8b94cff46d9d61e7c5ce

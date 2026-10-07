@@ -1,3 +1,4 @@
+# BROKEN ON PURPOSE (troubleshooting challenge): readinessProbe path /readyz does not exist (app serves /ready) -> pods never Ready, Service has no endpoints
 apiVersion: apps/v1
 kind: Deployment
 metadata:

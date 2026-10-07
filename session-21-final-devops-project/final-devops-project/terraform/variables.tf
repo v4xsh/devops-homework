@@ -94,6 +94,12 @@ variable "node_max_size" {
   default     = 3
 }
 
+variable "create_ecr" {
+  description = "Create the ECR repositories (set false for LocalStack community, where ECR is a Pro-only service)"
+  type        = bool
+  default     = true
+}
+
 variable "ecr_repositories" {
   description = "Container repositories to create"
   type        = list(string)

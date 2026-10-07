@@ -1,0 +1,20 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ diff <(awk 'f{print} /^---/{f=1}' troubleshooting/base/03-backend.yaml) troubleshooting/scenarios/3-service-targetport/broken-service.yaml | grep '^[<>]'
+> # BROKEN ON PURPOSE (troubleshooting challenge): targetPort 8080 but the container listens on 8000 -> connection refused, ingress 502
+<     - {name: http, port: 8000, targetPort: http}
+>     - {name: http, port: 8000, targetPort: 8080}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/scenarios/3-service-targetport/broken-service.yaml
+service/taskboard-backend configured
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 5
+~/devops-homework/session-21-final-devops-project/final-devops-project$ curl -s -o /dev/null -w 'GET /api/tasks via ingress -> HTTP %{http_code}\n' -H 'Host: taskboard-ts.local' http://$IP/api/tasks
+GET /api/tasks via ingress -> HTTP 502
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-ts -l app=taskboard-backend
+NAME                                 READY   STATUS    RESTARTS   AGE
+taskboard-backend-5d94ffbc45-snrlg   1/1     Running   0          22s
+taskboard-backend-5d94ffbc45-x68k2   1/1     Running   0          16s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get svc taskboard-backend -n final-ts -o jsonpath='service port={.spec.ports[0].port} targetPort={.spec.ports[0].targetPort}{"\n"}'
+service port=8000 targetPort=8080
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-ts -l app=taskboard-backend -o jsonpath='{.items[0].spec.containers[0].ports[0]}{"\n"}'
+{"containerPort":8000,"name":"http","protocol":"TCP"}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get endpointslices -n final-ts -l kubernetes.io/service-name=taskboard-backend -o jsonpath='{range .items[*]}{.ports[0].port}{" -> "}{.endpoints[*].addresses[0]}{"\n"}{end}'
+8080 -> 10.244.0.199 10.244.0.200
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl logs -n ingress-nginx deploy/ingress-nginx-controller --tail=300 | grep -E 'final-ts.*(connect\(\) failed|Connection refused)' | tail -n 1 | cut -c1-220

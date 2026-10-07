@@ -1,0 +1,23 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/04-frontend.yaml
+deployment.apps/taskboard-frontend configured
+service/taskboard-frontend unchanged
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-frontend -n final-ts --timeout=120s
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "taskboard-frontend" rollout to finish: 1 old replicas are pending termination...
+deployment "taskboard-frontend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get deploy taskboard-frontend -n final-ts -o jsonpath='resources={.spec.template.spec.containers[0].resources}{"\n"}'
+resources={"limits":{"cpu":"200m","memory":"96Mi"},"requests":{"cpu":"20m","memory":"32Mi"}}
+~/devops-homework/session-21-final-devops-project/final-devops-project$ sleep 90
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get hpa taskboard-frontend -n final-ts
+NAME                 REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+taskboard-frontend   Deployment/taskboard-frontend   cpu: 5%/70%   2         4         2          3m4s
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl describe hpa taskboard-frontend -n final-ts | grep -A4 '^Conditions' | cut -c1-160
+Conditions:
+  Type            Status  Reason               Message
+  ----            ------  ------               -------
+  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
+  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)

@@ -1,0 +1,16 @@
+~/devops-homework/session-21-final-devops-project/final-devops-project$ minikube image ls | grep taskboard-backend
+ghcr.io/v4xsh/taskboard-backend:1.0.1
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl apply -f troubleshooting/base/03-backend.yaml
+deployment.apps/taskboard-backend configured
+service/taskboard-backend unchanged
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout status deploy/taskboard-backend -n final-ts --timeout=180s
+deployment "taskboard-backend" successfully rolled out
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl get pods -n final-ts -l app=taskboard-backend -o custom-columns=POD:.metadata.name,IMAGE:.spec.containers[0].image,READY:.status.containerStatuses[0].ready
+POD                                  IMAGE                                   READY
+taskboard-backend-5d94ffbc45-6krfj   ghcr.io/v4xsh/taskboard-backend:1.0.1   true
+taskboard-backend-5d94ffbc45-rtw4m   ghcr.io/v4xsh/taskboard-backend:1.0.1   true
+~/devops-homework/session-21-final-devops-project/final-devops-project$ kubectl rollout history deploy/taskboard-backend -n final-ts | tail -n 4
+REVISION  CHANGE-CAUSE
+2         <none>
+3         <none>
+
